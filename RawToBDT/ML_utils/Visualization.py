@@ -59,7 +59,7 @@ def BDTSummary(shap_values, sample):
     return
 
 def plot_covariance(covMat, saveName):
-    plt.imshow(covMat, cmap=cmapNormal_r)
+    plt.imshow(covMat, cmap=cmapNormal_r, vmin=-1, vmax=1)
     plt.xticks(np.arange(len(fname)), fname, rotation=45)
     plt.yticks(np.arange(len(fname)), fname)
     plt.title(f"{saveName}")

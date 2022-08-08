@@ -86,29 +86,20 @@ def run_BDT():
     print("--------------- Running Distribution Matching ---------------")
     print("-------------------------------------------------------------")
 
-    sigs = []
-    bkgs = []
-    sigSave = sigRaw
-    bkgSave = bkgRaw
+    sigSave, sigPDM = dataSplit(sigRaw, 0.3)
+    bkgSave, bkgPDM = dataSplit(bkgRaw, 0.3)
 
     print(sigSave.shape)
     sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/DCR", 0.05, True, show = False)
-    # print(sigSave.shape)
     sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift", 30, True, show = False)
-    # print(sigSave.shape)
     sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift10", 20, True, show = False)
-    # print(sigSave.shape)
     sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift50", 20, True, show = False)
-    # print(sigSave.shape)
     sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/noise", 0.00002, True, show = False)
     sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/noiseTail", 0.00002, True, show = False)
-    # print(sigSave.shape)
     sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/LQ80", 10, True, show = False)
 
-    sigs.append(sigSave)
-    bkgs.append(bkgSave)
-    print(np.shape(np.concatenate(sigs, axis=0)))
-
+    sigs = sigSave
+    bkgs = bkgSave
 
     ###################################################################
     # TRAINING PREPARATION
@@ -116,11 +107,11 @@ def run_BDT():
     print("----------------------- Training Prep -----------------------")
     print("-------------------------------------------------------------")
 
-    signalTrain, signalTest = dataSplit(sigRaw, 0.3)
+    signalTrain, signalTest = dataSplit(sigs, 0.3)
     sigLabelTrain = np.ones(signalTrain.shape[0]) # Labels all training signals as signals (1)
     sigLabelTest = np.ones(signalTest.shape[0]) # Labels all testing signals as signals (1)
 
-    bkgTrain, bkgTest = dataSplit(bkgRaw, 0.3)  # assigns arrays corresponding to randomly split signal data 
+    bkgTrain, bkgTest = dataSplit(bkgs, 0.3)  # assigns arrays corresponding to randomly split signal data 
     bkgLabelTrain = np.zeros(bkgTrain.shape[0])
     bkgLabelTest = np.zeros(bkgTest.shape[0])
 
@@ -204,8 +195,8 @@ def run_BDT():
                     desc   ="Running Visualization................", 
                     colour = terminalCMAP[1]):
         if i == 0:
-            signalData = sigRaw
-            bkgData = bkgRaw
+            signalData = sigPDM
+            bkgData = bkgPDM
 
             X_test = np.concatenate([signalData,bkgData],axis=0)
             Y_test = np.array([1]*len(signalData) + [0] * len(bkgData))
@@ -240,15 +231,15 @@ def run_BDT():
             np.save(f"{plotPath}/shapValue", shap_valuesArr)
 
             bkgShap = np.array(shap_values[0], dtype = float)
-            covBKG = np.cov(shap_values[0].T)
 
-            covSIG = np.cov(shap_values[1].T)
+            covBKG = np.corrcoef(shap_values[0].T)
+            covSIG = np.corrcoef(shap_values[1].T)
 
             plot_covariance(covBKG, "Background Covariance")
             plot_covariance(covSIG, "Signal Covariance")
         elif i == 4:
-            sigsave = sigRaw
-            bkgsave = bkgRaw
+            # sigsave = sigRaw
+            # bkgsave = bkgRaw
 
             bdt_thresh = 0.55
             avse_thresh = 969 #-1 # How to set Cut
