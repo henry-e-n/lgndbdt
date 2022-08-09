@@ -9,20 +9,7 @@ setuptools.setup(
     author='Henry Nachman',
     author_email='henachman@unc.edu',
     description='Python package for extracting PSDs and training a BDT',
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    url='https://github.com/henry-e-n/lgndbdt',
     license='Apache-2.0',
     packages=['lgndbdt'],
-    install_requires=['h5py>=3.2.0',
-                        'iminuit',
-                        'matplotlib',
-                        'numpy>=1.21',
-                        'pandas',
-                        'parse',
-                        'pint',
-                        'pyfftw',
-                        'scipy',
-                        'tqdm',
-                        'lightgbm']
+    install_requires=['h5py', 'matplotlib', 'numpy', 'scipy', 'tqdm', 'lightgbm']
 )
