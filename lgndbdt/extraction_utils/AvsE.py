@@ -5,8 +5,8 @@ from matplotlib import cm
 from tqdm import tqdm
 
 from matplotlib import cm
-from DCR import EfromA
-from config import *
+from extraction_utils.DCR import EfromA
+from extraction_utils.config import *
 from time import time
 
 def getA(times, values, dtimes, currentEstimator = 100):
