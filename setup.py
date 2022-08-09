@@ -15,7 +15,17 @@ DESCRIPTION  ='Python package for extracting PSDs and training a BDT'
 LICENSE ='Apache-2.0'
 LONG_DESCRIPTION = (HERE/"README.md").read_text()
 LONG_DESC_TYPE   = 'text/markdown'
-INSTALL_REQUIRES =['numpy']
+INSTALL_REQUIRES =['numpy',
+					'matplotlib',
+					'scipy',
+					'lightgbm',
+					'shap',
+					'tqdm',
+					'PyQr5',
+					'imblearn',
+					'h5py',
+					'eli5',
+					'ipython']
 
 
 def gitcmd_update_submodules():
