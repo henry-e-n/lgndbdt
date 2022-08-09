@@ -1,4 +1,4 @@
-import setuptools_sm 
+import setuptools_scm 
 from setuptools import setup
 
 setup()
