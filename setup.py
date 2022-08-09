@@ -11,5 +11,5 @@ setuptools.setup(
     description='Python package for extracting PSDs and training a BDT',
     license='Apache-2.0',
     packages=['lgndbdt'],
-    install_requires=['h5py', 'matplotlib', 'numpy', 'scipy', 'tqdm', 'lightgbm']
+    install_requires=['numpy'],
 )
