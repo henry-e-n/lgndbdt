@@ -10,6 +10,6 @@ setuptools.setup(
     author_email='henachman@unc.edu',
     description='Python package for extracting PSDs and training a BDT',
     license='Apache-2.0',
-    packages=['lgndbdt'],
+    packages=['lgndbdt', 'ML_utils'],
     install_requires=['numpy'],
 )
