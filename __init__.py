@@ -1,4 +1,3 @@
-"""
 import os
 import sys
 
@@ -8,4 +7,3 @@ for path in module_path:
         sys.path.append(path)
 
 # Adds the package directory to the current path so that submodules can be appropriately added
-"""
