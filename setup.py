@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url='https://github.com/henry-e-n/lgndbdt',
     license='Apache-2.0',
-    packages=['ML_utils', 'raw_to_bdt', 'extraction_utils'],
+    packages=['lgndbdt', 'ML_utils', 'raw_to_bdt', 'extraction_utils'],
     install_requires=['h5py>=3.2.0',
                         'iminuit',
                         'matplotlib',
