@@ -230,8 +230,6 @@ def run_BDT():
             shap_valuesArr = np.insert(shap_valuesArr, 0, fname, axis=1)
             np.save(f"{plotPath}/shapValue", shap_valuesArr)
 
-            bkgShap = np.array(shap_values[0], dtype = float)
-
             covBKG = np.corrcoef(shap_values[0].T)
             covSIG = np.corrcoef(shap_values[1].T)
 
