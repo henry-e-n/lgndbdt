@@ -18,8 +18,8 @@ from extraction_utils.RawToTrain import *
 """
 See config file for appropriate dependencies:
 """
-def parameter_extraction(numWave = -1):
-    args = [detName, 1, numWave, 1] # detname, savefiles, numWave, p0
+def parameter_extraction(saveFiles = 1, numWave = -1, runP0 = 1):
+    args = [detName, saveFiles, numWave, runP0] # detname, savefiles, numWave, p0
 
     rawToTrain(args, "DEP")
     rawToTrain(args, "FEP")
