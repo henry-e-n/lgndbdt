@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.metrics import roc_curve, roc_auc_score
 
 
-from extraction_utils.config import plotPath, cmapNormal, fname, cmapNormal_r
+from extraction_utils.config import plotPath, cmapNormal, fname, cmapDiv, cmapNormal_r
 from ML_utils.plot_legacy import summary_legacy
 
 def TrainingMetric(evals_result):
@@ -59,7 +59,7 @@ def BDTSummary(shap_values, sample):
     return
 
 def plot_covariance(covMat, saveName):
-    plt.imshow(covMat, cmap=cmapNormal_r, vmin=-1, vmax=1)
+    plt.imshow(covMat, cmap=cmapDiv, vmin=-1, vmax=1)
     plt.xticks(np.arange(len(fname)), fname, rotation=45)
     plt.yticks(np.arange(len(fname)), fname)
     plt.title(f"{saveName}")
