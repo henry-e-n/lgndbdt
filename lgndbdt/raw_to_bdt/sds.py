@@ -229,11 +229,10 @@ def run_SDS():
 
     import itertools
     combos = []
-    print(combos)
-    
     for L in range(0, len(featureList) + 1):
         for subset in itertools.combinations(featureList, L):
             combos.append(subset)
+    print(combos)
 
     bdtAUC   = []
     finSize  = []
