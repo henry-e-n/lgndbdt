@@ -11,7 +11,7 @@ import tqdm
 
 from tqdm import tqdm
 from time import time
-from imblearn.over_sampling import SMOTENC
+from imblearn.over_sampling      import SMOTENC
 
 from matplotlib import cm
 
@@ -22,10 +22,10 @@ for path in module_path:
 
 from extraction_utils.config     import *
 from extraction_utils.h5Extract  import *
-from ML_utils.BDTPrep    import *
-from ML_utils.BDTTrain   import *
+from ML_utils.BDTPrep            import *
+from ML_utils.BDTTrain           import *
 from extraction_utils.RawToTrain import *
-from ML_utils.plot_legacy import summary_legacy
+from ML_utils.plot_legacy        import summary_legacy
 
 randSeed = 27
 np.random.seed(randSeed)
@@ -225,14 +225,16 @@ def main(distribList):
 
 def run_SDS():
     featureList = np.array(fname, dtype = object)
+    print(featureList)
+
     import itertools
     combos = []
     for L in range(0, len(featureList) + 1):
         for subset in itertools.combinations(featureList, L):
             combos.append(subset)
 
-    bdtAUC = []
-    finSize = []
+    bdtAUC   = []
+    finSize  = []
     bigStart = time()
     for n in tqdm(combos):
         auc, szF = main(n)
