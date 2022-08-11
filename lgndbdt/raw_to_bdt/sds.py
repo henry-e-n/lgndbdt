@@ -80,7 +80,6 @@ def main(distribList):
 
     for i in range(len(distribList)):
         feat = distribList[i]
-        dFeat = 1
         if feat == "/DCR":
             dFeat = 0.05
         if feat == "/tdrift":
@@ -95,8 +94,6 @@ def main(distribList):
             dFeat = 0.00002
         if feat == "/LQ80":
             dFeat = 10
-
-        print(dFeat)
         sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, feat, dFeat, True, show = False)
     
     sigs = sigSave
@@ -225,7 +222,7 @@ def main(distribList):
     return np.round(BDTauc, 5), np.shape(sigs)
 
 def run_SDS():
-    featureList = np.array(fname, dtype = object)
+    featureList = distMatch
     import itertools
     combos = []
     for L in range(0, len(featureList) + 1):
