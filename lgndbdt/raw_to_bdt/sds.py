@@ -180,45 +180,38 @@ def main(distribList):
 
     X_test = np.concatenate([signalData,bkgData],axis=0)
     Y_test = np.array([1]*len(signalData) + [0] * len(bkgData))
-    params = {"num_iterations": 1, "learning_rate": 0.15967607193274216, "num_leaves": 688, "bagging_freq": 34, "bagging_fraction": 0.9411410478379901, "min_data_in_leaf": 54, "drop_rate": 0.030050388917525712, "min_gain_to_split": 0.24143821598351703, "max_bin": 454, "boosting": "dart", "objective": "binary", "metric": "binary_logloss", "verbose": -100}
 
-    lgb_train = lgb.Dataset(X_test[:,:len(fname)], Y_test,free_raw_data=False, feature_name = list(fname))
+    # Is this code necesssary??
+
+    # params = {"num_iterations": 1, "learning_rate": 0.15967607193274216, "num_leaves": 688, "bagging_freq": 34, "bagging_fraction": 0.9411410478379901, "min_data_in_leaf": 54, "drop_rate": 0.030050388917525712, "min_gain_to_split": 0.24143821598351703, "max_bin": 454, "boosting": "dart", "objective": "binary", "metric": "binary_logloss", "verbose": -100}
+
+    # lgb_train = lgb.Dataset(X_test[:,:len(fname)], Y_test,free_raw_data=False, feature_name = list(fname))
+    # MSBDT = lgb.Booster(model_file='BDT_unblind.txt')
+    # params["num_iterations"] = 1
+
+    # gbm = lgb.train(params, 
+    #                 lgb_train) 
+
+    # MSBDTstr = MSBDT.model_to_string()
+
+    # replace with
     MSBDT = lgb.Booster(model_file='BDT_unblind.txt')
-    params["num_iterations"] = 1
-
-    gbm = lgb.train(params, 
-                    lgb_train) 
-
     MSBDTstr = MSBDT.model_to_string()
+
     explainer = shap.TreeExplainer(gbm.model_from_string(MSBDTstr))
     y_pred = gbm.predict(X_test[:,:len(fname)], num_iteration=gbm.best_iteration)
 
     # ROC CURVES #
-    cleanSig = np.delete(sigavse, np.argwhere(np.isnan(sigavse)))
-    cleanBkg = np.delete(bkgavse, np.argwhere(np.isnan(bkgavse)))
+    # cleanSig = np.delete(sigavse, np.argwhere(np.isnan(sigavse)))
+    # cleanBkg = np.delete(bkgavse, np.argwhere(np.isnan(bkgavse)))
 
-    avseOriginal = np.concatenate((cleanSig,cleanBkg))
-    avseOgLabels = np.concatenate((np.ones(len(cleanSig)), np.zeros(len(cleanBkg))))
+    # avseOriginal = np.concatenate((cleanSig,cleanBkg))
+    # avseOgLabels = np.concatenate((np.ones(len(cleanSig)), np.zeros(len(cleanBkg))))
 
-    BDTfpr, BDTtpr, BDTthresholds = roc_curve(Y_test, y_pred)
-    ogfpr, ogtpr, ogthresholds    = roc_curve(avseOgLabels, avseOriginal)
+    # BDTfpr, BDTtpr, BDTthresholds = roc_curve(Y_test, y_pred)
+    # ogfpr, ogtpr, ogthresholds    = roc_curve(avseOgLabels, avseOriginal)
     BDTauc = roc_auc_score(Y_test, y_pred)
-    ogauc  = roc_auc_score(avseOgLabels, avseOriginal)
-
-    hlineBDT = np.argmin(np.abs(BDTtpr-0.76))
-    hlineOG  = np.argmin(np.abs(ogtpr-0.76))
-
-    cleanSigExt = np.delete(sigRaw[:,selectDict["/AvsE_c"]], np.argwhere(np.isnan(sigavse)))
-    cleanBkgExt = np.delete(bkgRaw[:,selectDict["/AvsE_c"]], np.argwhere(np.isnan(bkgavse)))
-    avseExt = np.concatenate((cleanSigExt,cleanBkgExt))
-    avseExtLabels = np.concatenate((np.ones(len(cleanSigExt)), np.zeros(len(cleanBkgExt))))
-
-    Extfpr, Exttpr, Extthresholds    = roc_curve(avseExtLabels, avseExt)
-    Extauc  = roc_auc_score(avseExtLabels, avseExt)
-
-    hlineExt  = np.argmin(np.abs(Exttpr-0.76))
-    # print(f"76% thresholds - BDT : {BDTthresholds[hlineBDT]}, PYGAMA : {ogthresholds[hlineOG]}, Extracted {Extthresholds[hlineExt]}")
-
+    
     return np.round(BDTauc, 5), np.shape(sigs)
 
 def run_SDS():
@@ -238,9 +231,9 @@ def run_SDS():
         finSize.append(szF[0])
 
     sysDist = np.stack([bdtAUC, finSize])
-    np.savetxt("Plots/bdtAUC.csv", bdtAUC)
-    np.savetxt("Plots/finSize.csv", finSize)
-    np.save("Plots/SYSDIST", sysDist)
+    # np.savetxt("Plots/bdtAUC.csv", bdtAUC)
+    # np.savetxt("Plots/finSize.csv", finSize)
+    # np.save("Plots/SYSDIST", sysDist)
 
     bigEnd = time()
     print(f"Total Run Time : {bigEnd - bigStart}")
@@ -276,7 +269,7 @@ def run_SDS():
     ax2.set_xticklabels(tick_func(new_tick_locations, aucStandard))
     ax2.set_xlabel(r"Percent Increase from Standard")
     lgd = ax1.legend(bbox_to_anchor=(0.5, -0.40), loc = "lower center")
-    plt.savefig(f"SystematicDistribution.jpg", dpi=100, bbox_extra_artists=(lgd,), bbox_inches='tight')
+    plt.savefig(f"{plotPath}/SystematicDistribution.jpg", dpi=100, bbox_extra_artists=(lgd,), bbox_inches='tight')
 
 
     fig = plt.figure()
@@ -294,4 +287,4 @@ def run_SDS():
     ax2.set_xticklabels(tick_func(new_tick_locations, aucStandard))
     ax2.set_xlabel(r"Percent Increase from Standard")
     lgd = ax1.legend(bbox_to_anchor=(0.5, -0.40), loc = "lower center")
-    plt.savefig(f"SystematicDistributionHist2d.jpg", dpi=100, bbox_extra_artists=(lgd,), bbox_inches='tight')
+    plt.savefig(f"{plotPath}/SystematicDistributionHist2d.jpg", dpi=100, bbox_extra_artists=(lgd,), bbox_inches='tight')
