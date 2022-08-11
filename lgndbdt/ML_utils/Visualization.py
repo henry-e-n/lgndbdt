@@ -91,7 +91,7 @@ def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
     ymax = np.max(data[:, index2]) + np.std(data[:, index2])
 
     if point == True:
-        selection = (data[:, index1] < 306)
+        selection = (data[:, index1] < 600)
         selection = np.argwhere(selection)
         selection = selection[0]
         # print(selection, data[selection,index1], data[selection,index2])
