@@ -209,6 +209,9 @@ def run_BDT():
             gbm = lgb.train(params, 
                             lgb_train) 
 
+            MSBDTstr = MSBDT.model_to_string()
+            explainer = shap.TreeExplainer(gbm.model_from_string(MSBDTstr))
+            
             y_pred = gbm.predict(X_test[:,:len(fname)], num_iteration=gbm.best_iteration)
 
             BDTDistrib(y_pred, Y_test)
@@ -218,9 +221,6 @@ def run_BDT():
             np.random.shuffle(Pos_sample)
             np.random.shuffle(Neg_sample)
 
-            MSBDTstr = MSBDT.model_to_string()
-            explainer = shap.TreeExplainer(gbm.model_from_string(MSBDTstr))
-            
             sample = np.concatenate([Pos_sample[:10000], Neg_sample[:10000]],axis=0)
             shap_values = explainer.shap_values(sample)
             # Returns a list of matrices (# outputs, # samples x, # features)
