@@ -58,10 +58,10 @@ def BDTSummary(shap_values, sample):
     plt.close()
     return
 
-def plot_covariance(covMat, saveName):
+def plot_covariance(covMat, saveName, covName = fname):
     plt.imshow(covMat, cmap=cmapDiv, vmin=-1, vmax=1)
-    plt.xticks(np.arange(len(fname)), fname, rotation=45)
-    plt.yticks(np.arange(len(fname)), fname)
+    plt.xticks(np.arange(len(covName)), covName, rotation=60)
+    plt.yticks(np.arange(len(covName)), covName)
     plt.title(f"{saveName}")
     plt.colorbar()
     plt.savefig(f"{plotPath}/{saveName.replace(' ', '')}.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)

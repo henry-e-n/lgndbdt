@@ -209,8 +209,6 @@ def run_BDT():
             gbm = lgb.train(params, 
                             lgb_train) 
 
-            MSBDTstr = MSBDT.model_to_string()
-            explainer = shap.TreeExplainer(gbm.model_from_string(MSBDTstr))
             y_pred = gbm.predict(X_test[:,:len(fname)], num_iteration=gbm.best_iteration)
 
             BDTDistrib(y_pred, Y_test)
@@ -219,33 +217,75 @@ def run_BDT():
             Neg_sample = X_test[Y_test == 0,:len(fname)]
             np.random.shuffle(Pos_sample)
             np.random.shuffle(Neg_sample)
+
+            MSBDTstr = MSBDT.model_to_string()
+            explainer = shap.TreeExplainer(gbm.model_from_string(MSBDTstr))
+            
             sample = np.concatenate([Pos_sample[:10000], Neg_sample[:10000]],axis=0)
             shap_values = explainer.shap_values(sample)
-
+            # Returns a list of matrices (# outputs, # samples x, # features)
             BDTSummary(shap_values, sample)
 
         elif i == 2 or i == 3:
             # Covariance Matrices
-            shap_valuesArr = np.array(shap_values, dtype=object)
-            shap_valuesArr = np.insert(shap_valuesArr, 0, fname, axis=1)
-            np.save(f"{plotPath}/shapValue", shap_valuesArr)
-
-            covBKG = np.corrcoef(shap_values[0].T)
-            covSIG = np.corrcoef(shap_values[1].T)
-
-            plot_covariance(covBKG, "Background Covariance")
-            plot_covariance(covSIG, "Signal Covariance")
-        elif i == 4:
-            # sigsave = sigRaw
-            # bkgsave = bkgRaw
+            # Define Outperforming events
 
             bdt_thresh = 0.55
             avse_thresh = 969 #-1 # How to set Cut
             explainer = shap.TreeExplainer(gbm)
 
-            sample_selector1 = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
-            sample_selector2 = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
-            sample_selector = sample_selector1|sample_selector2
+            sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
+            sample_bkg = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
+
+            # Get Sig Outperforming SHAP
+            shap_sig = explainer.shap_values(X_test[sample_sig,:len(fname)])
+            shap_bkg = explainer.shap_values(X_test[sample_bkg,:len(fname)])
+
+            # Get BDT and AvsE score 
+            outSigBDT = y_pred[sample_sig]
+            outBkgBDT = y_pred[sample_bkg]
+
+            outSigAvsE = X_test[sample_sig,selectDict["/AvsE_c"]]
+            outBkgAvsE = X_test[sample_bkg,selectDict["/AvsE_c"]]
+
+            # Transform SHAP to array
+            shap_sigArr = np.array(shap_sig[0], dtype=float)
+            shap_bkgArr = np.array(shap_bkg[0], dtype=float)
+
+            # Add BDT
+            shap_sigArr = np.insert(shap_sigArr, -1, outSigBDT, axis=1)
+            shap_bkgArr = np.insert(shap_bkgArr, -1, outBkgBDT, axis=1)
+            # Add AvsE
+            shap_sigArr = np.insert(shap_sigArr, -1, outSigAvsE, axis=1)
+            shap_bkgArr = np.insert(shap_bkgArr, -1, outBkgAvsE, axis=1)
+
+            covName = np.append(fname, ["BDT", "A/E"])
+
+            covSIG = np.corrcoef(shap_sigArr.T)
+            covBKG = np.corrcoef(shap_bkgArr.T)
+            plot_covariance(covSIG, "Signal Covariance", covName)
+            plot_covariance(covBKG, "Background Covariance", covName)
+
+            # shap_valuesArr = np.array(shap_values, dtype=object)
+            # shap_valuesArr = np.insert(shap_valuesArr, 0, fname, axis=1)
+            # np.save(f"{plotPath}/shapValue", shap_valuesArr)
+
+            # covBKG = np.corrcoef(shap_values[0].T)
+            # covSIG = np.corrcoef(shap_values[1].T)
+
+            # plot_covariance(covBKG, "Background Covariance")
+            # plot_covariance(covSIG, "Signal Covariance")
+        elif i == 4:
+            # sigsave = sigRaw
+            # bkgsave = bkgRaw
+
+            # bdt_thresh = 0.55
+            # avse_thresh = 969 #-1 # How to set Cut
+            # explainer = shap.TreeExplainer(gbm)
+
+            # sample_selector1 = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
+            # sample_selector2 = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
+            sample_selector = sample_sig|sample_bkg
             evnew = X_test[sample_selector,:len(fname)]
             np.random.shuffle(evnew)
             evnew = evnew[:10000]
