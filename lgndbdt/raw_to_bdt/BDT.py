@@ -228,7 +228,7 @@ def run_BDT():
             # Returns a list of matrices (# outputs, # samples x, # features)
             BDTSummary(shap_values, sample)
 
-        elif i == 2 or i == 3:
+        elif i == 2:
             # Covariance Matrices
             # Define Outperforming events
             bdt_thresh = 0.55
@@ -287,7 +287,7 @@ def run_BDT():
             index = 0
             ROIdata = evnew #X_test[sample_selector]
 
-            ROIdata = ROIdata[ROIdata[:,selectDict["/tdrift"]] < 306]
+            ROIdata = ROIdata[ROIdata[:,selectDict["/tdrift"]] < 600]
             sample=ROIdata[index,:len(fname)].reshape(1,-1)
             shap_values = explainer.shap_values(sample)
             plot_SHAP_force(explainer, shap_values[1][0])
