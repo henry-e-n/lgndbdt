@@ -90,7 +90,7 @@ def run_BDT():
     bkgSave, bkgPDM = dataSplit(bkgRaw, 0.3)
 
     print(sigSave.shape)
-    for i in range in len(distMatch):
+    for i in range(len(distMatch)):
         sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, distMatch[i], distStep[i], True, show = False)
     # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift", 30, True, show = False)
     # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift10", 20, True, show = False)
