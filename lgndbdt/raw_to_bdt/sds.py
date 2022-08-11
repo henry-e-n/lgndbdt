@@ -80,7 +80,7 @@ def main(distribList):
 
     for i in range(len(distribList)):
         feat = distribList[i]
-
+        dFeat = 1
         if feat == "/DCR":
             dFeat = 0.05
         if feat == "/tdrift":
