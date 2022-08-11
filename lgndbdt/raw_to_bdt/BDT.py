@@ -90,13 +90,14 @@ def run_BDT():
     bkgSave, bkgPDM = dataSplit(bkgRaw, 0.3)
 
     print(sigSave.shape)
-    sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/DCR", 0.05, True, show = False)
-    sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift", 30, True, show = False)
-    sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift10", 20, True, show = False)
-    sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift50", 20, True, show = False)
-    sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/noise", 0.00002, True, show = False)
-    sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/noiseTail", 0.00002, True, show = False)
-    sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/LQ80", 10, True, show = False)
+    for i in range in len(distMatch):
+        sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, distMatch[i], distStep[i], True, show = False)
+    # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift", 30, True, show = False)
+    # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift10", 20, True, show = False)
+    # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift50", 20, True, show = False)
+    # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/noise", 0.00002, True, show = False)
+    # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/noiseTail", 0.00002, True, show = False)
+    # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/LQ80", 10, True, show = False)
 
     sigs = sigSave
     bkgs = bkgSave

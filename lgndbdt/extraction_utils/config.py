@@ -29,8 +29,9 @@ modPath = data["modPath"]
 savePath = f"{lpData}DataFiles/AnalysisOutput/{detName}/"
 plotPath = f"{lpData}/Plots"#os.getcwd()
 
-fname = np.array(["/AvsE_c", "/DCR", "/LQ80", "/tdrift", "/tdrift10", "/tdrift50", "/noise", "/noiseTail"]) # features to use in BDT
-
+fname = np.array(data["featureNames"]) # features to use in BDT
+distMatch = np.array(data["distNames"])
+distStep = np.array(data["distStep"])
 
 CorrectionParameters = [2896.5810301207716, 89.33188128281084, 0.01]
 
