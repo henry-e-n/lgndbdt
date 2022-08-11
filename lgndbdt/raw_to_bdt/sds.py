@@ -96,6 +96,7 @@ def main(distribList):
         if feat == "/LQ80":
             dFeat = 10
 
+        print(dFeat)
         sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, feat, dFeat, True, show = False)
     
     sigs = sigSave
@@ -225,14 +226,11 @@ def main(distribList):
 
 def run_SDS():
     featureList = np.array(fname, dtype = object)
-    print(featureList)
-
     import itertools
     combos = []
     for L in range(0, len(featureList) + 1):
         for subset in itertools.combinations(featureList, L):
             combos.append(subset)
-    print(combos)
 
     bdtAUC   = []
     finSize  = []
