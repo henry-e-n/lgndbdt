@@ -148,10 +148,11 @@ def main(distribList):
     ###################################################################
     # TRAINING
     ###################################################################
-    xTrain = xTrain[:10000]
-    yTrain = yTrain[:10000]
+    xTrain = xTrain[:7000]
+    yTrain = yTrain[:7000]
 
-    print(xTrain.shape, yTrain.shape)
+    if yTrain.shape[0] < 7000:
+        print(yTrain.shape)
 
     lgbTrain = lgb.Dataset(xTrain, yTrain, free_raw_data=False, feature_name = list(fname))
     lgbEval = lgb.Dataset(xVal, yVal, reference=lgbTrain, free_raw_data=False, feature_name = list(fname))
@@ -242,7 +243,7 @@ def run_SDS():
     bigEnd = time()
     print(f"Total Run Time : {bigEnd - bigStart}")
 
-    data = np.stack([combos, sysDist[0,:], sysDist[1,:]])
+    data = np.stack([combos, sysDist[0,:], sysDist[1,:]], dtype=object)
     labelData = data[0, :]
     auc = data[1,:]
     finalSize = data[2,:]*2
