@@ -249,7 +249,7 @@ def run_SDS():
     # data = np.stack([combos, sysDist[0,:], sysDist[1,:]])
     labelData = np.array(combos, dtype=object) #data[0, :]
     auc = np.array(bdtAUC) #data[1,:]
-    finalSize = np.array(finSize[:]*2) #data[2,:]*2
+    finalSize = np.array(finSize)*2 #data[2,:]*2
     lmParam = np.array(matchParam)
 
     print(auc.shape, finalSize.shape, lmParam.shape)
