@@ -234,7 +234,8 @@ def run_SDS():
         auc, szF = main(n)
         bdtAUC.append(auc)
         finSize.append(szF[0])
-
+    
+    print("checkpoint 1")
     sysDist = np.stack([bdtAUC, finSize])
     # np.savetxt("Plots/bdtAUC.csv", bdtAUC)
     # np.savetxt("Plots/finSize.csv", finSize)
@@ -243,7 +244,8 @@ def run_SDS():
     bigEnd = time()
     print(f"Total Run Time : {bigEnd - bigStart}")
 
-    data = np.stack([combos, sysDist[0,:], sysDist[1,:]], dtype=object)
+    print("checkpoint 2")
+    data = np.stack([combos, sysDist[0,:], sysDist[1,:]])
     labelData = data[0, :]
     auc = data[1,:]
     finalSize = data[2,:]*2
@@ -253,6 +255,7 @@ def run_SDS():
 
     aucStandard = auc[-1]
 
+    print("checkpoint 3")
     new_tick_locations = np.array([0.78, 0.82, 0.84])
 
     def tick_func(X, standard):
