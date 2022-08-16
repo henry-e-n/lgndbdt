@@ -94,7 +94,7 @@ def main(distribList):
             dFeat = 0.00002
         if feat == "/LQ80":
             dFeat = 10
-        sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, feat, dFeat, True, show = False)
+        sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, feat, dFeat, False, show = False)
     
     sigs = sigSave
     bkgs = bkgSave
@@ -148,6 +148,10 @@ def main(distribList):
     ###################################################################
     # TRAINING
     ###################################################################
+    xTrain = xTrain[:10000]
+    yTrain = yTrain[:10000]
+
+    print(xTrain.shape, yTrain.shape)
 
     lgbTrain = lgb.Dataset(xTrain, yTrain, free_raw_data=False, feature_name = list(fname))
     lgbEval = lgb.Dataset(xVal, yVal, reference=lgbTrain, free_raw_data=False, feature_name = list(fname))
