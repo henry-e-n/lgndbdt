@@ -252,8 +252,6 @@ def run_SDS():
     finalSize = np.array(finSize)*2 #data[2,:]*2
     lmParam = np.array(matchParam)
 
-    print(auc.shape, finalSize.shape, lmParam.shape)
-
     maxFS = np.argmax(finalSize)
     maxAUC = np.argmax(auc)
 
@@ -314,5 +312,18 @@ def run_SDS():
     ax2.set_xticks(new_tick_locations)
     ax2.set_xticklabels(tick_func(new_tick_locations, aucStandard))
     ax2.set_xlabel(r"Percent Increase from Standard")
-    lgd = ax1.legend(bbox_to_anchor=(0.5, -0.40), loc = "lower center")
+    # lgd = ax1.legend(bbox_to_anchor=(0.5, -0.40), loc = "lower center")
     plt.savefig(f"{plotPath}/SystematicDistributionLMP.jpg", dpi=100, bbox_extra_artists=(lgd,), bbox_inches='tight')
+
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    ax2 = ax1.twiny()
+    ax1.hist2d(auc, lmParam, '.', bins=[10,len(distMatch)])
+    ax1.set_xlabel(r"Raw ROC AUC score")
+    ax1.set_ylabel(r"Number of Matched Parameters")
+    lgd = ax1.legend(bbox_to_anchor=(0.5, -0.40), loc = "lower center")
+    ax2.set_xlim(ax1.get_xlim())
+    ax2.set_xticks(new_tick_locations)
+    ax2.set_xticklabels(tick_func(new_tick_locations, aucStandard))
+    ax2.set_xlabel(r"Percent Increase from Standard")
+    plt.savefig(f"{plotPath}/SystematicDistributionLMPhist.jpg", dpi=100, bbox_extra_artists=(lgd,), bbox_inches='tight')
