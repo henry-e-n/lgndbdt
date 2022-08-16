@@ -315,10 +315,12 @@ def run_SDS():
     # lgd = ax1.legend(bbox_to_anchor=(0.5, -0.40), loc = "lower center")
     plt.savefig(f"{plotPath}/SystematicDistributionLMP.jpg", dpi=100, bbox_extra_artists=(lgd,), bbox_inches='tight')
 
+    print(len(distMatch))
+
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
     ax2 = ax1.twiny()
-    ax1.hist2d(auc, lmParam, '.', bins=[10,len(distMatch)])
+    ax1.hist2d(auc, lmParam, '.', bins=(10,len(distMatch)))
     ax1.set_xlabel(r"Raw ROC AUC score")
     ax1.set_ylabel(r"Number of Matched Parameters")
     lgd = ax1.legend(bbox_to_anchor=(0.5, -0.40), loc = "lower center")
