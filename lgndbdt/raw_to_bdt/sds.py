@@ -217,7 +217,7 @@ def main(distribList):
     # ogfpr, ogtpr, ogthresholds    = roc_curve(avseOgLabels, avseOriginal)
     BDTauc = roc_auc_score(Y_test, y_pred)
     
-    return np.round(BDTauc, 5), np.shape(sigs)
+    return np.round(BDTauc, 5), np.shape(sigs), len(distribList)
 
 def run_SDS():
     featureList = distMatch
@@ -230,13 +230,15 @@ def run_SDS():
 
     bdtAUC   = []
     finSize  = []
+    matchParam = []
     bigStart = time()
     for n in tqdm(combos):
-        auc, szF = main(n)
+        auc, szF, lenMatchParam = main(n)
         bdtAUC.append(auc)
         finSize.append(szF[0])
+        matchParam.append(lenMatchParam)
     
-    sysDist = np.stack([bdtAUC, finSize])
+    # sysDist = np.stack([bdtAUC, finSize])
     # np.savetxt("Plots/bdtAUC.csv", bdtAUC)
     # np.savetxt("Plots/finSize.csv", finSize)
     # np.save("Plots/SYSDIST", sysDist)
@@ -244,10 +246,12 @@ def run_SDS():
     bigEnd = time()
     print(f"Total Run Time : {bigEnd - bigStart}")
 
-    data = np.stack([combos, sysDist[0,:], sysDist[1,:]])
-    labelData = data[0, :]
-    auc = data[1,:]
-    finalSize = data[2,:]*2
+    # data = np.stack([combos, sysDist[0,:], sysDist[1,:]])
+    labelData = np.array(combos, dtype=object) #data[0, :]
+    auc = np.array(bdtAUC) #data[1,:]
+    finalSize = np.array(finSize*2) #data[2,:]*2
+    lmParam = np.array(matchParam)
+
 
     maxFS = np.argmax(finalSize)
     maxAUC = np.argmax(auc)
@@ -286,7 +290,7 @@ def run_SDS():
     ax1.plot(auc[maxFS], finalSize[maxFS], 's', color = 'g', label = labelData[maxFS])
     ax1.plot(auc[maxAUC], finalSize[maxAUC], 'o', color='r', label = labelData[maxAUC])
     ax1.set_xlabel(r"Raw ROC AUC score")
-    ax1.set_ylabel(r"Total Number of Events (Sig + Bkg)")
+    ax1.set_ylabel(r"Total Number of Events after Matching")
     lgd = ax1.legend(bbox_to_anchor=(0.5, -0.40), loc = "lower center")
     ax2.set_xlim(ax1.get_xlim())
     ax2.set_xticks(new_tick_locations)
@@ -294,3 +298,20 @@ def run_SDS():
     ax2.set_xlabel(r"Percent Increase from Standard")
     lgd = ax1.legend(bbox_to_anchor=(0.5, -0.40), loc = "lower center")
     plt.savefig(f"{plotPath}/SystematicDistributionHist2d.jpg", dpi=100, bbox_extra_artists=(lgd,), bbox_inches='tight')
+
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    ax2 = ax1.twiny()
+    ax1.plot(auc, lmParam, '.')
+    # ax1.plot(auc[-1], finalSize[-1], '*', color='purple', label = "Standard All Matched")
+    # ax1.plot(auc[maxFS], finalSize[maxFS], 's', color = 'g', label = labelData[maxFS])
+    # ax1.plot(auc[maxAUC], finalSize[maxAUC], 'o', color='r', label = labelData[maxAUC])
+    ax1.set_xlabel(r"Raw ROC AUC score")
+    ax1.set_ylabel(r"Number of Matched Parameters")
+    lgd = ax1.legend(bbox_to_anchor=(0.5, -0.40), loc = "lower center")
+    ax2.set_xlim(ax1.get_xlim())
+    ax2.set_xticks(new_tick_locations)
+    ax2.set_xticklabels(tick_func(new_tick_locations, aucStandard))
+    ax2.set_xlabel(r"Percent Increase from Standard")
+    lgd = ax1.legend(bbox_to_anchor=(0.5, -0.40), loc = "lower center")
+    plt.savefig(f"{plotPath}/SystematicDistributionLMP.jpg", dpi=100, bbox_extra_artists=(lgd,), bbox_inches='tight')
