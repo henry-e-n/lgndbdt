@@ -13,7 +13,7 @@ import json
 terminalCMAP = ['#4B9CD3', '#13294B', '#EF426F', '#00A5AD', '#FFD100', '#C4D600']
 cmapNormal   = LinearSegmentedColormap.from_list("Custom", ["#151515", '#13294B', '#4B9CD3', "#F4E8DD"], N=50)#, '#C8A2C8'
 cmapNormal_r = cmapNormal.reversed("cmapNormal_r")
-cmapDiv      = LinearSegmentedColormap.from_list("Custom", ["#EF426F", '#F4E8DD', '#00A5AD'], N=50)
+cmapDiv      = LinearSegmentedColormap.from_list("Custom", ['#13294B', "#F4E8DD", '#4B9CD3'], N=50) #["#EF426F", '#F4E8DD', '#00A5AD'], N=50)
 
 # cmapNormal = LinearSegmentedColormap.from_list("Custom", ["#151515", '#13294B', '#2F638F', '#4B9CD3', 'A0C2D8', "#F4E8DD", "#DEC5D3", "#C8A2C8", "#B459B4","#A00FA0"], N=50)#, '#C8A2C8'
 # cmapNormal = LinearSegmentedColormap.from_list("Custom", ["#151515","#13294b","#4b9cd3","#f4e8dd","#E4B1CF","#F859D0", "#B30BA2"], 50)
