@@ -3,7 +3,8 @@ import shap
 import lightgbm as lgb
 import numpy as np
 from sklearn.metrics import roc_curve, roc_auc_score
-
+from sklearn.decomposition import PCA
+import itertools
 
 from extraction_utils.config import plotPath, cmapNormal, fname, cmapDiv, cmapNormal_r
 from ML_utils.plot_legacy import summary_legacy
@@ -175,6 +176,19 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
     plt.suptitle("BDT ROC curve", fontsize = 30, fontweight = 15)
     plt.title("BDT performance vs traditional A/E cut on all events", fontsize = 24, pad = 15, fontstyle='italic')
     plt.savefig(f"{plotPath}/ROC3.png",dpi=200, transparent=True)
+    plt.cla()
+    plt.clf()
+    plt.close()
+
+
+def printMVC(pcaMat):
+    plt.imshow(pcaMat, cmap=cmapDiv)
+    plt.suptitle("Multi Variate PCA", fontsize = 30, fontweight = 15)
+    plt.title("Read as [x y]", fontsize = 24, pad = 15, fontstyle='italic')
+    plt.xticks(np.arange(len(fname)), fname, rotation=60)
+    plt.yticks(np.arange(len(fname)), fname)
+    plt.colorbar()
+    plt.savefig(f"{plotPath}/mvc.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
     plt.cla()
     plt.clf()
     plt.close()

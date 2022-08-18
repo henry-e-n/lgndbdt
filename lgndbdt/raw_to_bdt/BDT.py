@@ -20,6 +20,7 @@ from ML_utils.BDTTrain      import *
 from extraction_utils.CleanData     import *
 from ML_utils.plot_legacy   import summary_legacy
 from ML_utils.Visualization import *
+from ML_utils.MultiVarCorr import multiVarCorr
 
 print("Finished Import")
 
@@ -193,7 +194,7 @@ def run_BDT():
 
     ######################################
 
-    for i in tqdm(range(10), 
+    for i in tqdm(range(11), 
                     desc   ="Running Visualization................", 
                     colour = terminalCMAP[1]):
         if i == 0:
@@ -227,8 +228,11 @@ def run_BDT():
             shap_values = explainer.shap_values(sample)
             # Returns a list of matrices (# outputs, # samples x, # features)
             BDTSummary(shap_values, sample)
-
         elif i == 2:
+            shap_val = np.array(shap_values)[0]
+            pcaMat = multiVarCorr(shap_val, 2)
+            printMVC(pcaMat)
+        elif i == 3:
             # Covariance Matrices
             # Define Outperforming events
             bdt_thresh = 0.55
@@ -250,7 +254,7 @@ def run_BDT():
             covSIG = np.corrcoef(shap_sigArr.T)
             plot_covariance(covSIG, "Signal Covariance", covName)
 
-        elif i == 3:
+        elif i == 4:
             sample_bkg = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
             shap_bkg = explainer.shap_values(X_test[sample_bkg,:len(fname)])
             outBkgBDT = y_pred[sample_bkg]
@@ -261,7 +265,7 @@ def run_BDT():
             covBKG = np.corrcoef(shap_bkgArr.T)
             plot_covariance(covBKG, "Background Covariance", covName)
 
-        elif i == 4:
+        elif i == 5:
             # sigsave = sigRaw
             # bkgsave = bkgRaw
 
@@ -277,13 +281,13 @@ def run_BDT():
             evnew = evnew[:10000]
             shap_valuesDist = explainer.shap_values(evnew)
             make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift10", "/AvsE_c")
-        elif i == 5:
-            make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift", "/AvsE_c")
         elif i == 6:
-            make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift50", "/AvsE_c"),
+            make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift", "/AvsE_c")
         elif i == 7:
-            make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift", "/AvsE_c", point=True),
+            make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift50", "/AvsE_c"),
         elif i == 8:
+            make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift", "/AvsE_c", point=True),
+        elif i == 9:
             index = 0
             ROIdata = evnew #X_test[sample_selector]
 
@@ -291,9 +295,9 @@ def run_BDT():
             sample=ROIdata[index,:len(fname)].reshape(1,-1)
             shap_values = explainer.shap_values(sample)
             plot_SHAP_force(explainer, shap_values[1][0])
-        elif i == 9:
+        elif i == 10:
             plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict)
-    return shap_sigArr, shap_bkgArr
+    return
 
 if __name__ == "__main__":
     run_BDT()

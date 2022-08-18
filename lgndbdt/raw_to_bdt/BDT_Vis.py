@@ -20,6 +20,7 @@ from ML_utils.BDTTrain      import *
 from extraction_utils.CleanData     import *
 from ML_utils.plot_legacy   import summary_legacy
 from ML_utils.Visualization import *
+from ML_utils.MultiVarCorr import multiVarCorr
 
 print("Finished Import")
 
@@ -96,7 +97,7 @@ def run_BDT():
 
     ######################################
 
-    for i in tqdm(range(6), 
+    for i in tqdm(range(7), 
                     desc   ="Running Visualization................", 
                     colour = terminalCMAP[1]):
         if i == 0:
@@ -180,7 +181,12 @@ def run_BDT():
             plot_SHAP_force(explainer, shap_values[1][0])
         elif i == 5:
             plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict)
-    return shap_valuesFull
+        elif i == 6:
+            shap_val = np.array(shap_valuesFull)[0]
+            pcaMat = multiVarCorr(shap_val, 2)
+            printMVC(pcaMat)
+
+    return
 
 if __name__ == "__main__":
     run_BDT()
