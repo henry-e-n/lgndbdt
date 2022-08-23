@@ -1,5 +1,6 @@
 from extraction_utils.config import *
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 import itertools
 
 
@@ -20,7 +21,7 @@ def singVarCorr(shap_values, nComp):
         pcaMatrix[subset[0], subset[1]] = second
     return pcaMatrix
 
-def biVarCorr(shap_values, fname, remove=" ", nComp = 2):
+def biVarCorr(shap_values, fname, remove=" ", standard=False, nComp = 2):
     events = shap_values.shape[0]
     num = shap_values.shape[1]
 
@@ -48,12 +49,20 @@ def biVarCorr(shap_values, fname, remove=" ", nComp = 2):
             pcaRes = pca.explained_variance_ratio_
         return pcaRes
 
+    if standard:
+        print(addedSHAP)
+        scaler = StandardScaler()
+        scaler.fit(addedSHAP)
+        print(f"MEAN {scaler.mean_}")
+        addedSHAP = scaler.transform(addedSHAP)
+        print(f"StandardScaler")
+        print(addedSHAP)
+
     if remove != " ":
         cut = np.where(np.char.find(np.array(namesArr, dtype=str), remove)>0)[0]
-        print(cut, addedSHAP.shape)
         addedSHAP = np.delete(addedSHAP, cut, axis = 1)
         namesArr = np.delete(namesArr, cut)
-        print(cut, addedSHAP.shape)
+        print(f"Made Cut - new shape {addedSHAP.shape}")
 
     pcaRes = runPCA()
     return pcaRes, namesArr
