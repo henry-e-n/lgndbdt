@@ -20,7 +20,8 @@ from ML_utils.BDTTrain      import *
 from extraction_utils.CleanData     import *
 from ML_utils.plot_legacy   import summary_legacy
 from ML_utils.Visualization import *
-from ML_utils.MultiVarCorr import multiVarCorr
+from ML_utils.MultiVarCorr import singVarCorr, multiVarCorr
+from lgndbdt.ML_utils.MultiVarCorr import biVarCorr
 
 print("Finished Import")
 
@@ -183,8 +184,10 @@ def run_BDT():
             plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict)
         elif i == 6:
             shap_val = np.array(shap_valuesFull)[0]
-            pcaMat = multiVarCorr(shap_val, 2)
-            printMVC(pcaMat)
+            # pcaMat = singVarCorr(shap_val, 2)
+            # printMVC(pcaMat)
+            pcaRes, pcaNames = biVarCorr(shap_val, fname)
+
 
     return
 

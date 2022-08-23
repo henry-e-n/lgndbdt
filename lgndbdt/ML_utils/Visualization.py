@@ -192,3 +192,52 @@ def printMVC(pcaMat):
     plt.cla()
     plt.clf()
     plt.close()
+
+def printBVC(pcaVect, pcaNames):
+    plt.barh(np.arange(len(pcaVect)), pcaVect)
+    plt.suptitle("Bivariate PCA - Log Scale", fontsize = 30, fontweight = 15)
+    # plt.title("Log Scale", fontsize = 24, pad = 15, fontstyle='italic')
+    plt.yticks(np.arange(len(pcaNames)), pcaNames) #, rotation=90
+    plt.semilogx()
+    plt.savefig(f"{plotPath}/bvc.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+    plt.cla()
+    plt.clf()
+    plt.close()
+
+    plt.pie(pcaVect, labels=pcaNames, autopct='%1.1f%%')
+    plt.suptitle("Bivariate PCA", fontsize = 30, fontweight = 15)
+    # plt.title("Raw Scale", fontsize = 24, pad = 15, fontstyle='italic')
+    plt.savefig(f"{plotPath}/bvcPIE.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+    plt.cla()
+    plt.clf()
+    plt.close()
+
+    # plt.pie(np.abs(np.min(np.log10(pcaVect)))-np.abs(np.log10(pcaVect)), labels=pcaNames, autopct='%1.1f%%')
+    # plt.suptitle("Bivariate PCA - Log Scale", fontsize = 30, fontweight = 15)
+    # # plt.title("Log Scale", fontsize = 24, pad = 15, fontstyle='italic')
+    # plt.savefig(f"{plotPath}/bvcPIElog.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+    # plt.cla()
+    # plt.clf()
+    # plt.close()
+
+    # cut = np.where(np.char.find(np.array(pcaNames, dtype=str), "AvsE")>0)[0]
+    # pcaVect = np.delete(pcaVect, cut)
+    # pcaNames = np.delete(pcaNames, cut)
+    
+    # plt.pie(np.abs(np.min(np.log10(pcaVect)))-np.abs(np.log10(pcaVect)), labels=pcaNames, autopct='%1.1f%%')
+    # plt.suptitle("Bivariate PCA - AvsE cut - Log", fontsize = 30, fontweight = 15)
+    # # plt.title("Log Scale", fontsize = 24, pad = 15, fontstyle='italic')
+    # plt.savefig(f"{plotPath}/bvcPIElogCut.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+    # plt.cla()
+    # plt.clf()
+    # plt.close()
+
+    # plt.pie(pcaVect, labels=pcaNames, autopct='%1.1f%%')
+    # plt.suptitle("Bivariate PCA - AvsE cut - Raw", fontsize = 30, fontweight = 15)
+    # # plt.title("Raw Scale", fontsize = 24, pad = 15, fontstyle='italic')
+    # plt.savefig(f"{plotPath}/bvcPIErawCut.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+    # plt.cla()
+    # plt.clf()
+    # plt.close()
+
+
