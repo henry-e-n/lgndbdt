@@ -197,7 +197,7 @@ def printBVC(pcaVect, pcaNames):
     plt.figure(figsize=(12,14))
     barColors = cmapNormal_r(pcaVect+0.3)
     plt.barh(np.arange(len(pcaVect)), pcaVect, color=barColors)
-    plt.suptitle("Bivariate PCA - Log Scale", fontsize = 30, fontweight = 15)
+    plt.suptitle("PCA - Log Scale", fontsize = 30, fontweight = 15)
     # plt.title("Log Scale", fontsize = 24, pad = 15, fontstyle='italic')
     plt.yticks(np.arange(len(pcaNames)), pcaNames) #, rotation=90
     plt.semilogx()
@@ -214,7 +214,7 @@ def printBVC(pcaVect, pcaNames):
     Piecolors = cmapNormal_r(pcaVectPie+0.3)
 
     plt.pie(pcaVectPie, labels=pcaNamesPie, autopct='%1.1f%%', colors=Piecolors)
-    plt.suptitle("Bivariate PCA", fontsize = 30, fontweight = 15)
+    plt.suptitle("PCA", fontsize = 30, fontweight = 15)
     # plt.title("Raw Scale", fontsize = 24, pad = 15, fontstyle='italic')
     plt.savefig(f"{plotPath}/bvcPIE.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
     plt.cla()

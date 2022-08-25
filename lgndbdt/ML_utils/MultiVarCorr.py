@@ -32,17 +32,17 @@ def biVarCorr(shap_values, fname, remove=" ", standard=False, nComp = 2):
 
     numCombos = len(combos)
     addedSHAP = np.zeros((events, numCombos))
-    namesArr = np.zeros(numCombos, dtype=object)
+    namesArr = np.zeros(numCombos, dtype=str)
     for subset in range(numCombos):
         scombo = combos[subset]
-        nameList = []
+        nameList = " "#np.array([], dtype=str)
         for i in range(nComp):
             shap0 = shap_values[:, scombo[i]]
             # shap1 = shap_values[:, scombo[1]]
             addedSHAP[:, subset] = addedSHAP[:, subset] + shap0 
-            nameList.append(f"{fname[scombo[i]]} ")
-        namesArr[subset] = nameList#namesArr[subset].append(f"{fname[scombo[i]]}, ") # {fname[scombo[1]]}] "
-    # print(addedSHAP.shape)
+            nameList = nameList + f"{fname[scombo[i]]} "
+        namesArr[subset] = nameList #namesArr[subset].append(f"{fname[scombo[i]]}, ") # {fname[scombo[1]]}] "
+    print(addedSHAP.shape)
 
     def runPCA():
         pcaRes = np.zeros(numCombos)
@@ -62,10 +62,11 @@ def biVarCorr(shap_values, fname, remove=" ", standard=False, nComp = 2):
         # print(addedSHAP)
 
     if remove != " ":
-        cut = np.where(np.char.find(np.array(namesArr, dtype=str), remove)>0)[0]
+        cut = np.where(np.char.find(namesArr, remove)>0)[0]
+        print(cut)
         addedSHAP = np.delete(addedSHAP, cut, axis = 1)
         namesArr = np.delete(namesArr, cut)
         print(f"Made Cut - new shape {addedSHAP.shape}")
-
+    print(namesArr)
     pcaRes = runPCA()
     return pcaRes, namesArr
