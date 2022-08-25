@@ -35,10 +35,13 @@ def biVarCorr(shap_values, fname, remove=" ", standard=False, nComp = 2):
     namesArr = np.zeros(numCombos, dtype=object)
     for subset in range(numCombos):
         scombo = combos[subset]
-        shap0 = shap_values[:, scombo[0]]
-        shap1 = shap_values[:, scombo[1]]
-        addedSHAP[:, subset] = shap0 + shap1
-        namesArr[subset] = f"[{fname[scombo[0]]}, {fname[scombo[1]]}] "
+        nameList = []
+        for i in range(nComp):
+            shap0 = shap_values[:, scombo[i]]
+            # shap1 = shap_values[:, scombo[1]]
+            addedSHAP[:, subset] = addedSHAP[:, subset] + shap0 
+            nameList.append(f"{fname[scombo[i]]} ")
+        namesArr[subset] = nameList#namesArr[subset].append(f"{fname[scombo[i]]}, ") # {fname[scombo[1]]}] "
     # print(addedSHAP.shape)
 
     def runPCA():
@@ -50,13 +53,13 @@ def biVarCorr(shap_values, fname, remove=" ", standard=False, nComp = 2):
         return pcaRes
 
     if standard:
-        print(addedSHAP)
+        # print(addedSHAP)
         scaler = StandardScaler()
         scaler.fit(addedSHAP)
-        print(f"MEAN {scaler.mean_}")
+        # print(f"MEAN {scaler.mean_}")
         addedSHAP = scaler.transform(addedSHAP)
-        print(f"StandardScaler")
-        print(addedSHAP)
+        # print(f"StandardScaler")
+        # print(addedSHAP)
 
     if remove != " ":
         cut = np.where(np.char.find(np.array(namesArr, dtype=str), remove)>0)[0]

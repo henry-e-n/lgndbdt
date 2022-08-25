@@ -20,7 +20,7 @@ from ML_utils.BDTTrain      import *
 from extraction_utils.CleanData     import *
 from ML_utils.plot_legacy   import summary_legacy
 from ML_utils.Visualization import *
-from ML_utils.MultiVarCorr import multiVarCorr
+from ML_utils.MultiVarCorr import *
 
 print("Finished Import")
 
@@ -230,8 +230,10 @@ def run_BDT():
             BDTSummary(shap_values, sample)
         elif i == 2:
             shap_val = np.array(shap_values)[0]
-            pcaMat = multiVarCorr(shap_val, 2)
-            printMVC(pcaMat)
+            pcaRes, pcaNames = biVarCorr(shap_val, fname)
+            printBVC(pcaRes, pcaNames)
+            # pcaMat = multiVarCorr(shap_val, 2)
+            # printMVC(pcaMat)
         elif i == 3:
             # Covariance Matrices
             # Define Outperforming events

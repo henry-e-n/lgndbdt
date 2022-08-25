@@ -194,6 +194,7 @@ def printMVC(pcaMat):
     plt.close()
 
 def printBVC(pcaVect, pcaNames):
+    plt.figure(figsize=(12,14))
     plt.barh(np.arange(len(pcaVect)), pcaVect)
     plt.suptitle("Bivariate PCA - Log Scale", fontsize = 30, fontweight = 15)
     # plt.title("Log Scale", fontsize = 24, pad = 15, fontstyle='italic')
