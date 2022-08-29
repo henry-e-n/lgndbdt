@@ -208,3 +208,17 @@ def pullFiles(detName, datapath):
     except FileNotFoundError:
         print("FNF")
         return
+
+
+
+
+#################################
+# General lh5 code
+#################################
+import h5py
+def openGroup(group):
+    for key in group.keys():
+        print(group[key])
+        if type(group[key])==h5py._hl.group.Group:
+            if len(group[key].keys())>0:
+                openGroup(group[key])
