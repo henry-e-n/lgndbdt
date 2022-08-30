@@ -216,9 +216,22 @@ def pullFiles(detName, datapath):
 # General lh5 code
 #################################
 import h5py
-def openGroup(group):
+
+def openGroup(group, kList):
     for key in group.keys():
-        print(group[key])
+        # print(f"{group.name}/{key}")
+        kList.append(f"{group.name}/{key}")
         if type(group[key])==h5py._hl.group.Group:
             if len(group[key].keys())>0:
-                openGroup(group[key])
+                kList = openGroup(group[key], kList)
+    return kList                
+
+def PEG(filename, relativePathToFolder):
+    filepath = checkPath(filename, relativePathToFolder)
+    wfd = h5.File(f"{filepath}", "r+")
+    
+    keys = []
+    keys = openGroup(wfd, keys)
+    print(keys)
+    cut = np.where(np.char.find(np.array(keys, dtype=str), "valu")>0)
+    print(wfd[keys[cut[0][0]]])
