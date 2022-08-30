@@ -94,7 +94,7 @@ def paramExtract(filename, relativePathToFolder = ""):
     return wfd, raw, paramArr
 """
 
-def paramExtract(filename, relativePathToFolder = "", og = "raw"):
+def PEG(filename, relativePathToFolder = "", og = "raw"):
     """
     Function: Extracts parameter arrays from an lh5 file
 
@@ -226,13 +226,13 @@ def openGroup(group, kList):
                 kList = openGroup(group[key], kList)
     return kList                
 
-def PEG(filename, relativePathToFolder, og="raw"):
+def paramExtract(filename, relativePathToFolder, og="raw"):
     filepath = checkPath(filename, relativePathToFolder)
     wfd = h5.File(f"{filepath}", "r+")
     keys = []
     keys = openGroup(wfd, keys)
 
-    targetKeys = ["dt", "index", "tp_0", "values", "t0", "dt", "dc"]
+    targetKeys = ["E", "index", "tp_0", "values", "t0", "m/dt", "dc"]
     paramArr = [] # np.empty(len(targetKeys), dtype = object)
     for target in targetKeys:
         cut = np.where(np.char.find(np.array(keys, dtype=str), target)>0)

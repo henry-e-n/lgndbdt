@@ -36,16 +36,15 @@ print("Finished Import")
 # > cd LegendMachineLearning/
 # > python RunAnalysis.py
 # >>>>>>>>>>>>>>>>>>>>>
-def cleanData(paramArr):
-    [E, dt4, index, tp0, dt8, t0, vals] = paramArr
+def cleanData(keys, paramArr):
+    pa = dict(zip(keys, paramArr))
     nans = []
-    for i in range(E.shape[0]):
-        if np.isnan(tp0[i]):
+    for i in range(pa["m/dt"].shape[0]):
+        if np.isnan(pa["tp_0"][i]):
             nans.append(i)   
     for n in range(len(paramArr)):
         paramArr[n] = np.delete(paramArr[n], nans, 0)
-    [E, dt4, index, tp0, dt8, t0, vals] = paramArr
-    print(f"Removed NANs, new shape is {E.shape}")
+    print(f"Removed NANs, new shape is {paramArr[n].shape}")
     return paramArr
 
 def pullFiles(detName, datapath):
@@ -120,19 +119,20 @@ def param_Extract(argumentList, choosePeak = "DEP"):
     #####################################################################
 
     # if cData:
-    #     paramArr         = cleanData(paramArr)
+    paramArr         = cleanData(keys, paramArr)
     if numWave == -1:
         print(paramArr[0].shape)
         numWave = paramArr[0].shape[0]
     
-    [E, dt4, index, tp0, dt8, t0, vals, dc_labels] = paramArr
+    # [E, dt4, index, pa["tp_0"], pa["m/dt"], pa["t0"], pa["values"], dc_labels] = paramArr
+    pa = dict(zip(keys, paramArr))
 
     #####################################################################
     ### Times Array
     #####################################################################
     if searchFile(f"timesArr_{choosePeak}.npy", lpData) == None:
         print(f"Creating times array, please wait...")
-        cTimes([dt8, t0, vals], choosePeak, numWave)
+        cTimes([pa["m/dt"], pa["t0"], pa["values"]], choosePeak, numWave)
     ts = np.load(searchFile(f'timesArr_{choosePeak}.npy', lpData))
     ts = ts[:numWave, :]
     print(f"{choosePeak} file extracted - Post Clean Shape: {ts.shape}")
@@ -141,7 +141,7 @@ def param_Extract(argumentList, choosePeak = "DEP"):
     ### AvsE
     #####################################################################
 
-    maxA, Eest = AvsE(ts, vals, dt8, plots = [], numWF = numWave)
+    maxA, Eest = AvsE(ts, pa["values"], pa["m/dt"], plots = [], numWF = numWave)
 
     # if saveFiles == True:
         # np.save(f"DataFiles/AnalysisIntermediate/{choosePeak}/maxA.npy", maxA)
@@ -155,7 +155,7 @@ def param_Extract(argumentList, choosePeak = "DEP"):
     #               desc   = "Running DCR...................",
     #               ascii  = '░▒█', 
     #               colour = terminalCMAP[1]):
-    #     deltas[i]        = findSlope(vals[i, :], dt8[i])
+    #     deltas[i]        = findSlope(pa["values"][i, :], pa["m/dt"][i])
     # if saveFiles == True:
         # np.save(f"{lpData}/DataFiles/AnalysisIntermediate/{choosePeak}/DCRSlopesUncorrected.npy", deltas)    
     
@@ -171,17 +171,17 @@ def param_Extract(argumentList, choosePeak = "DEP"):
     #     dp0Num           = numWave
     
     if p0Param == 0:
-        wfIn, wfCorr     = getP0(vals, 0, numWave)
+        wfIn, wfCorr     = getP0(pa["values"], 0, numWave)
     elif p0Param == 1:
         popt             = tuple([2896.5810301207716, 89.33188128281084, 0.01])
-        wfIn, wfCorr     = getP0(vals, popt, numWave)
+        wfIn, wfCorr     = getP0(pa["values"], popt, numWave)
     # print(f"P0 fitted Parameters..........:     {popt}")
 
     deltasCorr           = np.zeros(numWave)
     for i in tqdm(range(numWave), 
                   desc   ="Running DCR-P0................", 
                   colour = terminalCMAP[1]):
-        deltasCorr[i]    = findSlopeCorr(wfIn[i, :], wfCorr[i, :], dt8[i])
+        deltasCorr[i]    = findSlopeCorr(wfIn[i, :], wfCorr[i, :], pa["m/dt"][i])
     # if saveFiles == True:
         # np.save(f"{lpData}/DataFiles/AnalysisIntermediate/{choosePeak}/DCRSlopesCorrected.npy", deltasCorr)
 
@@ -195,7 +195,7 @@ def param_Extract(argumentList, choosePeak = "DEP"):
     ### Energy - Redundent from Eest Line 131
     #####################################################################
 
-    energyArr            = trapENS(ts[:,:], wfCorr[:,:], dt8[:])
+    energyArr            = trapENS(ts[:,:], wfCorr[:,:], pa["m/dt"][:])
     energyArr            = np.amax(energyArr, 1)
     if saveFiles == True:
         np.save(f"{lpData}/DataFiles/AnalysisIntermediate/{choosePeak}/EnergyEstimation{energyArr.shape[0]}.npy", energyArr)
@@ -209,15 +209,15 @@ def param_Extract(argumentList, choosePeak = "DEP"):
     for i in tqdm(range(0,numWave), 
                   desc   = "Calculating Noise.............", 
                   colour = terminalCMAP[0]):
-        window           = blWindow(tp0[i], dt8[i])
+        window           = blWindow(pa["tp_0"][i], pa["m/dt"][i])
         popt             = blLinFit(window, ts[i], wfIn[i])
         noise[i]         = findNoise(linFit, popt, window, ts[i], wfIn[i])
 
-        windowTail       = tailWindow(tp0[i], dt8[i])
+        windowTail       = tailWindow(pa["tp_0"][i], pa["m/dt"][i])
         windowTail[0]    = windowTail[0] + 250
         poptTail         = blLinFit(windowTail, ts[i], wfCorr[i])
         noiseTail[i]     = findNoise(linFit, poptTail, windowTail, ts[i], wfCorr[i])
-        # visBL2(windowTail, tp0[i], linFit, poptTail, dt8[i], ts[i], wfCorr[i], i/numWave)
+        # visBL2(windowTail, pa["tp_0"][i], linFit, poptTail, pa["m/dt"][i], ts[i], wfCorr[i], i/numWave)
 
     # if saveFiles == True:
         # np.save(f"{lpData}/DataFiles/AnalysisIntermediate/{choosePeak}/NoiseEst.npy", noise)
@@ -226,8 +226,8 @@ def param_Extract(argumentList, choosePeak = "DEP"):
     ### TDrift
     #####################################################################
 
-    # tdrift, tdrift50, tdrift10 = getTDrift(vals[:numWave, :], tp0[:numWave], dt8[:numWave])
-    tdrift, tdrift50, tdrift10 = getTDriftInterpolate(ts[:numWave, :], vals[:numWave, :], tp0[:numWave], dt8[:numWave])
+    # tdrift, tdrift50, tdrift10 = getTDrift(pa["values"][:numWave, :], pa["tp_0"][:numWave], pa["m/dt"][:numWave])
+    tdrift, tdrift50, tdrift10 = getTDriftInterpolate(ts[:numWave, :], pa["values"][:numWave, :], pa["tp_0"][:numWave], pa["m/dt"][:numWave])
 
     # meanTDrift           = np.mean(tdrift)
     # meanTDrift50         = np.mean(tdrift50)
@@ -239,19 +239,19 @@ def param_Extract(argumentList, choosePeak = "DEP"):
     standardAnalysisNames = np.array(["maxA", "deltasCorrected", "LQ80", "noise", "noiseTail", "tdrift", "tdrift50", "tdrift10", "TrapEnergy", "AvsE_c"])
     if saveFiles == True:
         appNewh5(f"{detName}_Clean.lh5", choosePeak, standardAnalysisArray, standardAnalysisNames, ts, wfCorr, lpData)
-        printAllPlots(choosePeak, paramArr, ts, standardAnalysisArray, wfIn, wfCorr)
+        printAllPlots(choosePeak, pa, ts, standardAnalysisArray, wfIn, wfCorr)
         
     return standardAnalysisArray
 
-def printAllPlots(peakName, params, times, analysisArr, wfIn, wfCorr):
+def printAllPlots(peakName, pa, times, analysisArr, wfIn, wfCorr):
     print("Exporting all Figures to AnalysisImages directory...")
-    [E, dt4, index, tp0, dt8, t0, vals, dc_labels] = params
+
     [maxA, deltasCorr, lqVal, noise, noiseTail, tdrift, tdrift50, tdrift10, energyArr, AvsE] = analysisArr
     # Waveform
     plt.figure()
     # plt.close()
 
-    plt.plot(times[0], vals[0,:], color=terminalCMAP[1])
+    plt.plot(times[0], pa["values"][0,:], color=terminalCMAP[1])
     plt.xlabel("Time")
     plt.title(f"Sample Waveform")
     # plt.show()
@@ -272,7 +272,7 @@ def printAllPlots(peakName, params, times, analysisArr, wfIn, wfCorr):
     plt.figure()
 
     # DCR
-    visualizeDCR(times[1], wfCorr[1, :], dt8[1], find97(wfIn[1]))
+    visualizeDCR(times[1], wfCorr[1, :], pa["m/dt"][1], find97(wfIn[1]))
     plt.xlabel("Time")
     plt.title(f"Waveform with DCR visualization")
     # plt.show()
@@ -289,7 +289,7 @@ def printAllPlots(peakName, params, times, analysisArr, wfIn, wfCorr):
     plt.figure()
 
     # AvsE
-    plt.plot(E[:len(maxA)], maxA,'.', color = terminalCMAP[1])
+    plt.plot(pa["E"][:len(maxA)], maxA,'.', color = terminalCMAP[1])
     plt.xlabel("Energy (MeV)")
     plt.ylabel("Max Current (A)")
     plt.title(f"A vs E")
@@ -329,19 +329,19 @@ def printAllPlots(peakName, params, times, analysisArr, wfIn, wfCorr):
     plt.figure()
 
     # Tdrift
-    plt.plot(times[0], vals[0], color = terminalCMAP[0])
-    tdriftInd   = int(tp0[0]/dt8[0] + tdrift[0]/dt8[0])
-    tdriftInd50 = int(tp0[0]/dt8[0] + tdrift50[0]/dt8[0])
-    tdriftInd10 = int(tp0[0]/dt8[0] + tdrift10[0]/dt8[0])
-    plt.plot(times[0, tdriftInd], vals[0, tdriftInd], '.', color = terminalCMAP[2])
-    plt.plot(times[0, tdriftInd50], vals[0, tdriftInd50], '.', color = terminalCMAP[2])
-    plt.plot(times[0, tdriftInd10], vals[0, tdriftInd10], '.', color = terminalCMAP[2])
+    plt.plot(times[0], pa["values"][0], color = terminalCMAP[0])
+    tdriftInd   = int(pa["tp_0"][0]/pa["m/dt"][0] + tdrift[0]/pa["m/dt"][0])
+    tdriftInd50 = int(pa["tp_0"][0]/pa["m/dt"][0] + tdrift50[0]/pa["m/dt"][0])
+    tdriftInd10 = int(pa["tp_0"][0]/pa["m/dt"][0] + tdrift10[0]/pa["m/dt"][0])
+    plt.plot(times[0, tdriftInd], pa["values"][0, tdriftInd], '.', color = terminalCMAP[2])
+    plt.plot(times[0, tdriftInd50], pa["values"][0, tdriftInd50], '.', color = terminalCMAP[2])
+    plt.plot(times[0, tdriftInd10], pa["values"][0, tdriftInd10], '.', color = terminalCMAP[2])
     plt.close()    
     plt.figure()
 
 
     # DCR
-    visualizeDCR(times[0], wfCorr[0, :], dt8[0], find97(wfIn[0]))
+    visualizeDCR(times[0], wfCorr[0, :], pa["m/dt"][0], find97(wfIn[0]))
 
     plt.scatter(times[0, tdriftInd], wfCorr[0, tdriftInd], marker="s", color = terminalCMAP[0], s=15, linewidths = 10, label="Drift Time")
     plt.scatter(times[0, tdriftInd50], wfCorr[0, tdriftInd50], marker="o", color = terminalCMAP[0], s=15,  linewidths = 10, label="50% Drift Time")
