@@ -226,12 +226,23 @@ def openGroup(group, kList):
                 kList = openGroup(group[key], kList)
     return kList                
 
-def PEG(filename, relativePathToFolder):
+def PEG(filename, relativePathToFolder, og="raw"):
     filepath = checkPath(filename, relativePathToFolder)
     wfd = h5.File(f"{filepath}", "r+")
-    
     keys = []
     keys = openGroup(wfd, keys)
-    print(keys)
-    cut = np.where(np.char.find(np.array(keys, dtype=str), "valu")>0)
-    print(wfd[keys[cut[0][0]]])
+
+    targetKeys = ["dt", "index", "tp_0", "values", "t0", "dt", "dc"]
+    paramArr = [] # np.empty(len(targetKeys), dtype = object)
+    for target in targetKeys:
+        cut = np.where(np.char.find(np.array(keys, dtype=str), target)>0)
+        # print(wfd[keys[cut[0][0]]][:])
+        paramArr.append(wfd[keys[cut[0][0]]])
+    
+    return wfd, targetKeys, paramArr
+    # paramArr = [raw["A/E"], raw["dt"],
+    #                 raw["index"], raw["tp_0"],
+    #                 raw["waveform/dt"], 
+    #                 raw["waveform/t0"],
+    #                 raw["waveform/values"]]
+

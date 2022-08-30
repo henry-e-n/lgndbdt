@@ -102,16 +102,18 @@ def param_Extract(argumentList, choosePeak = "DEP"):
     #####################################################################
     ### Data Import and Extraction
     #####################################################################
-    try:
-        filePaths            = pullFiles(f"{detName}_Clean.lh5", lpData)
-        print(filePaths)
-        # file, raw, paramArr  = paramExtract(f"{detName}_Clean.lh5", filePaths[f"{choosePeak}"], "clean")
-        paramArr             = postCleanSelect(detName, choosePeak)
-    except FileNotFoundError:
+    # try:
+    #     filePaths            = pullFiles(f"{detName}_Clean.lh5", lpData)
+    #     print(filePaths)
+    #     # file, raw, paramArr  = paramExtract(f"{detName}_Clean.lh5", filePaths[f"{choosePeak}"], "clean")
+    #     paramArr             = postCleanSelect(detName, choosePeak)
+    # except FileNotFoundError:
 
-        runClean(detName, choosePeak)
-        filePaths            = pullFiles(f"{detName}_Clean.lh5", lpData)
-        file, raw, paramArr  = paramExtract(f"{detName}_Clean.lh5", filePaths[f"{choosePeak}"])
+    #     runClean(detName, choosePeak)
+    #     filePaths            = pullFiles(f"{detName}_Clean.lh5", lpData)
+    #     file, raw, paramArr  = paramExtract(f"{detName}_Clean.lh5", filePaths[f"{choosePeak}"])
+    filePaths            = pullFiles(f"{detName}_Clean.lh5", lpData)
+    file, keys, paramArr  = paramExtract(f"{detName}_Clean.lh5", filePaths[f"{choosePeak}"])
 
     #####################################################################
     ### Clean Data if Specified
