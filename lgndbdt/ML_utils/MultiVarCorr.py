@@ -22,15 +22,16 @@ def singVarCorr(shap_values, nComp):
         pcaMatrix[subset[0], subset[1]] = second
     return pcaMatrix
 
-def biVarCorr(shap_values, fname, remove=" ", standard=False, nComp = 2):
+def biVarCorr(shap_values, fname, remove=" ", standard=True, nComp = 2, singVar=False):
     events = shap_values.shape[0]
     num = shap_values.shape[1]
 
     combos = []
-    for L in range(1,nComp+1):
-        print(L)
+    for L in range(nComp,nComp+1):
         for subset in itertools.combinations(np.arange(num), L):
             combos.append(subset)
+    if singVar != False:
+        combos.append([singVar])
     combos = np.array(combos, dtype=object)
 
     numCombos = len(combos)
@@ -38,7 +39,6 @@ def biVarCorr(shap_values, fname, remove=" ", standard=False, nComp = 2):
     namesArr = np.zeros(numCombos, dtype=object)
     for subset in range(numCombos):
         scombo = combos[subset]
-        print(len(scombo))
         nameList = ""#np.array([], dtype=str)
         for i in range(len(scombo)):#nComp):
             shap0 = shap_values[:, scombo[i]]
@@ -47,14 +47,21 @@ def biVarCorr(shap_values, fname, remove=" ", standard=False, nComp = 2):
             nameList = nameList + f"{fname[scombo[i]]} "
         namesArr[subset] = nameList #namesArr[subset].append(f"{fname[scombo[i]]}, ") # {fname[scombo[1]]}] "
 
-    def runPCA():
+    def runPCA(shapMat):
         pcaRes = np.zeros(numCombos)
         for subset in range(numCombos):
             pca = PCA()
-            pca.fit(addedSHAP)
+            pca.fit(shapMat)
             pcaRes = pca.explained_variance_ratio_
         return pcaRes
 
+    if remove != " ":
+        for r in range(len(remove)):
+            cut = np.where(np.char.find(np.array(namesArr, dtype=str), remove[r])>0)[0]
+            addedSHAP = np.delete(addedSHAP, cut, axis = 1)
+            namesArr = np.delete(namesArr, cut)
+            print(f"Made Cut - new shape {addedSHAP.shape}")
+    
     if standard:
         # print(addedSHAP)
         scaler = StandardScaler()
@@ -63,11 +70,7 @@ def biVarCorr(shap_values, fname, remove=" ", standard=False, nComp = 2):
         addedSHAP = scaler.transform(addedSHAP)
         # print(f"StandardScaler")
         # print(addedSHAP)
-
-    if remove != " ":
-        cut = np.where(np.char.find(np.array(namesArr, dtype=str), remove)>0)[0]
-        addedSHAP = np.delete(addedSHAP, cut, axis = 1)
-        namesArr = np.delete(namesArr, cut)
-        print(f"Made Cut - new shape {addedSHAP.shape}")
-    pcaRes = runPCA()
+    
+    print(addedSHAP)
+    pcaRes = runPCA(addedSHAP)
     return pcaRes, namesArr
