@@ -27,8 +27,10 @@ def biVarCorr(shap_values, fname, remove=" ", standard=False, nComp = 2):
     num = shap_values.shape[1]
 
     combos = []
-    for subset in itertools.combinations(np.arange(num), nComp):
-        combos.append(subset)
+    for L in range(1,nComp+1):
+        print(L)
+        for subset in itertools.combinations(np.arange(num), L):
+            combos.append(subset)
     combos = np.array(combos, dtype=object)
 
     numCombos = len(combos)
@@ -36,8 +38,9 @@ def biVarCorr(shap_values, fname, remove=" ", standard=False, nComp = 2):
     namesArr = np.zeros(numCombos, dtype=object)
     for subset in range(numCombos):
         scombo = combos[subset]
+        print(len(scombo))
         nameList = ""#np.array([], dtype=str)
-        for i in range(nComp):
+        for i in range(len(scombo)):#nComp):
             shap0 = shap_values[:, scombo[i]]
             # shap1 = shap_values[:, scombo[1]]
             addedSHAP[:, subset] = addedSHAP[:, subset] + shap0 
