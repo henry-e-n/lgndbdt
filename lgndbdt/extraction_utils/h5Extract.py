@@ -228,7 +228,7 @@ def openGroup(group, kList):
 
 def paramExtract(filename, relativePathToFolder, og="raw"):
     filepath = checkPath(filename, relativePathToFolder)
-    wfd = h5.File(f"{filepath}", "r+")
+    wfd = h5.File(f"{filepath}", "r")
     keys = []
     keys = openGroup(wfd, keys)
 
