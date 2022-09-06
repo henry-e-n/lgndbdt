@@ -27,7 +27,7 @@ def biVarCorr(shap_values, fname, remove=" ", standard=True, nComp = 2, singVar=
     num = shap_values.shape[1]
 
     combos = []
-    for L in range(nComp,nComp+1):
+    for L in range(1,nComp+1):
         for subset in itertools.combinations(np.arange(num), L):
             combos.append(subset)
     if singVar != False:

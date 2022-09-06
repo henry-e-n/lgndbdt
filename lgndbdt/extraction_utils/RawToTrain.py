@@ -17,13 +17,7 @@ from extraction_utils.h5Extract import *
 from extraction_utils.DCR import *
 
 from extraction_utils.config import *
-# print(savePath)
-# print(modPath)
 
-
-# detName = "V05612B"
-# numWave = 10
-# argumentList = [detName, 1, numWave, 1]
 
 def rawToTrain(argumentList, peak):
     param_Extract(argumentList, peak)
@@ -42,6 +36,7 @@ def rawToTrain(argumentList, peak):
     addParam(f"{savePath}{peak}/{detName}_Clean_StandardAnalysis.lh5", normDCR, "DCR")
     return
 
+"""
 def getRaw(filename, fpath):
     file, names, paramArr = paramExtract(filename, fpath, False)
     dataDict = []
@@ -64,3 +59,4 @@ def getRaw(filename, fpath):
     dataArr = np.stack(dataArr, 1)
     print(f"Returned {fpath}{filename}")#, shape {dataArr.shape}")
     return dataArr, dataDictionary, selectDictionary
+"""
