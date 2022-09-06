@@ -24,7 +24,7 @@ data = json.load(f)
 
 detName = data["detName"]#"V05612B"
 lpData = data["lpData"]
-modPath = data["modPath"]
+# modPath = data["modPath"]
 # analysisPath = data["analysisPath"]
 savePath = f"{lpData}DataFiles/AnalysisOutput/{detName}/"
 plotPath = f"{lpData}/Plots"#os.getcwd()
