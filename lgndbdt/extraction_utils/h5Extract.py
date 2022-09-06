@@ -226,13 +226,13 @@ def openGroup(group, kList):
                 kList = openGroup(group[key], kList)
     return kList                
 
-def paramExtract(filename, relativePathToFolder, og="raw"):
+def paramExtract(filename, relativePathToFolder, targetKeys):
     filepath = checkPath(filename, relativePathToFolder)
     wfd = h5.File(f"{filepath}", "r")
     keys = []
     keys = openGroup(wfd, keys)
 
-    targetKeys = ["E", "index", "tp_0", "values", "t0", "m/dt", "dc"]
+    
     paramArr = [] # np.empty(len(targetKeys), dtype = object)
     for target in targetKeys:
         cut = np.where(np.char.find(np.array(keys, dtype=str), target)>0)
