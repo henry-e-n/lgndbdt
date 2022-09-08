@@ -50,7 +50,7 @@ def biVarCorr(shap_values, fname, remove=" ", standard=True, nComp = 2, singVar=
     def runPCA(shapMat):
         pcaRes = np.zeros(numCombos)
         for subset in range(numCombos):
-            pca = PCA()
+            pca = PCA(n_components=2)
             pca.fit(shapMat)
             pcaRes = pca.explained_variance_ratio_
         return pcaRes
