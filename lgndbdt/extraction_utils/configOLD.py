@@ -15,21 +15,23 @@ cmapNormal   = LinearSegmentedColormap.from_list("Custom", ["#151515", '#13294B'
 cmapNormal_r = cmapNormal.reversed("cmapNormal_r")
 cmapDiv      = LinearSegmentedColormap.from_list("Custom", ['#13294B', "#F4E8DD", '#4B9CD3'], N=50) #["#EF426F", '#F4E8DD', '#00A5AD'], N=50)
 
+# cmapNormal = LinearSegmentedColormap.from_list("Custom", ["#151515", '#13294B', '#2F638F', '#4B9CD3', 'A0C2D8', "#F4E8DD", "#DEC5D3", "#C8A2C8", "#B459B4","#A00FA0"], N=50)#, '#C8A2C8'
+# cmapNormal = LinearSegmentedColormap.from_list("Custom", ["#151515","#13294b","#4b9cd3","#f4e8dd","#E4B1CF","#F859D0", "#B30BA2"], 50)
+# ["13294b","2f638f","4b9cd3","a0c2d8","f4e8dd","f6cbdf","f7aee0","f991e1","fa74e2","ff00e6"]
+
 f = open(f"{os.getcwd()}/paths.json")
 data = json.load(f)
 
-detName = data["detector_name"]#"V05612B"
-savePath = f"{data['save_path']}{data['detector_name']}"
-plotPath = f"{savePath}/Plots"#os.getcwd()
-modPath = data["mod_path"]
+detName = data["detName"]#"V05612B"
+lpData = data["lpData"]
+# modPath = data["modPath"]
+# analysisPath = data["analysisPath"]
+savePath = f"{lpData}DataFiles/AnalysisOutput/{detName}/"
+plotPath = f"{lpData}/Plots"#os.getcwd()
 
-fname = np.array(data["feature_names"]) # features to use in BDT
-distMatch = np.array(data["distribution_names"])
-distStep = np.array(data["distribution_step"])
-
-dspFile = f"{data['path_to_dsp']}{data['detector_name']}/{data['run_list']}"
-rawFile = f"{data['path_to_raw']}{data['detector_name']}/{data['run_list']}"
-
+fname = np.array(data["featureNames"]) # features to use in BDT
+distMatch = np.array(data["distNames"])
+distStep = np.array(data["distStep"])
 
 CorrectionParameters = [2896.5810301207716, 89.33188128281084, 0.01]
 
