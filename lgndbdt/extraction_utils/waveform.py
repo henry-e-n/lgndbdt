@@ -22,7 +22,7 @@ def cTimes(wfParams, choosePeak, number, save=True):
                 t[event, points] = t[event, points-1] + dt[event]
             
     if save:
-        np.save(f"{savePath}DataFiles/timesArr_{detName}.npy", t)
+        np.save(f"{savePath}/timesArr_{detName}.npy", t)
     
     return t
 
