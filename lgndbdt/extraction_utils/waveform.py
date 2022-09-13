@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from extraction_utils.config import terminalCMAP, lpData
+from extraction_utils.config import terminalCMAP
 
 from tqdm import tqdm
 
@@ -21,8 +21,8 @@ def cTimes(wfParams, choosePeak, number, save=True):
             for points in range(1,val.shape[1]):
                 t[event, points] = t[event, points-1] + dt[event]
             
-    if save:
-        np.save(f"{lpData}DataFiles/timesArr_{choosePeak}.npy", t)
+    # if save:
+    #     np.save(f"{lpData}DataFiles/timesArr_{choosePeak}.npy", t)
     
     return t
 
