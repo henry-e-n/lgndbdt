@@ -25,17 +25,17 @@ data = json.load(f)
 detName = data["detector_name"]#"V05612B"
 savePath = f"{data['save_path']}{data['detector_name']}"
 plotPath = f"{savePath}/Plots"#os.getcwd()
-modPath = data["mod_path"]
+# modPath = data["mod_path"]
 
-fname = np.array(data["feature_names"]) # features to use in BDT
-distMatch = np.array(data["distribution_names"])
-distStep = np.array(data["distribution_step"])
+# fname = np.array(data["feature_names"]) # features to use in BDT
+# distMatch = np.array(data["distribution_names"])
+# distStep = np.array(data["distribution_step"])
 
 dspFile = f"{data['path_to_dsp']}{data['detector_name']}/{data['run_list']}"
 rawFile = f"{data['path_to_raw']}{data['detector_name']}/{data['run_list']}"
 
 
-CorrectionParameters = [2896.5810301207716, 89.33188128281084, 0.01]
+# CorrectionParameters = [2896.5810301207716, 89.33188128281084, 0.01]
 
 """
 Package Dependencies
