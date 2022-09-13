@@ -250,3 +250,37 @@ def printBVC(pcaVect, pcaNames):
     # plt.close()
 
 
+def printPCAResults(pcaResults, pcaNames):    
+    [pcaComp, pcaEVR] = pcaResults
+    [pcaNames, pltNames] = pcaNames
+
+    print(f"PCA components - {pcaComp}")
+    print(f"PCA explained variance ratio - {pcaEVR}")
+    print(f"Names - {pcaNames}")
+
+    plt.barh(np.arange(len(pcaEVR)), np.abs(pcaEVR))
+    plt.suptitle("PCA - Log Scale", fontsize = 30, fontweight = 15)
+    plt.yticks(np.arange(len(pltNames)), pltNames) #, rotation=90
+    plt.semilogx()
+    plt.xlim(0.001, 1)
+    plt.savefig(f"bvcComp.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=False)
+
+
+
+    pcaCompPlot = np.zeros(pcaComp.shape)
+    for s in range(pcaComp.shape[0]):
+        pcaCompPlot[s, :] = np.abs(pcaComp[s,:])/np.sum(np.abs(pcaComp[s,:]))*pcaEVR[s]
+    plt.figure()
+    inc = np.zeros(len(pcaEVR))
+    plt.barh(np.arange(len(pcaEVR)), np.abs(pcaCompPlot[:, 0]), label=f"{pcaNames[0]}")
+    for i in range(1, len(pcaCompPlot[0, :])):
+        inc = np.abs(inc+pcaCompPlot[:, i-1])
+        plt.barh(np.arange(len(pcaEVR)), np.abs(pcaCompPlot[:, i]), left=inc, label=f"{pcaNames[i]}")
+
+    plt.suptitle("PCA - Log Scale", fontsize = 30, fontweight = 15)
+    plt.yticks(np.arange(len(pltNames)), pltNames) #, rotation=90
+    plt.semilogx()
+    plt.xlim(0.001, 1)
+    plt.legend(ncol=2, bbox_to_anchor = (1.05, 0.99))
+    plt.savefig(f"bvc.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=False)
+

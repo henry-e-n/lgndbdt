@@ -15,6 +15,10 @@ cmapNormal   = LinearSegmentedColormap.from_list("Custom", ["#151515", '#13294B'
 cmapNormal_r = cmapNormal.reversed("cmapNormal_r")
 cmapDiv      = LinearSegmentedColormap.from_list("Custom", ['#13294B', "#F4E8DD", '#4B9CD3'], N=50) #["#EF426F", '#F4E8DD', '#00A5AD'], N=50)
 
+
+
+
+
 f = open(f"{os.getcwd()}/paths.json")
 data = json.load(f)
 
