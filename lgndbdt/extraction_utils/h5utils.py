@@ -1,9 +1,17 @@
 import h5py as h5
 import numpy as np
+import os
 
 from extraction_utils.config import savePath, detName
 
-
+def searchFile(name, path):
+    try: 
+        for root, dirs, files in os.walk(path):
+                if name in files:
+   #                 print(os.path.join(root, name))
+                    return os.path.join(root, name)
+    except FileNotFoundError:
+        return
 
 ###############################################################
 

@@ -12,7 +12,7 @@ module_path = os.path.abspath(os.path.split(cwd)[0])
 sys.path.append(module_path)
 
 
-from extraction_utils.h5Extract import *
+# from extraction_utils.h5Extract import *
 from extraction_utils.waveform import *
 from extraction_utils.AvsE import *
 from extraction_utils.DCR import *
