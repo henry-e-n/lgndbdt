@@ -18,26 +18,27 @@ cmapDiv      = LinearSegmentedColormap.from_list("Custom", ['#13294B', "#F4E8DD"
 
 
 
+def setConfig(jsonIndex=0):
+    f = open(f"{os.getcwd()}/paths.json")
+    data = json.load(f)
+    data = data["runs"][0]
+    detName = data["detector_name"]#"V05612B"
+    savePath = os.getcwd()+f"/{data['detector_name']}"
+    print(savePath)
+    #f"{data['save_path']}{data['detector_name']}"
+    plotPath = f"{savePath}/Plots"#os.getcwd()
+    # modPath = data["mod_path"]
 
-f = open(f"{os.getcwd()}/paths.json")
-data = json.load(f)
+    # fname = np.array(data["feature_names"]) # features to use in BDT
+    # distMatch = np.array(data["distribution_names"])
+    # distStep = np.array(data["distribution_step"])
 
-detName = data["detector_name"]#"V05612B"
-savePath = os.getcwd()+f"/{data['detector_name']}"
-print(savePath)
-#f"{data['save_path']}{data['detector_name']}"
-plotPath = f"{savePath}/Plots"#os.getcwd()
-# modPath = data["mod_path"]
+    dspFile = f"{data['path_to_dsp']}{data['detector_name']}/{data['run_list']}"
+    rawFile = f"{data['path_to_raw']}{data['detector_name']}/{data['run_list']}"
 
-# fname = np.array(data["feature_names"]) # features to use in BDT
-# distMatch = np.array(data["distribution_names"])
-# distStep = np.array(data["distribution_step"])
+    return
 
-dspFile = f"{data['path_to_dsp']}{data['detector_name']}/{data['run_list']}"
-rawFile = f"{data['path_to_raw']}{data['detector_name']}/{data['run_list']}"
-
-
-# CorrectionParameters = [2896.5810301207716, 89.33188128281084, 0.01]
+setConfig()
 
 """
 Package Dependencies
