@@ -9,6 +9,7 @@ from pygama import lh5
 from pygama.dsp.dsp_optimize import *
 from pygama.dsp.WaveformBrowser import WaveformBrowser as wfb
 
+from extraction_utils.h5utils import paramExtract
 ##############################
 def calibration():
     f = open(f"{sys.path[0]}/paths.json")

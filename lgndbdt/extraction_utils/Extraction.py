@@ -18,6 +18,7 @@ from extraction_utils.BaselineNoise import *
 from extraction_utils.DriftTime import *
 from extraction_utils.LQ import *
 from extraction_utils.config import *
+from extraction_utils.h5utils import paramExtract
 
 
 def extraction(paramArr, paramKeys):
