@@ -16,29 +16,34 @@ cmapNormal_r = cmapNormal.reversed("cmapNormal_r")
 cmapDiv      = LinearSegmentedColormap.from_list("Custom", ['#13294B', "#F4E8DD", '#4B9CD3'], N=50) #["#EF426F", '#F4E8DD', '#00A5AD'], N=50)
 
 
+indf = open(f"{os.getcwd()}/ind.json")
 
+jsonData = json.load(indf)
+jsonIndex = jsonData["index"]
+print(jsonIndex)
 
-def setConfig(jsonIndex=0):
-    f = open(f"{os.getcwd()}/paths.json")
-    data = json.load(f)
-    data = data["runs"][0]
-    detName = data["detector_name"]#"V05612B"
-    savePath = os.getcwd()+f"/{data['detector_name']}"
-    print(savePath)
-    #f"{data['save_path']}{data['detector_name']}"
-    plotPath = f"{savePath}/Plots"#os.getcwd()
-    # modPath = data["mod_path"]
+f = open(f"{os.getcwd()}/paths.json")
+data = json.load(f)
+data = data["runs"][jsonIndex]
+detName = data["detector_name"]#"V05612B"
+savePath = os.getcwd()+f"/{data['detector_name']}"
+print(f"Save Path : {savePath}")
+#f"{data['save_path']}{data['detector_name']}"
+plotPath = f"{savePath}/Plots"#os.getcwd()
+# modPath = data["mod_path"]
 
-    # fname = np.array(data["feature_names"]) # features to use in BDT
-    # distMatch = np.array(data["distribution_names"])
-    # distStep = np.array(data["distribution_step"])
+# fname = np.array(data["feature_names"]) # features to use in BDT
+# distMatch = np.array(data["distribution_names"])
+# distStep = np.array(data["distribution_step"])
 
-    dspFile = f"{data['path_to_dsp']}{data['detector_name']}/{data['run_list']}"
-    rawFile = f"{data['path_to_raw']}{data['detector_name']}/{data['run_list']}"
+dspFile = f"{data['path_to_dsp']}{data['detector_name']}/{data['run_list']}"
+rawFile = f"{data['path_to_raw']}{data['detector_name']}/{data['run_list']}"
 
-    return
+# def __main__():
+#     global jsonIndex
+    
 
-
+#     return detName, savePath, plotPath, dspFile, rawFile
 """
 Package Dependencies
 numpy       =
