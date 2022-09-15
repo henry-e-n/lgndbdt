@@ -1,4 +1,4 @@
-import h5py as h5
+import h5py
 import numpy as np
 import os
 
@@ -43,7 +43,7 @@ def paramExtract(filepath, targetKeys):
 
 def appNewh5(appArr, appArrN, ts, wfdCorr):
     numWave = appArr.shape[1]
-    newFile = h5.File(f"{savePath}/{detName}_PSDs.lh5", "w")
+    newFile = h5py.File(f"{savePath}/{detName}_PSDs.lh5", "w")
     
     for n in range(len(appArr)):
         try:
