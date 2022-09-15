@@ -38,7 +38,6 @@ def setConfig(jsonIndex=0):
 
     return
 
-setConfig()
 
 """
 Package Dependencies
