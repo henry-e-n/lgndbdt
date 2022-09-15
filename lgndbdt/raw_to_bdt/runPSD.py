@@ -3,6 +3,16 @@ from extraction_utils.calibration_to_peakdata import *
 from extraction_utils.Extraction import *
 from extraction_utils.config import savePath
 
+def mkdir(detectorName):
+    cwd = os.getcwd()
+    path2make = os.path.join(cwd, f"{detectorName}") 
+    try:
+        os.mkdir(path2make)
+    except FileExistsError:
+        print("File or Path already exists")
+    return
+
+mkdir(detName)
 calPar, fitResults = calibration() # Calibrate Energy
 paramArr, paramKeys = getWFD(fitResults, 2) # Return Selection Peak Criteria
 
