@@ -23,7 +23,9 @@ f = open(f"{os.getcwd()}/paths.json")
 data = json.load(f)
 
 detName = data["detector_name"]#"V05612B"
-savePath = f"{data['save_path']}{data['detector_name']}"
+savePath = os.getcwd()+f"{data['detector_name']}"
+print(savepath)
+#f"{data['save_path']}{data['detector_name']}"
 plotPath = f"{savePath}/Plots"#os.getcwd()
 # modPath = data["mod_path"]
 
