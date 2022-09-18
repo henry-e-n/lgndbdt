@@ -26,6 +26,8 @@ f = open(f"{os.getcwd()}/paths.json")
 data = json.load(f)
 data = data["runs"][jsonIndex]
 detName = data["detector_name"]#"V05612B"
+targetPeak = data["target_peak"]
+source = data["source"]
 savePath = os.getcwd()+f"/{data['detector_name']}"
 print(f"Save Path : {savePath}")
 #f"{data['save_path']}{data['detector_name']}"

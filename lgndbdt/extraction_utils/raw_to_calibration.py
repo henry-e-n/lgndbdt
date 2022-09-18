@@ -10,23 +10,24 @@ from pygama.dsp.dsp_optimize import *
 from pygama.dsp.WaveformBrowser import WaveformBrowser as wfb
 
 from extraction_utils.h5utils import paramExtract
+from extraction_utils.config import *
 ##############################
 def calibration():
-    f = open(f"{sys.path[0]}/paths.json")
-    configData = json.load(f)
+    # f = open(f"{sys.path[0]}/paths.json")
+    # configData = json.load(f)
 
-    detector_name = configData["detector_name"]
-    dsp_data_dir = configData["path_to_dsp"] + detector_name + "/"
-    source = configData["source"]
+    # detector_name = configData["detector_name"]
+    # dsp_data_dir = configData["path_to_dsp"] + detector_name + "/"
+    # source = configData["source"]
 
-    run = configData["run_list"]
+    # run = configData["run_list"]
 
-    dsp_files = []
+    # dsp_files = []
 
-    dsp_file = dsp_data_dir +  run + '.lh5'
-    dsp_files.append(dsp_file)
+    # dsp_file = dsp_data_dir +  run + '.lh5'
+    # dsp_files.append(dspFile)
 
-    dsp, keys, energies = paramExtract(dsp_files[0], ["trapEmax"])
+    dsp, keys, energies = paramExtract(dspFile, ["trapEmax"])
     energies = energies[0]
 
     #####################################
@@ -35,8 +36,15 @@ def calibration():
     if source == "60Co":
         peaks = np.array([583.187, # 228Th -> 208Tl (85%)
                           1173.24, # 60Co
-                          1332.5, # 60Co
+                          1332.5, # 60Co,
+                          1592.5, # 228Th DEP
+                          2103.5, # 228Th SEP
                           2614.53]) # 228Th -> 208Tl (99.8%) 
+        if targetPeak == "228ThDEP":
+            peakIndex = 3
+        elif targetPeak == "228ThDEP":
+            peakIndex = 4
+        
     else:
         peaks = np.array([583.187, # 228Th -> 208Tl (85%)
                           2614.53]) # 228Th -> 208Tl (99.8%) 
