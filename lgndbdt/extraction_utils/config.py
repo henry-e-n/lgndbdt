@@ -20,7 +20,7 @@ indf = open(f"{os.getcwd()}/ind.json")
 
 jsonData = json.load(indf)
 jsonIndex = jsonData["index"]
-print(jsonIndex)
+# print(jsonIndex)
 
 f = open(f"{os.getcwd()}/paths.json")
 data = json.load(f)
@@ -29,7 +29,7 @@ detName = data["detector_name"]#"V05612B"
 targetPeak = data["target_peak"]
 source = data["source"]
 savePath = os.getcwd()+f"/{data['detector_name']}"
-print(f"Save Path : {savePath}")
+print(f"{detName}, Save Path : {savePath}")
 #f"{data['save_path']}{data['detector_name']}"
 plotPath = f"{savePath}/Plots"#os.getcwd()
 # modPath = data["mod_path"]
