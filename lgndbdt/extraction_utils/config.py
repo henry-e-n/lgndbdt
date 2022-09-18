@@ -29,7 +29,6 @@ detName = data["detector_name"]#"V05612B"
 targetPeak = data["target_peak"]
 source = data["source"]
 savePath = os.getcwd()+f"/{data['detector_name']}"
-print(f"{detName}, Save Path : {savePath}")
 #f"{data['save_path']}{data['detector_name']}"
 plotPath = f"{savePath}/Plots"#os.getcwd()
 # modPath = data["mod_path"]
