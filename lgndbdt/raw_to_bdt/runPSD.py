@@ -37,8 +37,8 @@ def cleanData(paramArr):
 
 
 def runPSD():
-    import extraction_utils
-    importlib.reload(extraction_utils)
+    import extraction_utils.config
+    importlib.reload(extraction_utils.config)
     from extraction_utils.config import detName
     print(f"runPSD {detName}")
 
