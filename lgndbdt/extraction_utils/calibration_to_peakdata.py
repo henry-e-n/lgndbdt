@@ -6,12 +6,12 @@ import os
 import json
 import h5py
 
-from extraction_utils.h5utils import paramExtract
-from extraction_utils.h5utils import paramExtract
 import importlib
 import extraction_utils.config
 importlib.reload(extraction_utils.config)
 from extraction_utils.config import *
+
+from extraction_utils.h5utils import paramExtract
 
 def getWFD(fitResults, peakIndex):
     # Fit Results [ [uncal energies, cal energies], [[1st peak fit param], 2nd peak fit...]] 
