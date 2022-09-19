@@ -1,6 +1,6 @@
 import importlib
-import extraction_utils.config
-importlib.reload(extraction_utils.config)
+import extraction_utils
+importlib.reload(extraction_utils)
 from extraction_utils.config import *
 
 from extraction_utils.raw_to_calibration import *
