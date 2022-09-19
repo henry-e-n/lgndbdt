@@ -17,7 +17,7 @@ def mkdir(detectorName):
     try:
         os.mkdir(path2make)
     except FileExistsError:
-        print("File or Path already exists")
+        print(f"{detectorName} File or Path already exists")
     return
 
 def cleanData(paramArr):
@@ -37,6 +37,11 @@ def cleanData(paramArr):
 
 
 def runPSD():
+    import extraction_utils
+    importlib.reload(extraction_utils)
+    from extraction_utils.config import detName
+    print(f"runPSD {detName}")
+
     mkdir(detName)
     calPar, fitResults = calibration() # Calibrate Energy
     paramArr, paramKeys = getWFD(fitResults, 2) # Return Selection Peak Criteria
