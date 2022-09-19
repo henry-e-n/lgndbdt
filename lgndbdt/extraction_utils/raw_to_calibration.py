@@ -10,6 +10,9 @@ from pygama.dsp.dsp_optimize import *
 from pygama.dsp.WaveformBrowser import WaveformBrowser as wfb
 
 from extraction_utils.h5utils import paramExtract
+import importlib
+import extraction_utils.config
+importlib.reload(extraction_utils.config)
 from extraction_utils.config import *
 ##############################
 def calibration():
@@ -129,7 +132,7 @@ def calibration():
     #                    sigmas[3]*10]) #modify these such that only the desired peaks appear in the window
 
     widths = sigmas * 3
-    
+
     n_peaks = uncal_peaks.shape[0]
     # fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24)) 
     # labels = [r'$^{228}$Th', r'$^{60}$Co', r'$^{60}$Co', r'$^{228}$Th', r'$^{228}$Th SEP'] #If other peaks are chosen, make sure to modify this

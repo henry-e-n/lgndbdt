@@ -1,9 +1,12 @@
 from extraction_utils.raw_to_calibration import *
 from extraction_utils.calibration_to_peakdata import *
 from extraction_utils.Extraction import *
-from extraction_utils.config import savePath
-import extraction_utils.config
+from extraction_utils.h5utils import paramExtract
+
 import importlib
+import extraction_utils.config
+importlib.reload(extraction_utils.config)
+from extraction_utils.config import *
 
 
 def mkdir(detectorName):
@@ -32,8 +35,6 @@ def cleanData(paramArr):
 
 
 def runPSD():
-    importlib.reload(extraction_utils.config)
-
     mkdir(detName)
     calPar, fitResults = calibration() # Calibrate Energy
     paramArr, paramKeys = getWFD(fitResults, 2) # Return Selection Peak Criteria
