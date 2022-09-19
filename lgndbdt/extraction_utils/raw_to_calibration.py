@@ -123,11 +123,13 @@ def calibration():
 
     #Plot histograms and fit initial functions
 
-    widths = np.array([sigmas[0]*2,
-                       sigmas[1]*4, 
-                       sigmas[2]*6,
-                       sigmas[3]*10]) #modify these such that only the desired peaks appear in the window
+    # widths = np.array([sigmas[0]*2,
+    #                    sigmas[1]*4, 
+    #                    sigmas[2]*6,
+    #                    sigmas[3]*10]) #modify these such that only the desired peaks appear in the window
 
+    widths = sigmas * 3
+    
     n_peaks = uncal_peaks.shape[0]
     # fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24)) 
     # labels = [r'$^{228}$Th', r'$^{60}$Co', r'$^{60}$Co', r'$^{228}$Th', r'$^{228}$Th SEP'] #If other peaks are chosen, make sure to modify this
