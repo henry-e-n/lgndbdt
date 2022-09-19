@@ -2,7 +2,7 @@ import h5py
 import numpy as np
 import os
 
-from extraction_utils.config import savePath, detName
+from extraction_utils.config import savePath, detName, targetPeak
 
 def searchFile(name, path):
     try: 
@@ -43,7 +43,7 @@ def paramExtract(filepath, targetKeys):
 
 def appNewh5(appArr, appArrN, ts, wfdCorr):
     numWave = appArr.shape[1]
-    newFile = h5py.File(f"{savePath}/{detName}_PSDs.lh5", "w")
+    newFile = h5py.File(f"{savePath}/{detName}_PSDs_{targetPeak}.lh5", "w")
     
     for n in range(len(appArr)):
         try:
