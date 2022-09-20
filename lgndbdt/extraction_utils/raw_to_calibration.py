@@ -130,12 +130,15 @@ def calibration():
 
     #Plot histograms and fit initial functions
 
-    # widths = np.array([sigmas[0]*2,
-    #                    sigmas[1]*4, 
-    #                    sigmas[2]*6,
-    #                    sigmas[3]*10]) #modify these such that only the desired peaks appear in the window
-
-    widths = sigmas * 3
+    if targetPeak == "228ThDEP" or targetPeak=="228ThSEP":
+        widths = np.array([sigmas[0]*3,
+                   sigmas[1]*4, 
+                   sigmas[2]*6,
+                   sigmas[3]*5,
+                   sigmas[4]*4, 
+                   sigmas[5]*8])
+    else:
+        widths = sigmas * 3
 
     n_peaks = uncal_peaks.shape[0]
     # fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24)) 
