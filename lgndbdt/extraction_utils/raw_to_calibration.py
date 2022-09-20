@@ -46,8 +46,10 @@ def calibration():
                           2103.5, # 228Th SEP
                           2614.53]) # 228Th -> 208Tl (99.8%) 
         if targetPeak == "228ThDEP":
+            print("DEP")
             peakIndex = 3
         elif targetPeak == "228ThSEP":
+            print("SEP")
             peakIndex = 4
         
     else:
@@ -201,7 +203,7 @@ def calibration():
 
     cal_pars, fitData = match_peaks(mus, cal_peaks)
 
-    return cal_pars, [fitData, fit_pars]
+    return cal_pars, [fitData, fit_pars], peakIndex
 
 if __name__ == "__main__":
     calibration()

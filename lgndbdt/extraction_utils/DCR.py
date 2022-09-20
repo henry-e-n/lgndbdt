@@ -244,7 +244,7 @@ def getP0(vals, popt, numWave = 100):
         else:
             dp0Num = numWave
             
-        print(f"Running P0 minimization - Please Wait...")
+        # print(f"Running P0 minimization - Please Wait...")
         res = minimize(dp0fx,
                     [72*40, 2.1*40, 0.0105], 
                     args    = vals[:dp0Num,:], 
