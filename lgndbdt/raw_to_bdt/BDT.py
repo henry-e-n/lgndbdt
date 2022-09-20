@@ -17,7 +17,6 @@ from extraction_utils.config        import *
 from extraction_utils.h5Extract     import *
 from ML_utils.BDTPrep       import *
 from ML_utils.BDTTrain      import *
-from extraction_utils.CleanData     import *
 from ML_utils.plot_legacy   import summary_legacy
 from ML_utils.Visualization import *
 from ML_utils.MultiVarCorr import *

@@ -47,7 +47,7 @@ def calibration():
                           2614.53]) # 228Th -> 208Tl (99.8%) 
         if targetPeak == "228ThDEP":
             peakIndex = 3
-        elif targetPeak == "228ThDEP":
+        elif targetPeak == "228ThSEP":
             peakIndex = 4
         
     else:
