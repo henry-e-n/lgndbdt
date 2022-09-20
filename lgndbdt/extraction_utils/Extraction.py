@@ -35,9 +35,9 @@ def extraction(paramArr, paramKeys):
     print(detName)
     # print(pa)
     # Make times array
-    if searchFile(f"timesArr_{detName}.npy", savePath) == None:
-        print(f"Creating times array, please wait...")
-        cTimes([pa["dt"], pa["t0"], pa["values"]], detName, -1) # Can remove detname and number in lgndbdt update
+    # if searchFile(f"timesArr_{detName}.npy", savePath) == None:
+    #     print(f"Creating times array, please wait...")
+    cTimes([pa["dt"], pa["t0"], pa["values"]], detName, -1) # Can remove detname and number in lgndbdt update
     ts = np.load(searchFile(f'timesArr_{detName}.npy', savePath))
     
     numWave = paramArr[0].shape[0]
