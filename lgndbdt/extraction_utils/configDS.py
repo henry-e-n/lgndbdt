@@ -26,8 +26,8 @@ detName = data["detName"]#"V05612B"
 lpData = data["lpData"]
 # modPath = data["modPath"]
 # analysisPath = data["analysisPath"]
-savePath = f"{lpData}DataFiles/AnalysisOutput/{detName}/"
-plotPath = f"{lpData}/Plots"#os.getcwd()
+savePath = data["savePath"] #f"{lpData}DataFiles/AnalysisOutput/{detName}/"
+plotPath = f"{savePath}/Plots"#os.getcwd()
 
 fname = np.array(data["featureNames"]) # features to use in BDT
 distMatch = np.array(data["distNames"])
