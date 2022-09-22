@@ -13,7 +13,7 @@ from time import time
 from imblearn.over_sampling import SMOTENC
 
 
-from extraction_utils.config        import *
+from extraction_utils.configDS        import *
 from extraction_utils.h5Extract     import *
 from ML_utils.BDTPrep       import *
 from ML_utils.BDTTrain      import *

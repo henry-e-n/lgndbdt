@@ -1,5 +1,5 @@
 import numpy as np
-from extraction_utils.config import *
+from extraction_utils.configDS import *
 
 from imblearn.over_sampling import SMOTENC
 

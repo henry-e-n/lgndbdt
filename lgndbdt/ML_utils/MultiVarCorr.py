@@ -1,5 +1,5 @@
 from typing import Concatenate
-from extraction_utils.config import *
+from extraction_utils.configDS import *
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 import itertools

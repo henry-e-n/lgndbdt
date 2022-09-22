@@ -6,7 +6,7 @@ from sklearn.metrics import roc_curve, roc_auc_score
 from sklearn.decomposition import PCA
 import itertools
 
-from extraction_utils.config import plotPath, cmapNormal, fname, cmapDiv, cmapNormal_r
+from extraction_utils.configDS import plotPath, cmapNormal, fname, cmapDiv, cmapNormal_r
 from ML_utils.plot_legacy import summary_legacy
 
 def TrainingMetric(evals_result):
