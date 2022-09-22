@@ -41,7 +41,7 @@ def BDTDistrib(y_pred, Y_test):
     plt.xlabel("BDT output")
     plt.ylabel("# of events / 0.01 BDT Output(a.u.)")
     plt.title("BDT Distribtion")
-    plt.savefig(f"{plotPath}/BDT_distribution.png",dpi=100, transparent=True)
+    plt.savefig(f"{plotPath}/BDT_distribution.png",dpi=100, facecolor=(0.0, 0.0, 0.0, 0.2) )#transparent=True)
     # plt.show()
     plt.cla()
     plt.clf()

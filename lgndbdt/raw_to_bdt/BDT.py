@@ -51,6 +51,9 @@ def run_BDT():
     filename        = f"{detName}_Clean_StandardAnalysis.lh5"
     fpath           = f"{savePath}"
 
+    print(filename)
+    print(fpath)
+
     def getRaw(filename, fpath):
         file, names, paramArr = paramExtract(filename, fpath, False)
         dataDict = []
@@ -228,9 +231,10 @@ def run_BDT():
             # Returns a list of matrices (# outputs, # samples x, # features)
             BDTSummary(shap_values, sample)
         elif i == 2:
-            shap_val = np.array(shap_values)[0]
-            pcaRes, pcaNames = biVarCorr(shap_val, fname)
-            printBVC(pcaRes, pcaNames)
+            print("SKIP")
+            # shap_val = np.array(shap_values)[0]
+            # pcaRes, pcaNames = biVarCorr(shap_val, fname)
+            # printBVC(pcaRes, pcaNames)
             # pcaMat = multiVarCorr(shap_val, 2)
             # printMVC(pcaMat)
         elif i == 3:

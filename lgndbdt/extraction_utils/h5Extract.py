@@ -94,7 +94,7 @@ def paramExtract(filename, relativePathToFolder = ""):
     return wfd, raw, paramArr
 """
 
-def PEG(filename, relativePathToFolder = "", og = "raw"):
+def paramExtract(filename, relativePathToFolder = "", og = "raw"):
     """
     Function: Extracts parameter arrays from an lh5 file
 
@@ -226,7 +226,7 @@ def openGroup(group, kList):
                 kList = openGroup(group[key], kList)
     return kList                
 
-def paramExtract(filename, relativePathToFolder, targetKeys):
+def gpe(filename, relativePathToFolder, targetKeys):
     filepath = checkPath(filename, relativePathToFolder)
     wfd = h5.File(f"{filepath}", "r")
     keys = []
