@@ -5,7 +5,7 @@ import sys
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from tqdm import tqdm
-from extraction_utils.config import detName
+from extraction_utils.configDS import detName
 
 def searchFile(name, path):
     try: 
