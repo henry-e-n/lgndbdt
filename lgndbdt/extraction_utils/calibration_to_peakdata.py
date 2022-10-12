@@ -12,6 +12,7 @@ importlib.reload(extraction_utils.config)
 from extraction_utils.config import *
 
 from extraction_utils.h5utils import paramExtract
+from pygama.lh5 import lh5
 
 def getWFD(fitResults, peakIndex):
     # Fit Results [ [uncal energies, cal energies], [[1st peak fit param], 2nd peak fit...]] 
@@ -38,10 +39,19 @@ def getWFD(fitResults, peakIndex):
     # raw_files.append(raw_file)
 
     dsptargetKeys = ["trapEmax", "tp_0"]
-    wfd, keys, DSPparamArr = paramExtract(dspFile, dsptargetKeys)
+    # wfd, keys, DSPparamArr = paramExtract(dspFile, dsptargetKeys)
+    dsp_stack = lh5.load_nda(dsp_files, dsptargetKeys, "icpc1/dsp")
+    DSPparamArr = [dsp_stack["trapEmax"], dsp_stack["tp_0"]]
 
     rawtargetKeys = ["t0", "dt", "values"]
-    wfd, keys, RAWparamArr = paramExtract(rawFile, rawtargetKeys)
+    # wfd, keys, RAWparamArr = paramExtract(rawFile, rawtargetKeys)
+    raw_stack = lh5.load_nda(raw_files, rawtargetKeys, "icpc1/raw/waveform")
+    RAWparamArr = [raw_stack["t0"], raw_stack["dt"], raw_stack["values"]]
+
+    # Need to translate dictionary to array from load_nda and name DSPparamArr and RAWparamArr
+    # Specify location of rawtargetKeys in raw files
+    #
+    #
 
 
     energies = DSPparamArr[0][:]

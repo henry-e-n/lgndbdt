@@ -37,8 +37,21 @@ plotPath = f"{savePath}/Plots"#os.getcwd()
 # distMatch = np.array(data["distribution_names"])
 # distStep = np.array(data["distribution_step"])
 
-dspFile = f"{data['path_to_dsp']}{data['detector_name']}/{data['run_list']}.lh5"
-rawFile = f"{data['path_to_raw']}{data['detector_name']}/{data['run_list']}.lh5"
+dsp_data_dir = f"{data['path_to_dsp']}{data['detector_name']}/"
+raw_data_dir = f"{data['path_to_raw']}{data['detector_name']}/"
+run_list = data["run_list"]
+
+raw_files = []
+dsp_files = []
+
+for run in run_list:
+    dsp_file = dsp_data_dir +  run + '.lh5'
+    raw_file = raw_data_dir +  run + '.lh5'
+    dsp_files.append(dsp_file)
+    raw_files.append(raw_file)
+
+# dspFile = f"{data['path_to_dsp']}{data['detector_name']}/{data['run_list']}.lh5"
+# rawFile = f"{data['path_to_raw']}{data['detector_name']}/{data['run_list']}.lh5"
 
 # def __main__():
 #     global jsonIndex

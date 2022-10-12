@@ -18,22 +18,13 @@ from extraction_utils.h5utils import paramExtract
 
 ##############################
 def calibration():
-    # f = open(f"{sys.path[0]}/paths.json")
-    # configData = json.load(f)
+    
 
-    # detector_name = configData["detector_name"]
-    # dsp_data_dir = configData["path_to_dsp"] + detector_name + "/"
-    # source = configData["source"]
-
-    # run = configData["run_list"]
-
-    # dsp_files = []
-
-    # dsp_file = dsp_data_dir +  run + '.lh5'
-    # dsp_files.append(dspFile)
-
-    dsp, keys, energies = paramExtract(dspFile, ["trapEmax"])
-    energies = energies[0]
+    energy_stack = lh5.load_nda(dsp_files, ["trapEmax"], "icpc1/dsp")
+    energies = energy_stack["trapEmax"]
+    
+    # dsp, keys, energies = paramExtract(dspFile, ["trapEmax"])
+    # energies = energies[0]
 
     #####################################
     # First Calibration Pass
@@ -182,6 +173,7 @@ def calibration():
     #Plot fit results and compare to data
     # fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24)) 
 
+    sigmas = []
     for i in range(n_peaks):
 
         #Get histogram for peak within bounds of 5 sigma
@@ -192,6 +184,7 @@ def calibration():
         #Compute components of fit function
         fit = func(bin_centers, *fit_pars[i], components=False)
         gaussian, step = func(bin_centers, *fit_pars[i], components=True)
+        sigmas.append(fit_pars[i][2])
 
         #Plot data and fit components
         # axs[i].semilogy(bin_centers, hist, ds="steps-mid", color="k", label=labels[i])
