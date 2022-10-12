@@ -43,6 +43,10 @@ learning_rate        = args.learning_rate
 num_leaves           = args.num_leaves
 max_bin              = args.max_bin
 
+
+randSeed = 27
+np.random.seed(randSeed)
+
 def run_BDT():
     ###################################################################
     # Data Type Preparation
@@ -231,7 +235,7 @@ def run_BDT():
             # Returns a list of matrices (# outputs, # samples x, # features)
             BDTSummary(shap_values, sample)
         elif i == 2:
-            print("SKIP")
+            continue
             # shap_val = np.array(shap_values)[0]
             # pcaRes, pcaNames = biVarCorr(shap_val, fname)
             # printBVC(pcaRes, pcaNames)
