@@ -12,7 +12,7 @@ importlib.reload(extraction_utils.config)
 from extraction_utils.config import *
 
 from extraction_utils.h5utils import paramExtract
-from pygama.lh5 import lh5
+from pygama import lh5
 
 def getWFD(fitResults, peakIndex):
     # Fit Results [ [uncal energies, cal energies], [[1st peak fit param], 2nd peak fit...]] 
