@@ -176,7 +176,7 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
     plt.vlines(x = ogfpr[hlineOG]  , ymin = 0, ymax = ogtpr[hlineOG]  , linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
     plt.xlim((0,1))
     plt.ylim((0,1))
-    plt.legend(loc="upper right")
+    plt.legend(loc="lower right")
     plt.xlabel("False Positivity Rate                                            ")
     plt.ylabel("True Positivity Rate")
     # plt.suptitle("BDT ROC curve", fontsize = 30, fontweight = 15)
