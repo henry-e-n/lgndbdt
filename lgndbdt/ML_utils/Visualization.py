@@ -24,11 +24,11 @@ def TrainingMetric(evals_result):
 
 def TreeVis(gbm):
     print("SKIP TREE VIS")
-    # lgb.plot_tree(gbm, dpi=1000, show_info="data_percentage", figsize=(10,8))
-    # plt.savefig(f"{plotPath}/PlotTree.jpg", dpi=1000, transparent=True)
-    # plt.cla()
-    # plt.clf()
-    # plt.close()
+    lgb.plot_tree(gbm, dpi=1000, show_info="data_percentage", figsize=(12,8))
+    plt.savefig(f"{plotPath}/PlotTree.png", dpi=1000, transparent=True)
+    plt.cla()
+    plt.clf()
+    plt.close()
 
     # graph = lgb.create_tree_digraph(gbm)#, dpi=700, show_info="data_percentage", figsize=(4,4))
     # graph.render(filename=f"{plotPath}/PlotTreeDiGraph", format='png', view=True)
@@ -36,7 +36,7 @@ def TreeVis(gbm):
 
 def BDTDistrib(y_pred, Y_test):
     plt.rcParams['font.size'] = 25
-    plt.rcParams["figure.figsize"] = (15,8)
+    plt.rcParams["figure.figsize"] = (15,16)
     rg=np.arange(0.0,1.0,0.01) # 0.0075
     plt.hist(y_pred[Y_test==1], label="Signal", bins=rg, histtype="step", linewidth = 3, color = "#13294B")# color=cmapNormal(0.2),linewidth=3)
     plt.hist(y_pred[Y_test==0], label="Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F") # , color=cmapNormal(0.8)
@@ -44,7 +44,7 @@ def BDTDistrib(y_pred, Y_test):
     plt.legend(loc="upper center",frameon=False)
     plt.xlabel("BDT output")
     plt.ylabel("# of events / 0.01 BDT Output(a.u.)")
-    plt.title("BDT Result Distribtion")
+    plt.title("BDT Result Distribution", fontsize = 40)
     plt.savefig(f"{plotPath}/BDT_distribution.png",dpi=300, transparent=True)
     # plt.show()
     plt.cla()
@@ -164,7 +164,7 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
         # print(f"76% thresholds - BDT : {BDTthresholds[hlineBDT]}, PYGAMA : {ogthresholds[hlineOG]}")
     
     # plt.rcParams["font.size"]=24
-    plt.figure(figsize=(30,16))
+    plt.figure(figsize=(15,16))
     plt.plot([0],[0],color="white",label = "Classifier             DEP           FEP        AUC    ")
     plt.plot(BDTfpr, BDTtpr, color = "#EF426F" , linestyle = "-", linewidth = 4, label = f"    BDT               75.0%        {np.round(100*BDTfpr[hlineBDT],1)}%    {np.round(BDTauc, 3)}")
     plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"Pygama A/E       75.0%        {np.round(100*ogfpr[hlineOG],1)}%    {np.round(ogauc, 3)}")
@@ -174,13 +174,13 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
     plt.hlines(y = BDTtpr[hlineBDT], xmin = 0, xmax = BDTfpr[hlineBDT]  , linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
     plt.vlines(x = BDTfpr[hlineBDT], ymin = 0, ymax = BDTtpr[hlineBDT], linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
     plt.vlines(x = ogfpr[hlineOG]  , ymin = 0, ymax = ogtpr[hlineOG]  , linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
-    plt.xlim((0,1))
-    plt.ylim((0,1))
+    plt.xlim((0,0.6))
+    plt.ylim((0,0.85))
     plt.legend(loc="lower right")
-    plt.xlabel("False Positivity Rate                                            ")
-    plt.ylabel("True Positivity Rate")
+    plt.xlabel("False Positivity Rate", fontsize = 40)
+    plt.ylabel("True Positivity Rate", fontsize = 40)
     # plt.suptitle("BDT ROC curve", fontsize = 30, fontweight = 15)
-    plt.title("BDT ROC Curve : performance vs traditional A/E cut on all events") #, fontsize = 24, pad = 15, fontstyle='italic')
+    plt.title("BDT vs traditional A/E ROC performance", fontsize = 40) #, fontsize = 24, pad = 15, fontstyle='italic')
     plt.savefig(f"{plotPath}/ROC3.png",dpi=300, transparent=True)
     plt.cla()
     plt.clf()
