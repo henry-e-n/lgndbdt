@@ -32,7 +32,7 @@ from extraction_utils.h5utils import *
 def extraction(paramArr, paramKeys):
     # Make Dictionary for easy referencing of Parameters
     pa = dict(zip(paramKeys, paramArr))
-    print(detName)
+    # print(detName)
     # print(pa)
     # Make times array
     # if searchFile(f"timesArr_{detName}.npy", savePath) == None:
