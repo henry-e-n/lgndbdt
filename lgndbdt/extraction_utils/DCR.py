@@ -166,14 +166,10 @@ def dp0fx(popt, wfArray):
         wf_out[0] = wf_in[0]
         e1 = e2 = wf_in[0]
         e3 = 0
-        
          
         for i in range(1, len(wf_in), 1): # Iterates over rest of wf
             e1 += wf_in[i] - e2 + e2*const1
-            try:
-                e3 += wf_in[i] - e2 - e3*const2
-            except RuntimeWarning:
-                print(i, e1, e2, e3)
+            e3 += wf_in[i] - e2 - e3*const2
             e2  = wf_in[i]
             wf_out[i] = e1 - frac*e3
 
@@ -253,7 +249,7 @@ def getP0(vals, popt, numWave = 100):
                     args    = vals[:dp0Num,:], 
                     method  = 'Nelder-Mead', 
                     tol     = 1e-4, 
-                    bounds  = ((60*40, 90*40), (1e-5, 5*40),(0.01,0.012)))
+                    bounds  = ((60*40, 90*40), (1, 5*40),(0.01,0.012)))
         
         # print(f"\nP0 fit parameters - {res.x/40}")
         popt = tuple(res.x)
