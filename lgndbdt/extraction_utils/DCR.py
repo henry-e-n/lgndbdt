@@ -167,16 +167,16 @@ def dp0fx(popt, wfArray):
         e1 = e2 = wf_in[0]
         e3 = 0
         
-        try: 
-            for i in range(1, len(wf_in), 1): # Iterates over rest of wf
-                e1 += wf_in[i] - e2 + e2*const1
+         
+        for i in range(1, len(wf_in), 1): # Iterates over rest of wf
+            e1 += wf_in[i] - e2 + e2*const1
+            try:
                 e3 += wf_in[i] - e2 - e3*const2
-                e2  = wf_in[i]
-                
-                wf_out[i] = e1 - frac*e3
-        except RuntimeWarning:
-            print(i, e1, e2, e3)
-            
+            except RuntimeWarning:
+                print(i, e1, e2, e3)
+            e2  = wf_in[i]
+            wf_out[i] = e1 - frac*e3
+
         maxInd = np.argmax(wf_in) # Index of max
         pre_wf = wf_in[:maxInd] # waveform before max
         
