@@ -85,7 +85,7 @@ def extraction(paramArr, paramKeys):
         noise[i]         = findNoise(linFit, popt, window, ts[i], wfIn[i])
 
         windowTail       = tailWindow(pa["tp_0"][i], pa["dt"][i])
-        if windowTail + 250 >= len(wfCorr[i])-100:
+        if windowTail[0] + 250 >= len(wfCorr[i])-100:
             print(windowTail)
             windowTail[0]    = windowTail[0] + np.floor((len(wfCorr[i])-100-windowTail[0])/5)
             print(windowTail)
