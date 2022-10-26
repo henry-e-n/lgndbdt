@@ -90,7 +90,7 @@ def extraction(paramArr, paramKeys):
             poptTail         = blLinFit(windowTail, ts[i], wfCorr[i])
         except ValueError:
             print(f"Error {i}")
-            print(wfCorr[i, :500])
+            print(len(wfCorr[i]))
             print(f"WindowTail {windowTail}")
             # print(np.where(wfCorr[i]<0))
             # print(np.where(np.isnan(wfCorr[i])))
