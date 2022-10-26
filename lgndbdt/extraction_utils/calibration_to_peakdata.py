@@ -67,10 +67,10 @@ def getWFD(fitResults, peakIndex):
     paramArr = np.empty(len(DSPparamArr)+len(RAWparamArr), dtype = object)
     paramArrKeys = []
     for i in range(len(DSPparamArr)):
-        paramArr[i] = np.array([DSPparamArr[i][selection_crit]])
+        paramArr[i] = np.array(DSPparamArr[i][selection_crit])
         paramArrKeys.append(dsptargetKeys[i])# os.path.split(DSPparamArr[i].name)[1])
     for i in range(len(RAWparamArr)):
-        paramArr[i+len(DSPparamArr)] = np.array([RAWparamArr[i][selection_crit]])
+        paramArr[i+len(DSPparamArr)] = np.array(RAWparamArr[i][selection_crit])
         paramArrKeys.append(rawtargetKeys[i])#os.path.split(RAWparamArr[i].name)[1])
         
     print(paramArr.shape, paramArr[0].shape, paramArr[-1].shape)
