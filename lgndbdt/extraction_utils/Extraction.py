@@ -86,7 +86,10 @@ def extraction(paramArr, paramKeys):
 
         windowTail       = tailWindow(pa["tp_0"][i], pa["dt"][i])
         windowTail[0]    = windowTail[0] + 250
-        poptTail         = blLinFit(windowTail, ts[i], wfCorr[i])
+        try:
+            poptTail         = blLinFit(windowTail, ts[i], wfCorr[i])
+        except ValueError:
+            print(ts[i], wfCorr[i])
         noiseTail[i]     = findNoise(linFit, poptTail, windowTail, ts[i], wfCorr[i])
     
     #####################################################################
