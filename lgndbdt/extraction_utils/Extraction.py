@@ -90,8 +90,10 @@ def extraction(paramArr, paramKeys):
             poptTail         = blLinFit(windowTail, ts[i], wfCorr[i])
         except ValueError:
             print(f"Error {i}")
-            print(np.where(wfCorr[i]<0))
-            print(np.where(np.isnan(wfCorr[i])))
+            print(wfCorr[i, :500])
+            print(f"WindowTail {windowTail}")
+            # print(np.where(wfCorr[i]<0))
+            # print(np.where(np.isnan(wfCorr[i])))
 
         noiseTail[i]     = findNoise(linFit, poptTail, windowTail, ts[i], wfCorr[i])
     
