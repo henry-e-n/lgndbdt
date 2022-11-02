@@ -74,7 +74,7 @@ def getWFD(fitResults, peakIndex, verbose=False):
         paramArrKeys.append(rawtargetKeys[i])#os.path.split(RAWparamArr[i].name)[1])
         
     if verbose:
-        print(f"Number of features: {paramArr[0].shape}")
+        print(f"Number of features: {len(paramArrKeys)}")
         print(f"Number of Extracted Waveforms (pre-clean): {paramArr[1].shape}")
     return paramArr, paramArrKeys
 

@@ -200,7 +200,7 @@ def calibration(verbose=False):
     cal_pars, fitData = match_peaks(mus, cal_peaks)
 
     if verbose:
-        print(f"Known Energy: {peaks}, Calibrated ADC {fitData}")
+        print(f"Known Energy: {fitData[0][peakIndex]}, Calibrated ADC {fitData[1][peakIndex]}")
     return cal_pars, [fitData, fit_pars], peakIndex
 
 if __name__ == "__main__":
