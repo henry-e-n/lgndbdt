@@ -14,7 +14,7 @@ from extraction_utils.config import *
 from extraction_utils.h5utils import paramExtract
 from pygama import lh5
 
-def getWFD(fitResults, peakIndex):
+def getWFD(fitResults, peakIndex, verbose=False):
     # Fit Results [ [uncal energies, cal energies], [[1st peak fit param], 2nd peak fit...]] 
     evE = fitResults[0][0]
     adcE = fitResults[0][1]
@@ -73,8 +73,9 @@ def getWFD(fitResults, peakIndex):
         paramArr[i+len(DSPparamArr)] = np.array(RAWparamArr[i][selection_crit])
         paramArrKeys.append(rawtargetKeys[i])#os.path.split(RAWparamArr[i].name)[1])
         
-    # print(paramArr.shape, paramArr[0].shape, paramArr[-1].shape)
-
+    if verbose:
+        print(f"Number of features: {paramArr[0].shape}")
+        print(f"Number of Extracted Waveforms (pre-clean): {paramArr[1].shape}")
     return paramArr, paramArrKeys
 
 # if __name__ == "__main__":

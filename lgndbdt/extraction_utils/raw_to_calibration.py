@@ -17,7 +17,7 @@ from extraction_utils.config import *
 from extraction_utils.h5utils import paramExtract
 
 ##############################
-def calibration():
+def calibration(verbose=False):
     
 
     energy_stack = lh5.load_nda(dsp_files, ["trapEmax"], "icpc1/dsp")
@@ -199,6 +199,8 @@ def calibration():
 
     cal_pars, fitData = match_peaks(mus, cal_peaks)
 
+    if verbose:
+        print(f"Known Energy: {peaks[peakIndex]}, Calibrated ADC {fitData[peakIndex]}")
     return cal_pars, [fitData, fit_pars], peakIndex
 
 if __name__ == "__main__":

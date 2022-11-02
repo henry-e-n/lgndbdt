@@ -20,8 +20,8 @@ def mkdir(detectorName):
         print(f"{detectorName} Path already exists")
     return
 
-def cleanData(paramArr):
-    print(f"Initial Shape: {paramArr[0].shape}")
+def cleanData(paramArr, verbose=False):
+    # print(f"Initial Shape: {paramArr[0].shape}")
     nans = []
     for i in range(len(paramArr)):
         for w in range(len(paramArr[i])):
@@ -31,8 +31,9 @@ def cleanData(paramArr):
     # print(nans)
     for n in range(len(paramArr)):
         paramArr[n] = np.delete(paramArr[n], nans, 0)
-    print(f"Final Shape: {paramArr[0].shape}")
-
+    # print(f"Final Shape: {paramArr[0].shape}")
+    if verbose:
+        print(f"Number of Waveforms (post-clean) : {paramArr[0].shape}")
     return paramArr
 
 
