@@ -86,9 +86,9 @@ def extraction(paramArr, paramKeys):
 
         windowTail       = tailWindow(pa["tp_0"][i], pa["dt"][i])
         if windowTail[0] + 250 >= len(wfCorr[i])-100:
-            print(windowTail)
+            # print(windowTail)
             windowTail[0]    = windowTail[0] + int(np.floor((len(wfCorr[i])-100-windowTail[0])/5))
-            print(windowTail)
+            # print(windowTail)
         else:
             windowTail[0]    = windowTail[0] + 250
         try:

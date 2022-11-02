@@ -59,7 +59,7 @@ def getWFD(fitResults, peakIndex):
     peakEnergy = adcE[peakIndex]
     sigma = peakFits[peakIndex][2]
     # sigmas = np.array(sigmas)
-    print(peakEnergy, sigma)
+    # print(peakEnergy, sigma)
     
     selection_crit =  (energies>(peakEnergy-sigma))*(energies<(peakEnergy+sigma))
     
@@ -73,9 +73,9 @@ def getWFD(fitResults, peakIndex):
         paramArr[i+len(DSPparamArr)] = np.array(RAWparamArr[i][selection_crit])
         paramArrKeys.append(rawtargetKeys[i])#os.path.split(RAWparamArr[i].name)[1])
         
-    print(paramArr.shape, paramArr[0].shape, paramArr[-1].shape)
+    # print(paramArr.shape, paramArr[0].shape, paramArr[-1].shape)
 
     return paramArr, paramArrKeys
 
-if __name__ == "__main__":
-    getWFD([1143.53239803, 2200.70625742, 2499.94000479, 4905.99035165])
+# if __name__ == "__main__":
+#     getWFD([1143.53239803, 2200.70625742, 2499.94000479, 4905.99035165])

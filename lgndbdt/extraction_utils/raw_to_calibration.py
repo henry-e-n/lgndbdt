@@ -93,7 +93,7 @@ def calibration():
         return [best_m, best_b], [cal, data]
 
     linear_cal, fitDat = match_peaks(uncal_peaks, cal_peaks)
-    print(linear_cal)
+    # print(linear_cal)
 
     def linearFit(en, linCal):
         calibratedEnergy = en*linCal[0] + linCal[1]
