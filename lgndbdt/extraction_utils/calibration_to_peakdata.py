@@ -71,13 +71,20 @@ def getWFD(fitResults, peakIndex, verbose=False):
         selection_crit =  (energies>(peakEnergy-sigma))*(energies<(peakEnergy+sigma))
         
         # RAWparamArr = np.array(RAWparamArr, dtype=object)
-        
-        for i in range(len(DSPparamArr)):
-            paramArr[i] = np.append(paramArr[i], DSPparamArr[i][selection_crit])
-            # paramArrKeys.append(dsptargetKeys[i])# os.path.split(DSPparamArr[i].name)[1])
-        for i in range(len(RAWparamArr)):
-            paramArr[i+len(DSPparamArr)] = np.append(paramArr[i+len(DSPparamArr)], RAWparamArr[i][selection_crit])
-            # paramArrKeys.append(rawtargetKeys[i])#os.path.split(RAWparamArr[i].name)[1])
+        if file == 0:
+            for i in range(len(DSPparamArr)):
+                paramArr[i] = DSPparamArr[i][selection_crit]
+                # paramArrKeys.append(dsptargetKeys[i])# os.path.split(DSPparamArr[i].name)[1])
+            for i in range(len(RAWparamArr)):
+                paramArr[i+len(DSPparamArr)] = RAWparamArr[i][selection_crit]
+                # paramArrKeys.append(rawtargetKeys[i])#os.path.split(RAWparamArr[i].name)[1])
+        if file >= 1:
+            for i in range(len(DSPparamArr)):
+                paramArr[i] = np.append(paramArr[i], DSPparamArr[i][selection_crit], axis = 0)
+                # paramArrKeys.append(dsptargetKeys[i])# os.path.split(DSPparamArr[i].name)[1])
+            for i in range(len(RAWparamArr)):
+                paramArr[i+len(DSPparamArr)] = np.append(paramArr[i+len(DSPparamArr)], RAWparamArr[i][selection_crit], axis = 0)
+                # paramArrKeys.append(rawtargetKeys[i])#os.path.split(RAWparamArr[i].name)[1])
         
     if verbose:
         print(f"Number of features: {len(paramArrKeys)}")
