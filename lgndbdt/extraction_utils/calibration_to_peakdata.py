@@ -41,7 +41,7 @@ def getWFD(fitResults, peakIndex, verbose=False):
     rawtargetKeys = ["t0", "dt", "values"]
 
     paramArr = np.empty(len(dsptargetKeys)+len(rawtargetKeys), dtype = object)
-    paramArrKeys = []
+    paramArrKeys = dsptargetKeys + rawtargetKeys
     
     for file in range(len(dsp_files)):
         dspFile = dsp_files[file]
@@ -73,15 +73,15 @@ def getWFD(fitResults, peakIndex, verbose=False):
         # RAWparamArr = np.array(RAWparamArr, dtype=object)
         
         for i in range(len(DSPparamArr)):
-            paramArr[i] = np.append(paramArr[i], np.array(DSPparamArr[i][selection_crit]))
+            paramArr[i] = np.append(paramArr[i], DSPparamArr[i][selection_crit])
             # paramArrKeys.append(dsptargetKeys[i])# os.path.split(DSPparamArr[i].name)[1])
         for i in range(len(RAWparamArr)):
-            paramArr[i+len(DSPparamArr)] = np.append(paramArr[i+len(DSPparamArr)], np.array(RAWparamArr[i][selection_crit]))
+            paramArr[i+len(DSPparamArr)] = np.append(paramArr[i+len(DSPparamArr)], RAWparamArr[i][selection_crit])
             # paramArrKeys.append(rawtargetKeys[i])#os.path.split(RAWparamArr[i].name)[1])
         
     if verbose:
         print(f"Number of features: {len(paramArrKeys)}")
-        print(f"Number of Extracted Waveforms (pre-clean): {paramArr[1].shape}")
+        print(f"Number of Extracted Waveforms (pre-clean): {paramArr.shape} {paramArr[1].shape}")
     return paramArr, paramArrKeys
 
 # if __name__ == "__main__":
