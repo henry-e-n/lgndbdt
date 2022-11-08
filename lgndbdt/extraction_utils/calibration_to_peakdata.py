@@ -37,41 +37,47 @@ def getWFD(fitResults, peakIndex, verbose=False):
     # raw_file = raw_data_dir +  run + '.lh5'
     # dsp_files.append(dsp_file)
     # raw_files.append(raw_file)
-
     dsptargetKeys = ["trapEmax", "tp_0"]
-    # wfd, keys, DSPparamArr = paramExtract(dspFile, dsptargetKeys)
-    dsp_stack = lh5.load_nda(dsp_files, dsptargetKeys, "icpc1/dsp")
-    DSPparamArr = [dsp_stack["trapEmax"], dsp_stack["tp_0"]]
-
     rawtargetKeys = ["t0", "dt", "values"]
-    # wfd, keys, RAWparamArr = paramExtract(rawFile, rawtargetKeys)
-    raw_stack = lh5.load_nda(raw_files, rawtargetKeys, "icpc1/raw/waveform")
-    RAWparamArr = [raw_stack["t0"], raw_stack["dt"], raw_stack["values"]]
 
-    # Need to translate dictionary to array from load_nda and name DSPparamArr and RAWparamArr
-    # Specify location of rawtargetKeys in raw files
-    #
-    #
-
-
-    energies = DSPparamArr[0][:]
-    
-    peakEnergy = adcE[peakIndex]
-    sigma = peakFits[peakIndex][2]
-    # sigmas = np.array(sigmas)
-    # print(peakEnergy, sigma)
-    
-    selection_crit =  (energies>(peakEnergy-sigma))*(energies<(peakEnergy+sigma))
-    
-    # RAWparamArr = np.array(RAWparamArr, dtype=object)
-    paramArr = np.empty(len(DSPparamArr)+len(RAWparamArr), dtype = object)
+    paramArr = np.empty(len(dsptargetKeys)+len(rawtargetKeys), dtype = object)
     paramArrKeys = []
-    for i in range(len(DSPparamArr)):
-        paramArr[i] = np.array(DSPparamArr[i][selection_crit])
-        paramArrKeys.append(dsptargetKeys[i])# os.path.split(DSPparamArr[i].name)[1])
-    for i in range(len(RAWparamArr)):
-        paramArr[i+len(DSPparamArr)] = np.array(RAWparamArr[i][selection_crit])
-        paramArrKeys.append(rawtargetKeys[i])#os.path.split(RAWparamArr[i].name)[1])
+    
+    for file in range(len(dsp_files)):
+        dspFile = dsp_files[file]
+        rawFile = raw_files[file]
+
+        # wfd, keys, DSPparamArr = paramExtract(dspFile, dsptargetKeys)
+        dsp_stack = lh5.load_nda(dspFile, dsptargetKeys, "icpc1/dsp")
+        DSPparamArr = [dsp_stack["trapEmax"], dsp_stack["tp_0"]]
+
+        # wfd, keys, RAWparamArr = paramExtract(rawFile, rawtargetKeys)
+        raw_stack = lh5.load_nda(rawFile, rawtargetKeys, "icpc1/raw/waveform")
+        RAWparamArr = [raw_stack["t0"], raw_stack["dt"], raw_stack["values"]]
+
+        # Need to translate dictionary to array from load_nda and name DSPparamArr and RAWparamArr
+        # Specify location of rawtargetKeys in raw files
+        #
+        #
+
+
+        energies = DSPparamArr[0][:]
+        
+        peakEnergy = adcE[peakIndex]
+        sigma = peakFits[peakIndex][2]
+        # sigmas = np.array(sigmas)
+        # print(peakEnergy, sigma)
+        
+        selection_crit =  (energies>(peakEnergy-sigma))*(energies<(peakEnergy+sigma))
+        
+        # RAWparamArr = np.array(RAWparamArr, dtype=object)
+        
+        for i in range(len(DSPparamArr)):
+            paramArr[i] = np.append(paramArr[i], np.array(DSPparamArr[i][selection_crit]))
+            # paramArrKeys.append(dsptargetKeys[i])# os.path.split(DSPparamArr[i].name)[1])
+        for i in range(len(RAWparamArr)):
+            paramArr[i+len(DSPparamArr)] = np.append(paramArr[i+len(DSPparamArr)], np.array(RAWparamArr[i][selection_crit]))
+            # paramArrKeys.append(rawtargetKeys[i])#os.path.split(RAWparamArr[i].name)[1])
         
     if verbose:
         print(f"Number of features: {len(paramArrKeys)}")
