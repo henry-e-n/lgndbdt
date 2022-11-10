@@ -1,6 +1,7 @@
 import json, os, sys, h5py
 import numpy as np
 from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt
 
 import pygama.analysis.calibration as pgc
 import pygama.analysis.histograms as pgh
@@ -17,7 +18,7 @@ from extraction_utils.config import *
 from extraction_utils.h5utils import paramExtract
 
 ##############################
-def calibration(verbose=False):
+def calibration(verbose=False, plotBool=False):
     
     if len(dsp_files) >= 10:
         calibration_files = dsp_files[:10]
@@ -26,6 +27,10 @@ def calibration(verbose=False):
     energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "icpc1/dsp")
     energies = energy_stack["trapEmax"]
     
+    if verbose:
+        print(energies.shape)
+
+
     # dsp, keys, energies = paramExtract(dspFile, ["trapEmax"])
     # energies = energies[0]
 
@@ -104,15 +109,16 @@ def calibration(verbose=False):
     cal_energies_first = linearFit(energies, linear_cal)
 
     # Plots Energy Histogram
-    # plt.hist(cal_energies_first, bins=1000, color='k', ec='k')
-    # for peak in peaks:
-    #     plt.axvline(peak, 0, 5e5, color='r', lw=1, alpha=0.75)
+    if plotBool:
+        plt.hist(cal_energies_first, bins=1000, color='k', ec='k')
+        for peak in peaks:
+            plt.axvline(peak, 0, 5e5, color='r', lw=1, alpha=0.75)
 
-    # plt.xlabel('Energy (keV)', fontsize=24)
-    # plt.ylabel('Counts', fontsize=24)
-    # plt.yscale('log')
-    # plt.xlim(0,3000)
-    # plt.show()
+        plt.xlabel('Energy (keV)', fontsize=24)
+        plt.ylabel('Counts', fontsize=24)
+        plt.yscale('log')
+        plt.xlim(0,3000)
+        plt.savefig(f"{savePath}/EnergyHist.jpg")
 
 
     #####################################
