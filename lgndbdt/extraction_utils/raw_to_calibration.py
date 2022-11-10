@@ -58,7 +58,7 @@ def calibration(verbose=False, plotBool=False):
     hist, bins, var = pgh.get_hist(energies, bins=1000)
     uncal_peaks, cal_peaks, cal_pars = pgc.hpge_find_E_peaks(hist, bins, var, peaks)
 
-    def match_peaks(data_pks, cal_pks):
+    def match_peaks(data_pks, cal_pks, plotBool=plotBool):
         """
         Match uncalibrated peaks with literature energy values.
         """
@@ -88,14 +88,16 @@ def calibration(verbose=False, plotBool=False):
         # print(i, best_err)
         # print("cal:",cal)
         # print("data:",data)
+        if plotBool:
         # Plots Scatter of Calibration Pass
-        # plt.scatter(data, cal, label='min.err:{:.2e}'.format(err))
-        # xs = np.linspace(data[0], data[-1], 10)
-        # plt.plot(xs, best_m * xs + best_b , c="r",
-        #          label="y = {:.2f} x + {:.2f}".format(best_m,best_b) )
-        # plt.xlabel("Energy (ADC)", fontsize=24)
-        # plt.ylabel("Energy (keV)", fontsize=24)
-        # plt.legend(loc='best', fontsize=20)
+            plt.scatter(data, cal, label='min.err:{:.2e}'.format(err))
+            xs = np.linspace(data[0], data[-1], 10)
+            plt.plot(xs, best_m * xs + best_b , c="r",
+                    label="y = {:.2f} x + {:.2f}".format(best_m,best_b) )
+            plt.xlabel("Energy (ADC)", fontsize=24)
+            plt.ylabel("Energy (keV)", fontsize=24)
+            plt.legend(loc='best', fontsize=20)
+            plt.savefig(f"{savePath}/CalibrationFit.jpg")
         # plt.show()
 
         return [best_m, best_b], [cal, data]
@@ -183,6 +185,9 @@ def calibration(verbose=False, plotBool=False):
     # fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24)) 
 
     sigmas = []
+    fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24))
+    labels = [r'$^{60}$Co', r'$^{60}$Co', r'$^{228}$Th DEP', r'$^{228}$Th SEP', r'$^{228}$Th FEP'] #If other peaks are chosen, make sure to modify this
+
     for i in range(n_peaks):
 
         #Get histogram for peak within bounds of 5 sigma
@@ -197,9 +202,6 @@ def calibration(verbose=False, plotBool=False):
 
         #Plot data and fit components
         if plotBool:
-            fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24))
-            labels = [r'$^{60}$Co', r'$^{60}$Co', r'$^{228}$Th DEP', r'$^{228}$Th SEP', r'$^{228}$Th FEP'] #If other peaks are chosen, make sure to modify this
-
             axs[i].semilogy(bin_centers, hist, ds="steps-mid", color="k")#, label=labels[i])
             axs[i].semilogy(bin_centers, fit, color="r", label='fit')
             axs[i].semilogy(bin_centers, gaussian, color="orange", label="gaussian")
