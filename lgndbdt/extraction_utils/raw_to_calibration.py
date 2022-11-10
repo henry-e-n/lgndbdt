@@ -98,6 +98,8 @@ def calibration(verbose=False, plotBool=False):
             plt.ylabel("Energy (keV)", fontsize=24)
             plt.legend(loc='best', fontsize=20)
             plt.savefig(f"{savePath}/CalibrationFit.jpg")
+            plt.clf()
+            plt.cla()
         # plt.show()
 
         return [best_m, best_b], [cal, data]
@@ -121,7 +123,8 @@ def calibration(verbose=False, plotBool=False):
         plt.yscale('log')
         plt.xlim(0,3000)
         plt.savefig(f"{savePath}/EnergyHist.jpg")
-
+        plt.clf()
+        plt.cla()
 
     #####################################
     # Second Calibration Pass
@@ -186,7 +189,7 @@ def calibration(verbose=False, plotBool=False):
 
     sigmas = []
     fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24))
-    labels = [r'$^{60}$Co', r'$^{60}$Co', r'$^{228}$Th DEP', r'$^{228}$Th SEP', r'$^{228}$Th FEP'] #If other peaks are chosen, make sure to modify this
+    labels = [r'$^{228}$Th -> Tl', r'$^{60}$Co', r'$^{60}$Co', r'$^{228}$Th DEP', r'$^{228}$Th SEP', r'$^{228}$Th -> Tl']
 
     for i in range(n_peaks):
 
@@ -210,6 +213,8 @@ def calibration(verbose=False, plotBool=False):
             axs[i].legend(fontsize=18, loc='best')
     
     plt.savefig(f"{savePath}/fitPeaks.jpg")
+    plt.cla()
+    plt.clf()
 
     mus = np.asarray([fit_pars[i][1] for i in range(len(fit_pars))])
     mu_errs = np.asarray([fit_errs[i][1] for i in range(len(fit_pars))]) 

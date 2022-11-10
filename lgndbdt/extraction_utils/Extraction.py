@@ -29,7 +29,7 @@ from extraction_utils.h5utils import paramExtract
 from extraction_utils.h5utils import *
 
 
-def extraction(paramArr, paramKeys):
+def extraction(paramArr, paramKeys, plotBool=False):
     # Make Dictionary for easy referencing of Parameters
     pa = dict(zip(paramKeys, paramArr))
     # print(detName)
@@ -111,4 +111,13 @@ def extraction(paramArr, paramKeys):
     standardAnalysisNames = np.array(["dt", "t0", "tp_0", "maxA", "deltasCorrected", "LQ80", "noise", "noiseTail", "tdrift", "tdrift50", "tdrift10", "TrapEnergy", "AvsE_c"])
     appNewh5(standardAnalysisArray, standardAnalysisNames, ts, wfCorr)
     
+    if plotBool:
+        # maxA hist
+        plt.hist(maxA, bins = 25)
+        plt.xlabel("Current Amplitude")
+        plt.ylabel("Number")
+        plt.title(f"Current spread")
+        plt.savefig(f'{savePath}/_AHist.jpg')
+        plt.close()    
+        plt.figure()
     return
