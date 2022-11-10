@@ -53,7 +53,7 @@ def AvsE(times, values, dtimes, plots = [], numWF = 2500, currentEstimator = 100
     # plt.show()
     for w in tqdm(range(numWF),
                   desc = "Getting Current Amplitude.....",
-                  colour = terminalCMAP[0]):
+                  colour = terminalCMAP[1]):
         maxA[w] = np.max(np.dot(values[w, :], tensor.T))
     return maxA, Eest
 

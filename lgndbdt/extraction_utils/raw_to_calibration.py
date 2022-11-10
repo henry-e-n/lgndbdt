@@ -28,7 +28,7 @@ def calibration(verbose=False, plotBool=False):
     energies = energy_stack["trapEmax"]
     
     if verbose:
-        print(energies.shape)
+        print(len(energies))
 
 
     # dsp, keys, energies = paramExtract(dspFile, ["trapEmax"])
@@ -196,12 +196,18 @@ def calibration(verbose=False, plotBool=False):
         sigmas.append(fit_pars[i][2])
 
         #Plot data and fit components
-        # axs[i].semilogy(bin_centers, hist, ds="steps-mid", color="k", label=labels[i])
-        # axs[i].semilogy(bin_centers, fit, color="r", label='fit')
-        # axs[i].semilogy(bin_centers, gaussian, color="orange", label="gaussian")
-        # axs[i].semilogy(bin_centers, step, color="cyan", label="step")
-        # axs[i].set_ylim(hist[-1:]+1, np.amax(hist)+100)
-        # axs[i].legend(fontsize=18, loc='best')
+        if plotBool:
+            fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24))
+            labels = [r'$^{60}$Co', r'$^{60}$Co', r'$^{228}$Th DEP', r'$^{228}$Th SEP', r'$^{228}$Th FEP'] #If other peaks are chosen, make sure to modify this
+
+            axs[i].semilogy(bin_centers, hist, ds="steps-mid", color="k", label=labels[i])
+            axs[i].semilogy(bin_centers, fit, color="r", label='fit')
+            axs[i].semilogy(bin_centers, gaussian, color="orange", label="gaussian")
+            axs[i].semilogy(bin_centers, step, color="cyan", label="step")
+            axs[i].set_ylim(hist[-1:]+1, np.amax(hist)+100)
+            axs[i].legend(fontsize=18, loc='best')
+    
+    plt.savefig(f"{savePath}/fitPeaks.jpg")
 
     mus = np.asarray([fit_pars[i][1] for i in range(len(fit_pars))])
     mu_errs = np.asarray([fit_errs[i][1] for i in range(len(fit_pars))]) 

@@ -103,6 +103,9 @@ def getWFD(fitResults, peakIndex, verbose=False):
     paramArr = np.empty(len(dsptargetKeys)+len(rawtargetKeys), dtype = object)
     paramArrKeys = dsptargetKeys + rawtargetKeys
     
+    if verbose:
+        print(f"Number of files: {len(dsp_files)}")
+        
     for file in range(len(dsp_files)):
         dspFile = dsp_files[file]
         rawFile = raw_files[file]
