@@ -28,7 +28,7 @@ def calibration(verbose=False, plotBool=False):
     energies = energy_stack["trapEmax"]
     
     if verbose:
-        print(len(energies))
+        print(f"Number of events for Calibration: {len(energies)}")
 
 
     # dsp, keys, energies = paramExtract(dspFile, ["trapEmax"])
@@ -45,10 +45,10 @@ def calibration(verbose=False, plotBool=False):
                           2103.5, # 228Th SEP
                           2614.53]) # 228Th -> 208Tl (99.8%) 
         if targetPeak == "228ThDEP":
-            print("DEP")
+            print(f"Calibrating on 228Th DEP")
             peakIndex = 3
         elif targetPeak == "228ThSEP":
-            print("SEP")
+            print(f"Calibrating on 228Th SEP")
             peakIndex = 4
         
     else:
@@ -200,7 +200,7 @@ def calibration(verbose=False, plotBool=False):
             fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24))
             labels = [r'$^{60}$Co', r'$^{60}$Co', r'$^{228}$Th DEP', r'$^{228}$Th SEP', r'$^{228}$Th FEP'] #If other peaks are chosen, make sure to modify this
 
-            axs[i].semilogy(bin_centers, hist, ds="steps-mid", color="k", label=labels[i])
+            axs[i].semilogy(bin_centers, hist, ds="steps-mid", color="k")#, label=labels[i])
             axs[i].semilogy(bin_centers, fit, color="r", label='fit')
             axs[i].semilogy(bin_centers, gaussian, color="orange", label="gaussian")
             axs[i].semilogy(bin_centers, step, color="cyan", label="step")
