@@ -1,4 +1,4 @@
-import lightgbm as lgb
++import lightgbm as lgb
 import numpy as np
 import os
 import sys
@@ -13,7 +13,7 @@ from time import time
 from imblearn.over_sampling import SMOTENC
 
 
-from extraction_utils.configDS        import *
+from extraction_utils.config        import *
 from extraction_utils.h5Extract     import *
 from ML_utils.BDTPrep       import *
 from ML_utils.BDTTrain      import *
@@ -52,7 +52,7 @@ def run_BDT():
     # Data Type Preparation
     ###################################################################
 
-    filename        = f"{detName}_Clean_StandardAnalysis.lh5"
+    filename        = f"{detName}_PSDs_{targetPeak[:-3]}"
     fpath           = f"{savePath}"
 
     print(filename)
@@ -84,8 +84,8 @@ def run_BDT():
         print(f"Returned {fpath}{filename}")#, shape {dataArr.shape}")
         return dataArr, dataDictionary, wfd, avse, selectDictionary
 
-    sigRaw, sigDict, sigWFD, sigavse, selectDict = getRaw(filename, f"{fpath}DEP/")
-    bkgRaw, bkgDict, bkgWFD, bkgavse, selectDict = getRaw(filename, f"{fpath}FEP/")
+    sigRaw, sigDict, sigWFD, sigavse, selectDict = getRaw(f"{filename}DEP.lh5", f"{fpath}")
+    bkgRaw, bkgDict, bkgWFD, bkgavse, selectDict = getRaw(f"{filename}SEP.lh5", f"{fpath}")
 
     ###################################################################
     # DATA MATCHING
