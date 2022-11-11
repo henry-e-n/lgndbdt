@@ -33,7 +33,7 @@ savePath = os.getcwd()+f"/{data['detector_name']}"
 plotPath = f"{savePath}/Plots"#os.getcwd()
 # modPath = data["mod_path"]
 
-# fname = np.array(data["feature_names"]) # features to use in BDT
+fname = np.array(data["feature_names"]) # features to use in BDT
 # distMatch = np.array(data["distribution_names"])
 # distStep = np.array(data["distribution_step"])
 
