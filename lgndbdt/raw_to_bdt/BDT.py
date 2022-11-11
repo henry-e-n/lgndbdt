@@ -23,25 +23,25 @@ from ML_utils.MultiVarCorr import *
 
 print("Finished Import")
 
-import argparse                  # allows us to deal with arguments to main()
-from argparse import RawTextHelpFormatter
+# import argparse                  # allows us to deal with arguments to main()
+# from argparse import RawTextHelpFormatter
 # PARSER ARGUMENTS
-parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter, 
-                                     description = "If the data is already clean, set clean to false and fname to the clean data name")
-parser.add_argument("learning_rate", type=float,
-                    help="Learning Rate of BDT",
-                    default = 0.07442318529884213, nargs='?')
-parser.add_argument("num_leaves", type=int,
-                    help="Number of Leaves of BDT",
-                    default = 73, nargs='?')
-parser.add_argument("max_bin", type=int,
-                    help="Max Bins of BDT",
-                    default = 542, nargs='?')                
+# parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter, 
+#                                      description = "If the data is already clean, set clean to false and fname to the clean data name")
+# parser.add_argument("learning_rate", type=float,
+#                     help="Learning Rate of BDT",
+#                     default = 0.07442318529884213, nargs='?')
+# parser.add_argument("num_leaves", type=int,
+#                     help="Number of Leaves of BDT",
+#                     default = 73, nargs='?')
+# parser.add_argument("max_bin", type=int,
+#                     help="Max Bins of BDT",
+#                     default = 542, nargs='?')                
 
-args                 = parser.parse_args()
-learning_rate        = args.learning_rate
-num_leaves           = args.num_leaves
-max_bin              = args.max_bin
+# args                 = parser.parse_args()
+learning_rate        = 0.07442318529884213 #args.learning_rate
+num_leaves           = 73 #args.num_leaves
+max_bin              = 542 #args.max_bin
 
 
 randSeed = 27
