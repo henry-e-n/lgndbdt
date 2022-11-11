@@ -99,12 +99,12 @@ def run_BDT():
     print(f"Signal Size before Distribution Matching {sigSave.shape}")
     for i in range(len(distMatch)):
         sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, distMatch[i], distStep[i], True, show = False)
-    # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift", 30, True, show = False)
-    # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift10", 20, True, show = False)
-    # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift50", 20, True, show = False)
-    # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/noise", 0.00002, True, show = False)
-    # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/noiseTail", 0.00002, True, show = False)
-    # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/LQ80", 10, True, show = False)
+        sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift", 30, True, show = False)
+        sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift10", 20, True, show = False)
+        sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift50", 20, True, show = False)
+        sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/noise", 0.00002, True, show = False)
+        sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/noiseTail", 0.00002, True, show = False)
+        sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/LQ80", 10, True, show = False)
     print(f"Signal Size after Distribution Matching {sigSave.shape}")
 
     sigs = sigSave

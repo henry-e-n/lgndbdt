@@ -34,8 +34,8 @@ plotPath = f"{savePath}/Plots"#os.getcwd()
 # modPath = data["mod_path"]
 
 fname = np.array(data["feature_names"]) # features to use in BDT
-# distMatch = np.array(data["distribution_names"])
-# distStep = np.array(data["distribution_step"])
+distMatch = np.array(data["distribution_names"])
+distStep = np.array(data["distribution_step"])
 
 dsp_data_dir = f"{data['path_to_dsp']}{data['detector_name']}/"
 raw_data_dir = f"{data['path_to_raw']}{data['detector_name']}/"
