@@ -37,11 +37,12 @@ def calibration(verbose=False, plotBool=False):
     #####################################
     # First Calibration Pass
     #####################################
+    """ 583.187, # 228Th -> 208Tl (85%)
+    1173.24, # 60Co
+    1332.5, # 60Co,"""
+
     if source == "60Co":
-        peaks = np.array([583.187, # 228Th -> 208Tl (85%)
-                          1173.24, # 60Co
-                          1332.5, # 60Co,
-                          1592.5, # 228Th DEP
+        peaks = np.array([1592.5, # 228Th DEP
                           2103.5, # 228Th SEP
                           2614.53]) # 228Th -> 208Tl (99.8%) 
         if targetPeak == "228ThDEP":
