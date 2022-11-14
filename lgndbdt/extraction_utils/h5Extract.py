@@ -121,6 +121,7 @@ def paramExtract(filename, relativePathToFolder = "", og = "raw"):
                     raw["waveform/dt"], 
                     raw["waveform/t0"],
                     raw["waveform/values"]]
+        wfd.close()
         return wfd, raw, paramArr
     elif og == "clean":
         raw = wfd[f"{headKeys[0]}"]
@@ -130,11 +131,13 @@ def paramExtract(filename, relativePathToFolder = "", og = "raw"):
                     raw["waveform/t0"],
                     raw["waveform/values"],
                     raw["dc_labels"]]
+        wfd.close()
         return wfd, raw, paramArr
     else:
         paramArr = []
         for n in range(len(headKeys)):
             paramArr.append(wfd[f"{headKeys[n]}"])
+        wfd.close()
         return wfd, headKeys, paramArr
     
 def appNewh5(ogH5, choosePeak, appArr, appArrN, ts, wfdCorr, module_path):
