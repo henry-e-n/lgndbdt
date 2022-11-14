@@ -83,6 +83,7 @@ def run_BDT():
         selectDictionary = dict(select)
         dataArr = np.stack(dataArr, 1)
         print(f"Returned {fpath}{filename}")#, shape {dataArr.shape}")
+        file.close()
         return dataArr, dataDictionary, wfd, avse, selectDictionary
 
     sigRaw, sigDict, sigWFD, sigavse, selectDict = getRaw(f"{filename}DEP.lh5", f"{fpath}")
