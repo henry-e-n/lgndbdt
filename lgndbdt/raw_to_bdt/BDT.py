@@ -60,6 +60,7 @@ def run_BDT():
 
     def getRaw(filename, fpath):
         file, names, paramArr = paramExtract(filename, fpath, False)
+        print(paramArr)
         dataDict = []
         dataArr = np.zeros((len(fname), paramArr[0].shape[0]))
         select = []
