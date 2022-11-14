@@ -20,8 +20,8 @@ from extraction_utils.h5utils import paramExtract
 ##############################
 def calibration(verbose=False, plotBool=False):
     
-    if len(dsp_files) >= 10:
-        calibration_files = dsp_files[:10]
+    if len(dsp_files) >= 3:
+        calibration_files = dsp_files[:3]
     else:
         calibration_files = dsp_files
     energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "icpc1/dsp")
