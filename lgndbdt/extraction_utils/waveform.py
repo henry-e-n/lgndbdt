@@ -13,7 +13,7 @@ def cTimes(wfParams, choosePeak, number, save=True):
     else:
         rg = val.shape[0] # Actually always save full times file
         
-    for event in tqdm(range(rg), desc=f"Loading.............:", ascii=False, ncols=75, colour = terminalCMAP[0]):#):
+    for event in tqdm(range(rg), desc=f"Loading Raw Data.............:", ascii=False, ncols=75, colour = terminalCMAP[0]):#):
         t[event, 0] = t0[event]
         if event > 1 and t0[event] == t0[event-1] and dt[event] == dt[event-1]:
             t[event, :] = t[event-1, :]
