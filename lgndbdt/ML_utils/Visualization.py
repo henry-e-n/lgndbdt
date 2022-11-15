@@ -125,7 +125,7 @@ def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
     return
 
 def plot_SHAP_force(explainer, shap_values):
-    print("force_plot")
+    # print("force_plot")
     # shap.force_plot(explainer.expected_value[1], shap_values, fname, matplotlib = False, show=True, plot_cmap = "PkYg", text_rotation=60)
     shapFP = shap.force_plot(explainer.expected_value[1], shap_values, fname, matplotlib = True, show=False, plot_cmap = "PkYg", text_rotation=45)
     plt.savefig(f"{plotPath}/ForcePlot.png",dpi=200, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)

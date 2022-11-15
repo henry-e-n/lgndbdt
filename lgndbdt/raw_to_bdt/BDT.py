@@ -60,7 +60,6 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
 
     def getRaw(filename, fpath):
         file, names, paramArr = paramExtract(filename, fpath, False)
-        print(paramArr)
         dataDict = []
         dataArr = np.zeros((len(fname), paramArr[0].shape[0]))
         select = []
@@ -175,11 +174,11 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
     evals_result = {}
 
     # Performs the training on the dataset
+    lgb.early_stopping(10)
     gbm = lgb.train(params, 
                     lgbTrain,
                     feature_name=list(fname), 
                     valid_sets=lgbEval,
-                    early_stopping_rounds=10,
                     evals_result=evals_result,
                     verbose_eval = 20) 
 
@@ -211,6 +210,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
 
                 X_test = np.concatenate([signalData,bkgData],axis=0)
                 Y_test = np.array([1]*len(signalData) + [0] * len(bkgData))
+                print(f"X_test Shape {X_test.shape}, Y_test Shape {Y_test.shape}")
                 params = {"num_iterations": 1, "learning_rate": 0.15967607193274216, "num_leaves": 688, "bagging_freq": 34, "bagging_fraction": 0.9411410478379901, "min_data_in_leaf": 54, "drop_rate": 0.030050388917525712, "min_gain_to_split": 0.24143821598351703, "max_bin": 454, "boosting": "dart", "objective": "binary", "metric": "binary_logloss", "verbose": -100}
 
                 lgb_train = lgb.Dataset(X_test[:,:len(fname)], Y_test,free_raw_data=False, feature_name = list(fname))
@@ -250,9 +250,6 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
                 print(f"AvsE Distribution, Min: {np.min(avseDistribution)}, Max {np.max(avseDistribution)}, Mean {np.mean(avseDistribution)}")
                 explainer = shap.TreeExplainer(gbm)
                 sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
-                print(f"253 - Samplesig shape {sample_sig.shape}")
-                print(X_test.shape)
-                print(X_test[sample_sig,:len(fname)])
                 # Get Sig Outperforming SHAP
                 shap_sig = explainer.shap_values(X_test[sample_sig,:len(fname)])
                 # Get BDT and AvsE score 
@@ -269,9 +266,6 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
                 plot_covariance(covSIG, "Signal Covariance", covName)
             elif i == 4:
                 sample_bkg = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
-                print(f"271 - SampleBKG shape {sample_bkg.shape}")
-                print(X_test.shape, fname)
-                print(X_test[sample_bkg,:len(fname)])
                 shap_bkg = explainer.shap_values(X_test[sample_bkg,:len(fname)])
                 outBkgBDT = y_pred[sample_bkg]
                 outBkgAvsE = X_test[sample_bkg,selectDict["/AvsE_c"]]
