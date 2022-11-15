@@ -246,7 +246,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
             elif i == 3:
                 # Covariance Matrices
                 # Define Outperforming events
-                
+                avseDistribution = X_test[:,selectDict["/AvsE_c"]]
+                print(f"AvsE Distribution, Min: {np.min(avseDistribution)}, Max {np.max(avseDistribution)}, Mean {np.mean(avseDistribution)}")
                 explainer = shap.TreeExplainer(gbm)
                 sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
                 print(f"253 - Samplesig shape {sample_sig.shape}")
