@@ -118,12 +118,12 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
     print("-------------------------------------------------------------")
 
     signalTrain, signalTest = dataSplit(sigs, 0.3)
-    sigLabelTrain = np.ones(signalTrain.shape[0]) # Labels all training signals as signals (1)
-    sigLabelTest = np.ones(signalTest.shape[0]) # Labels all testing signals as signals (1)
+    sigLabelTrain           = np.ones(signalTrain.shape[0]) # Labels all training signals as signals (1)
+    sigLabelTest            = np.ones(signalTest.shape[0]) # Labels all testing signals as signals (1)
 
     bkgTrain, bkgTest = dataSplit(bkgs, 0.3)  # assigns arrays corresponding to randomly split signal data 
-    bkgLabelTrain = np.zeros(bkgTrain.shape[0])
-    bkgLabelTest = np.zeros(bkgTest.shape[0])
+    bkgLabelTrain     = np.zeros(bkgTrain.shape[0])
+    bkgLabelTest      = np.zeros(bkgTest.shape[0])
 
     # Combining then randomizing signal and background data for training
 
@@ -139,7 +139,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
     xTestStraight = np.concatenate([signalTest, bkgTest], axis = 0) # combines test input - no need to shuffle as it is for testing only
     yTestStraight = np.concatenate([sigLabelTest, bkgLabelTest], axis = 0) # combines test label
 
-    sigTest = np.where(yTestStraight == 1)[0] # Array of signal indeces
+    sigTest   = np.where(yTestStraight == 1)[0] # Array of signal indeces
     backgTest = np.where(yTestStraight == 0)[0]
 
     minTestEntry = min(len(sigTest), len(backgTest)) # Takes lesser beween num of sig and num of bkg
@@ -164,7 +164,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
     print("-------------------------------------------------------------")
 
     lgbTrain = lgb.Dataset(xTrain, yTrain, free_raw_data=False, feature_name = list(fname))
-    lgbEval = lgb.Dataset(xVal, yVal, reference=lgbTrain, free_raw_data=False, feature_name = list(fname))
+    lgbEval  = lgb.Dataset(xVal, yVal, reference=lgbTrain, free_raw_data=False, feature_name = list(fname))
 
     # Defines the hyperparameters of the BDT 
     params={"num_iterations": 2000, "learning_rate": learning_rate,
@@ -176,9 +176,9 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
     # Performs the training on the dataset
     gbm = lgb.train(params, 
                     lgbTrain,
-                    feature_name=list(fname), 
-                    valid_sets=lgbEval,
-                    callbacks = [lgb.early_stopping(10), lgb.log_evaluation(20), lgb.record_evaluation(evals_result)])
+                    feature_name = list(fname), 
+                    valid_sets   = lgbEval,
+                    callbacks    = [lgb.early_stopping(10), lgb.log_evaluation(20), lgb.record_evaluation(evals_result)])
 
     explainer = shap.TreeExplainer(gbm)
     gbm.save_model('BDT_unblind.txt') # Saves the BDT model as txt file
@@ -203,27 +203,32 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
                         desc   ="Running Visualization................", 
                         colour = terminalCMAP[1]):
             if i == 0:
-                signalData = sigPDM
-                bkgData = bkgPDM
+                
                 print(f"Size SigPDM {sigPDM.shape}, BkgPDM {bkgPDM.shape}")
-                if sigPDM.shape != bkgPDM.shape:
-                    print(f"Unequal sizes")
-                    minSize = np.min([sigPDM.shape[0], bkgPDM.shape[0]])
-                    print(minSize)
-                    
+                minSize = np.min([sigPDM.shape[0], bkgPDM.shape[0]])
+                print(minSize)
+
+                np.random.shuffle(sigPDM)
+                np.random.shuffle(bkgPDM)
+                
+                signalData   = sigPDM[:minSize, :]
+                bkgData      = bkgPDM[:minSize, :]
+
+                print(f"Size SignalData {signalData.shape}, BkgData {bkgData.shape}")
+
                 X_test = np.concatenate([signalData,bkgData],axis=0)
                 Y_test = np.array([1]*len(signalData) + [0] * len(bkgData))
                 print(f"X_test Shape {X_test.shape}, Y_test Shape {Y_test.shape}")
                 params = {"num_iterations": 1, "learning_rate": 0.15967607193274216, "num_leaves": 688, "bagging_freq": 34, "bagging_fraction": 0.9411410478379901, "min_data_in_leaf": 54, "drop_rate": 0.030050388917525712, "min_gain_to_split": 0.24143821598351703, "max_bin": 454, "boosting": "dart", "objective": "binary", "metric": "binary_logloss", "verbose": -100, "silent":True}
 
                 lgb_train = lgb.Dataset(X_test[:,:len(fname)], Y_test,free_raw_data=False, feature_name = list(fname))
-                MSBDT = lgb.Booster(model_file='BDT_unblind.txt')
+                MSBDT     = lgb.Booster(model_file='BDT_unblind.txt')
                 params["num_iterations"] = 1
 
                 gbm = lgb.train(params, 
                                 lgb_train) 
 
-                MSBDTstr = MSBDT.model_to_string()
+                MSBDTstr  = MSBDT.model_to_string()
                 explainer = shap.TreeExplainer(gbm.model_from_string(MSBDTstr))
                 
                 y_pred = gbm.predict(X_test[:,:len(fname)], num_iteration=gbm.best_iteration)
@@ -251,12 +256,12 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
                 # Define Outperforming events
                 avseDistribution = X_test[:,selectDict["/AvsE_c"]]
                 print(f"AvsE Distribution, Min: {np.min(avseDistribution)}, Max {np.max(avseDistribution)}, Mean {np.mean(avseDistribution)}")
-                explainer = shap.TreeExplainer(gbm)
+                explainer  = shap.TreeExplainer(gbm)
                 sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
                 # Get Sig Outperforming SHAP
                 shap_sig = explainer.shap_values(X_test[sample_sig,:len(fname)])
                 # Get BDT and AvsE score 
-                outSigBDT = y_pred[sample_sig]
+                outSigBDT  = y_pred[sample_sig]
                 outSigAvsE = X_test[sample_sig,selectDict["/AvsE_c"]]
                 # Transform SHAP to array
                 shap_sigArr = np.array(shap_sig[0], dtype=float)
@@ -264,18 +269,18 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
                 shap_sigArr = np.insert(shap_sigArr, -1, outSigBDT, axis=1)
                 # Add AvsE
                 shap_sigArr = np.insert(shap_sigArr, -1, outSigAvsE, axis=1)
-                covName = np.append(fname, ["BDT", "A/E"])
-                covSIG = np.corrcoef(shap_sigArr.T)
+                covName     = np.append(fname, ["BDT", "A/E"])
+                covSIG      = np.corrcoef(shap_sigArr.T)
                 plot_covariance(covSIG, "Signal Covariance", covName)
             elif i == 4:
-                sample_bkg = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
-                shap_bkg = explainer.shap_values(X_test[sample_bkg,:len(fname)])
-                outBkgBDT = y_pred[sample_bkg]
-                outBkgAvsE = X_test[sample_bkg,selectDict["/AvsE_c"]]
+                sample_bkg  = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
+                shap_bkg    = explainer.shap_values(X_test[sample_bkg,:len(fname)])
+                outBkgBDT   = y_pred[sample_bkg]
+                outBkgAvsE  = X_test[sample_bkg,selectDict["/AvsE_c"]]
                 shap_bkgArr = np.array(shap_bkg[0], dtype=float)
                 shap_bkgArr = np.insert(shap_bkgArr, -1, outBkgBDT, axis=1)
                 shap_bkgArr = np.insert(shap_bkgArr, -1, outBkgAvsE, axis=1)
-                covBKG = np.corrcoef(shap_bkgArr.T)
+                covBKG      = np.corrcoef(shap_bkgArr.T)
                 plot_covariance(covBKG, "Background Covariance", covName)
 
             elif i == 5:
@@ -304,8 +309,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
                 index = 0
                 ROIdata = evnew #X_test[sample_selector]
 
-                ROIdata = ROIdata[ROIdata[:,selectDict["/tdrift"]] < 600]
-                sample=ROIdata[index,:len(fname)].reshape(1,-1)
+                ROIdata     = ROIdata[ROIdata[:,selectDict["/tdrift"]] < 600]
+                sample      = ROIdata[index,:len(fname)].reshape(1,-1)
                 shap_values = explainer.shap_values(sample)
                 plot_SHAP_force(explainer, shap_values[1][0])
             elif i == 10:
