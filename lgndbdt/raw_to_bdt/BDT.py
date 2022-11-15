@@ -269,7 +269,8 @@ def run_BDT(plots=False):
             elif i == 4:
                 sample_bkg = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
                 print(f"271 - SampleBKG shape {sample_bkg.shape}")
-                print(X_test.shape)
+                print(X_test.shape, fname)
+                print(X_test[sample_bkg,:len(fname)])
                 shap_bkg = explainer.shap_values(X_test[sample_bkg,:len(fname)])
                 outBkgBDT = y_pred[sample_bkg]
                 outBkgAvsE = X_test[sample_bkg,selectDict["/AvsE_c"]]
