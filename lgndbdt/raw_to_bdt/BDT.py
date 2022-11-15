@@ -13,13 +13,13 @@ from time import time
 from imblearn.over_sampling import SMOTENC
 
 
-from extraction_utils.config        import *
-from extraction_utils.h5Extract     import *
-from ML_utils.BDTPrep       import *
-from ML_utils.BDTTrain      import *
-from ML_utils.plot_legacy   import summary_legacy
-from ML_utils.Visualization import *
-from ML_utils.MultiVarCorr import *
+from lgndbdt.extraction_utils.config        import *
+from lgndbdt.extraction_utils.h5Extract     import *
+from lgndbdt.ML_utils.BDTPrep       import *
+from lgndbdt.ML_utils.BDTTrain      import *
+from lgndbdt.ML_utils.plot_legacy   import summary_legacy
+from lgndbdt.ML_utils.Visualization import *
+from lgndbdt.ML_utils.MultiVarCorr import *
 
 print("Finished Import")
 
@@ -98,7 +98,7 @@ def run_BDT(plots=False):
     sigSave, sigPDM = dataSplit(sigRaw, 0.3)
     bkgSave, bkgPDM = dataSplit(bkgRaw, 0.3)
 
-    print(f"Signal Size before Distribution Matching {sigSave.shape}")
+    print(f"Size before Distribution Matching Signal: {sigSave.shape}, Background: {bkgSave.shape}")
     for i in range(len(distMatch)):
         sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, distMatch[i], distStep[i], plots, show = False)
         # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift", 30, False, show = False)
@@ -107,7 +107,7 @@ def run_BDT(plots=False):
         # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/noise", 0.00002, False, show = False)
         # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/noiseTail", 0.00002, False, show = False)
         # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/LQ80", 10, False, show = False)
-    print(f"Signal Size after Distribution Matching {sigSave.shape}")
+    print(f"Size after Distribution Matching Signal: {sigSave.shape}, Background: {bkgSave.shape}")
 
     sigs = sigSave
     bkgs = bkgSave
@@ -250,6 +250,8 @@ def run_BDT(plots=False):
                 avse_thresh = 969 #-1 # How to set Cut
                 explainer = shap.TreeExplainer(gbm)
                 sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
+                print(f"253 - Samplesig shape {sample_sig.shape}")
+                print(X_test.shape)
                 # Get Sig Outperforming SHAP
                 shap_sig = explainer.shap_values(X_test[sample_sig,:len(fname)])
                 # Get BDT and AvsE score 
@@ -264,9 +266,10 @@ def run_BDT(plots=False):
                 covName = np.append(fname, ["BDT", "A/E"])
                 covSIG = np.corrcoef(shap_sigArr.T)
                 plot_covariance(covSIG, "Signal Covariance", covName)
-
             elif i == 4:
                 sample_bkg = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
+                print(f"271 - SampleBKG shape {sample_bkg.shape}")
+                print(X_test.shape)
                 shap_bkg = explainer.shap_values(X_test[sample_bkg,:len(fname)])
                 outBkgBDT = y_pred[sample_bkg]
                 outBkgAvsE = X_test[sample_bkg,selectDict["/AvsE_c"]]
