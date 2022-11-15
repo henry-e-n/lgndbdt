@@ -174,13 +174,11 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
     evals_result = {}
 
     # Performs the training on the dataset
-    lgb.early_stopping(10)
     gbm = lgb.train(params, 
                     lgbTrain,
                     feature_name=list(fname), 
                     valid_sets=lgbEval,
-                    evals_result=evals_result,
-                    verbose_eval = 20) 
+                    callbacks = [lgb.early_stopping(10), lgb.log_evaluation(20), lgb.record_evaluation(evals_result)])
 
     explainer = shap.TreeExplainer(gbm)
     gbm.save_model('BDT_unblind.txt') # Saves the BDT model as txt file
