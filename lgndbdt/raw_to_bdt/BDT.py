@@ -47,7 +47,7 @@ max_bin              = 542 #args.max_bin
 randSeed = 27
 np.random.seed(randSeed)
 
-def run_BDT(plots=False):
+def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
     ###################################################################
     # Data Type Preparation
     ###################################################################
@@ -246,12 +246,12 @@ def run_BDT(plots=False):
             elif i == 3:
                 # Covariance Matrices
                 # Define Outperforming events
-                bdt_thresh = 0.55
-                avse_thresh = 969 #-1 # How to set Cut
+                
                 explainer = shap.TreeExplainer(gbm)
                 sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
                 print(f"253 - Samplesig shape {sample_sig.shape}")
                 print(X_test.shape)
+                print(X_test[sample_sig,:len(fname)])
                 # Get Sig Outperforming SHAP
                 shap_sig = explainer.shap_values(X_test[sample_sig,:len(fname)])
                 # Get BDT and AvsE score 
