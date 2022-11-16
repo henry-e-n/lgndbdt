@@ -233,6 +233,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
                 
                 y_pred = gbm.predict(X_test[:,:len(fname)], num_iteration=gbm.best_iteration)
 
+                print(f"y-pred {y_pred}, Y_test {Y_test}")
+
                 BDTDistrib(y_pred, Y_test)
             elif i == 1:
                 Pos_sample = X_test[Y_test == 1,:len(fname)]
