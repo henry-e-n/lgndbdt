@@ -35,9 +35,14 @@ def TreeVis(gbm):
     return
 
 def BDTDistrib(y_pred, Y_test):
+    # print("RUNNING BDTDISTRIB")
     plt.rcParams['font.size'] = 25
     plt.rcParams["figure.figsize"] = (15,16)
-    rg=np.arange(0.0,1.0,0.01) # 0.0075
+    rg=np.arange(0.0,1.01,0.005) # 0.0075
+    
+    # print(f"41 Vis: {len(y_pred[Y_test==1])}, {len(y_pred[Y_test==0])}")
+    # print(f"41 Vis: {len(y_pred[y_pred<=0.5])}, {len(y_pred[y_pred>0.5])}")
+
     plt.hist(y_pred[Y_test==1], label="Signal", bins=rg, histtype="step", linewidth = 3, color = "#13294B")# color=cmapNormal(0.2),linewidth=3)
     plt.hist(y_pred[Y_test==0], label="Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F") # , color=cmapNormal(0.8)
     plt.gca().ticklabel_format(axis="y",style="sci")

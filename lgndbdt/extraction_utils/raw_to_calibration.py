@@ -50,6 +50,9 @@ def calibration(verbose=False, plotBool=False):
         elif targetPeak == "228ThSEP":
             print(f"Calibrating on 228Th SEP")
             peakIndex = 4
+        elif targetPeak == "228ThFEP":
+            print(f"Calibrating on 228Th FEP")
+            peakIndex = 5
         
     else:
         peaks = np.array([583.187, # 228Th -> 208Tl (85%)

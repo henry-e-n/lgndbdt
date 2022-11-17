@@ -47,7 +47,7 @@ max_bin              = 542 #args.max_bin
 randSeed = 27
 np.random.seed(randSeed)
 
-def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
+def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
     ###################################################################
     # Data Type Preparation
     ###################################################################
@@ -86,7 +86,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
         return dataArr, dataDictionary, wfd, avse, selectDictionary
 
     sigRaw, sigDict, sigWFD, sigavse, selectDict = getRaw(f"{filename}DEP.lh5", f"{fpath}")
-    bkgRaw, bkgDict, bkgWFD, bkgavse, selectDict = getRaw(f"{filename}SEP.lh5", f"{fpath}")
+    bkgRaw, bkgDict, bkgWFD, bkgavse, selectDict = getRaw(f"{filename}{SEPorFEP}.lh5", f"{fpath}")
 
     ###################################################################
     # DATA MATCHING
@@ -178,13 +178,14 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
                     lgbTrain,
                     feature_name = list(fname), 
                     valid_sets   = lgbEval,
-                    callbacks    = [lgb.early_stopping(10), lgb.log_evaluation(20), lgb.record_evaluation(evals_result)])
+                    callbacks    = [lgb.early_stopping(10), lgb.print_evaluation(20), lgb.record_evaluation(evals_result)])
 
     explainer = shap.TreeExplainer(gbm)
     gbm.save_model('BDT_unblind.txt') # Saves the BDT model as txt file
 
     gbm = lgb.Booster(model_file='BDT_unblind.txt')  # init model
-    TrainingMetric(evals_result) #####################
+    if plots:
+        TrainingMetric(evals_result) #####################
 
     ###################################################################
     # TREE VISUALIZATION
@@ -204,9 +205,9 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
                         colour = terminalCMAP[1]):
             if i == 0:
                 
-                print(f"Size SigPDM {sigPDM.shape}, BkgPDM {bkgPDM.shape}")
+                # print(f"Size SigPDM {sigPDM.shape}, BkgPDM {bkgPDM.shape}")
                 minSize = np.min([sigPDM.shape[0], bkgPDM.shape[0]])
-                print(minSize)
+                # print(minSize)
 
                 np.random.shuffle(sigPDM)
                 np.random.shuffle(bkgPDM)
@@ -214,9 +215,9 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
                 signalData   = sigPDM[:minSize, :]
                 bkgData      = bkgPDM[:minSize, :]
 
-                print(f"Size SignalData {signalData.shape}, BkgData {bkgData.shape}")
+                # print(f"Size SignalData {signalData.shape}, BkgData {bkgData.shape}")
 
-                X_test = np.concatenate([signalData,bkgData],axis=0)
+                X_test = np.concatenate([signalData,bkgData], axis=0)
                 Y_test = np.array([1]*len(signalData) + [0] * len(bkgData))
                 print(f"X_test Shape {X_test.shape}, Y_test Shape {Y_test.shape}")
                 params = {"num_iterations": 1, "learning_rate": 0.15967607193274216, "num_leaves": 688, "bagging_freq": 34, "bagging_fraction": 0.9411410478379901, "min_data_in_leaf": 54, "drop_rate": 0.030050388917525712, "min_gain_to_split": 0.24143821598351703, "max_bin": 454, "boosting": "dart", "objective": "binary", "metric": "binary_logloss", "verbose": -100, "silent":True}
@@ -233,7 +234,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
                 
                 y_pred = gbm.predict(X_test[:,:len(fname)], num_iteration=gbm.best_iteration)
 
-                print(f"y-pred {y_pred}, Y_test {Y_test}")
+                # print(f"y-pred {y_pred} {y_pred.shape}, Y_test {Y_test} {Y_test.shape}")
 
                 BDTDistrib(y_pred, Y_test)
             elif i == 1:
