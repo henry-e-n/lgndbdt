@@ -30,6 +30,11 @@ detName = data["detector_name"]#"V05612B"
 targetPeak = data["target_peak"]
 source = data["source"]
 savePath = os.getcwd()+f"/{data['detector_name']}"
+if data["path_to_PSDs"] == "":
+    psdPath = savePath
+else:
+    psdPath = data["path_to_PSDs"]
+
 #f"{data['save_path']}{data['detector_name']}"
 plotPath = f"{savePath}/Plots"#os.getcwd()
 # modPath = data["mod_path"]

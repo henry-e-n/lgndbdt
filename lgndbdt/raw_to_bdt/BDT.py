@@ -53,7 +53,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, plots=False):
     ###################################################################
 
     filename        = f"{detName}_PSDs_{targetPeak[:-3]}"
-    fpath           = f"{savePath}"
+    fpath           = f"{psdPath}"
 
     print(filename)
     print(fpath)
