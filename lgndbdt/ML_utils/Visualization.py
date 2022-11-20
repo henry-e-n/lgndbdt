@@ -38,7 +38,7 @@ def BDTDistrib(y_pred, Y_test):
     # print("RUNNING BDTDISTRIB")
     plt.rcParams['font.size'] = 25
     plt.rcParams["figure.figsize"] = (15,16)
-    rg=np.arange(0.0,1.01,0.005) # 0.0075
+    rg=np.arange(0.0,1.01,0.01) # 0.0075
     
     # print(f"41 Vis: {len(y_pred[Y_test==1])}, {len(y_pred[Y_test==0])}")
     # print(f"41 Vis: {len(y_pred[y_pred<=0.5])}, {len(y_pred[y_pred>0.5])}")
