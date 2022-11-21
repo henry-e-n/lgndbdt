@@ -99,6 +99,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
 
     print(f"Size before Distribution Matching Signal: {sigSave.shape}, Background: {bkgSave.shape}")
     for i in range(len(distMatch)):
+        print(f"Distribution Matching {distMatch[i]}")
         sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, distMatch[i], distStep[i], plots, show = False)
         # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift", 30, False, show = False)
         # sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, "/tdrift10", 20, False, show = False)
