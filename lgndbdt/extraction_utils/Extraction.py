@@ -69,13 +69,17 @@ def extraction(paramArr, paramKeys, plotBool=False):
 
     energyArr            = trapENS(ts[:,:], wfCorr[:,:], pa["dt"][:])
     energyArr            = np.amax(energyArr, 1)
-    
+
+
+    np.save(f"{savePath}/energyArr_dsp.npy", pa["trapEmax"])
+    np.save(f"{savePath}/energyArr_extracted.npy", energyArr)
+
     #####################################################################
     ### Baseline and Noise
     #####################################################################
     noise                = np.zeros(numWave)
     noiseTail            = np.zeros(numWave)
-    
+
     if np.any(np.isin(fname, "/noise")) or np.any(np.isin(fname, "/noiseTail")): 
 
         for i in tqdm(range(0,numWave), 
