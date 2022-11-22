@@ -46,13 +46,18 @@ def calibration(verbose=False, plotBool=False):
 
     if len(dsp_files_clean) >= 2:
         calibration_files = dsp_files_clean[:2]
+        energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "icpc1/dsp")
+        energies = energy_stack["trapEmax"]
     elif ((len(dsp_files_clean) <2) and (len(dsp_files_icpcs) >= 2)):
+        print("rtc 52: ICPCS")
         calibration_files = dsp_files_icpcs[:2]
+        energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "icpcs/icpc1/dsp")
+        energies = energy_stack["trapEmax"]
     else:
+        print("rtc 57: ERROR ??")
         calibration_files = dsp_files_clean
 
-    energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "icpc1/dsp")
-    energies = energy_stack["trapEmax"]
+    
     
     if verbose:
         print(f"Number of events for Calibration: {len(energies)}")
