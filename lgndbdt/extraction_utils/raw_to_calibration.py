@@ -42,14 +42,14 @@ def cleanDSP(dsp_files):
 def calibration(verbose=False, plotBool=False):
     
 
-    dsp_files, dsp_files_icpcs = cleanDSP(dsp_files)
+    dsp_files_clean, dsp_files_icpcs = cleanDSP(dsp_files)
 
-    if len(dsp_files) >= 2:
-        calibration_files = dsp_files[:2]
-    elif (len(dsp_files <2) and len(dsp_files_icpcs >= 2)):
+    if len(dsp_files_clean) >= 2:
+        calibration_files = dsp_files_clean[:2]
+    elif (len(dsp_files_clean <2) and len(dsp_files_icpcs >= 2)):
         calibration_files = dsp_files_icpcs[:2]
     else:
-        calibration_files = dsp_files
+        calibration_files = dsp_files_clean
 
     energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "icpc1/dsp")
     energies = energy_stack["trapEmax"]
