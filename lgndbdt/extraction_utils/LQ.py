@@ -62,7 +62,7 @@ def getLQ80(ts, vals):
             plt.plot(np.arange(len(vals[i])), vals[i])
             plt.show()
 
-            return LQ80
+            # return LQ80
     return LQ80
 
 
