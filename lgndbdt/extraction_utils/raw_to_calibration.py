@@ -46,7 +46,7 @@ def calibration(verbose=False, plotBool=False):
 
     if len(dsp_files_clean) >= 2:
         calibration_files = dsp_files_clean[:2]
-    elif (len(dsp_files_clean <2) and len(dsp_files_icpcs >= 2)):
+    elif ((len(dsp_files_clean) <2) and (len(dsp_files_icpcs) >= 2)):
         calibration_files = dsp_files_icpcs[:2]
     else:
         calibration_files = dsp_files_clean
