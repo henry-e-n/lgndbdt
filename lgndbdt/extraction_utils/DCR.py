@@ -311,6 +311,7 @@ def trapENS(times, values, dtimes, intTimes = (1000, 5000)):
                   desc   ="Running Trap Filter...........", 
                   colour = terminalCMAP[1]):
         trapArr[w, :] = np.dot(values[w], tensor.T)[:-bufferCell]/riseCell
+    np.save("TrapArr.npy", trapArr)
     return trapArr
 
 ###########################################################################################
