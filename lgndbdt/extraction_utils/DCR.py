@@ -1,7 +1,7 @@
 import numpy as np
 from tqdm import tqdm
 from matplotlib import cm
-from extraction_utils.config import cmapNormal, terminalCMAP, plotPath
+from extraction_utils.config import cmapNormal, terminalCMAP, plotPath, savePath
 from extraction_utils.waveform import *
 
 from scipy.optimize import minimize, curve_fit
@@ -285,15 +285,17 @@ def trapENS3(times, values, dtimes, intTimes = (1000, 5000)):
             trapArr[m, i] = rightInt-leftInt
     return trapArr
 ###########################################################################################
-def trapENS(times, values, dtimes, intTimes = (1000, 5000)):
+def trapENS(times, values, dtimes, intTimes = (3000, 5500)):
     """
     ***MATRIX ACCELERATED***
     """
     riseTime   = intTimes[0] #us
     ftTime     = intTimes[1] #ns
+    print(f"Ramp Time {riseTime} ns, Flat-Top Time {ftTime} ns")
     riseCell   = us2cell(dtimes[0], riseTime)
     ftCell   = us2cell(dtimes[0], ftTime)
     bufferCell = 2*riseCell + ftCell
+
 
     wfdLen = values.shape[1]
     row = np.zeros(wfdLen)
@@ -310,8 +312,11 @@ def trapENS(times, values, dtimes, intTimes = (1000, 5000)):
     for w in tqdm(range(values.shape[0]), 
                   desc   ="Running Trap Filter...........", 
                   colour = terminalCMAP[1]):
+
+        blEstimate = np.mean(values[w, :200])
+        values[w] = values[w]-blEstimate
         trapArr[w, :] = np.dot(values[w], tensor.T)[:-bufferCell]/riseCell
-    np.save("TrapArr.npy", trapArr)
+    np.save(f"{savePath}/TrapArr.npy", trapArr)
     return trapArr
 
 ###########################################################################################
