@@ -16,14 +16,41 @@ importlib.reload(extraction_utils.config)
 from extraction_utils.config import *
 
 from extraction_utils.h5utils import paramExtract
+from extraction_utils.h5Extract import openGroup
 
+def cleanDSP(dsp_files):
+    delList = []
+    dsp_files_icpcs = []
+    for i in range(len(dsp_files)):
+        file = dsp_files[i]
+        try:
+            checkFile = h5py.File(file)
+            group  = openGroup(checkFile, [])
+            print(group)
+            if group == ["/icpcs/icpc1/dsp/trapEmax"]:
+                dsp_files_icpcs.append(dsp_files[i])
+                delList.append(i)
+                print("Found one")
+        except FileNotFoundError:
+            print(f"FNF: {i}, {file}")
+            delList.append(i)
+
+    dsp_files = np.delete(dsp_files, delList)
+
+    return dsp_files, dsp_files_icpcs
 ##############################
 def calibration(verbose=False, plotBool=False):
     
+
+    dsp_files, dsp_files_icpcs = cleanDSP(dsp_files)
+
     if len(dsp_files) >= 2:
         calibration_files = dsp_files[:2]
+    elif (len(dsp_files <2) and len(dsp_files_icpcs >= 2)):
+        calibration_files = dsp_files_icpcs[:2]
     else:
         calibration_files = dsp_files
+
     energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "icpc1/dsp")
     energies = energy_stack["trapEmax"]
     

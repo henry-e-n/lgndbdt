@@ -110,11 +110,20 @@ def getWFD(fitResults, peakIndex, verbose=False):
         dspFile = dsp_files[file]
         rawFile = raw_files[file]
         try: 
-            dsp_stack = lh5.load_nda(dspFile, dsptargetKeys, "icpc1/dsp")
-            DSPparamArr = [dsp_stack["trapEmax"], dsp_stack["tp_0"]]
+            try:
+                dsp_stack = lh5.load_nda(dspFile, dsptargetKeys, "icpc1/dsp")
+                DSPparamArr = [dsp_stack["trapEmax"], dsp_stack["tp_0"]]
+            except TypeError:
+                dsp_stack = lh5.load_nda(dspFile, dsptargetKeys, "icpcs/icpc1/dsp")
+                DSPparamArr = [dsp_stack["trapEmax"], dsp_stack["tp_0"]]
 
-            raw_stack = lh5.load_nda(rawFile, rawtargetKeys, "icpc1/raw/waveform")
-            RAWparamArr = [raw_stack["t0"], raw_stack["dt"], raw_stack["values"]]
+            try:
+                raw_stack = lh5.load_nda(rawFile, rawtargetKeys, "icpc1/raw/waveform")
+                RAWparamArr = [raw_stack["t0"], raw_stack["dt"], raw_stack["values"]]
+            except TypeError:
+                raw_stack = lh5.load_nda(rawFile, rawtargetKeys, "icpcs/icpc1/raw/waveform")
+                RAWparamArr = [raw_stack["t0"], raw_stack["dt"], raw_stack["values"]]
+                
             if DSPparamArr[0].shape != RAWparamArr[0].shape:
                 print("Error in File - DSP and RAW size don't match.")
             else:
