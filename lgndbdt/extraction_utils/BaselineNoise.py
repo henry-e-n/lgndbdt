@@ -99,9 +99,9 @@ def blLinFit(indexWindow, times, values):
     try:
         print(indexWindow[1])
     except TypeError:
-        print(f"TYPE ERROR {indexWindow}")
+        print(f"TYPE ERROR {indexWindow, values[0:100]}")
         indexWindow = [0, int(300)]
-        
+
     xs = times[indexWindow[0]: indexWindow[1]]
     [leftInd, rightInd] = indexWindow
     ys = values[leftInd:rightInd]
