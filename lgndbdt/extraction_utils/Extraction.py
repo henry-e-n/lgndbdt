@@ -73,37 +73,37 @@ def extraction(paramArr, paramKeys, plotBool=False):
     #####################################################################
     ### Baseline and Noise
     #####################################################################
+    if np.isin(fname, "/noise") or np.isin(fname, "/noiseTail"): 
+        noise                = np.zeros(numWave)
+        noiseTail            = np.zeros(numWave)
 
-    noise                = np.zeros(numWave)
-    noiseTail            = np.zeros(numWave)
+        for i in tqdm(range(0,numWave), 
+                    desc   = "Calculating Noise.............", 
+                    colour = terminalCMAP[0]):
+            window           = blWindow(pa["tp_0"][i], pa["dt"][i])
+            popt             = blLinFit(window, ts[i], wfIn[i])
+            if type(window) == None:
+                noise[i] = 666
+            else:
+                noise[i]         = findNoise(linFit, popt, window, ts[i], wfIn[i])
 
-    for i in tqdm(range(0,numWave), 
-                  desc   = "Calculating Noise.............", 
-                  colour = terminalCMAP[0]):
-        window           = blWindow(pa["tp_0"][i], pa["dt"][i])
-        popt             = blLinFit(window, ts[i], wfIn[i])
-        if type(window) == None:
-            noise[i] = 666
-        else:
-            noise[i]         = findNoise(linFit, popt, window, ts[i], wfIn[i])
+            windowTail       = tailWindow(pa["tp_0"][i], pa["dt"][i])
+            if windowTail[0] + 250 >= len(wfCorr[i])-100:
+                # print(windowTail)
+                windowTail[0]    = windowTail[0] + int(np.floor((len(wfCorr[i])-100-windowTail[0])/5))
+                # print(windowTail)
+            else:
+                windowTail[0]    = windowTail[0] + 250
+            try:
+                poptTail         = blLinFit(windowTail, ts[i], wfCorr[i])
+            except ValueError:
+                print(f"Error {i}")
+                print(f"WindowTail {windowTail}")
+                # print(np.where(wfCorr[i]<0))
+                # print(np.where(np.isnan(wfCorr[i])))
 
-        windowTail       = tailWindow(pa["tp_0"][i], pa["dt"][i])
-        if windowTail[0] + 250 >= len(wfCorr[i])-100:
-            # print(windowTail)
-            windowTail[0]    = windowTail[0] + int(np.floor((len(wfCorr[i])-100-windowTail[0])/5))
-            # print(windowTail)
-        else:
-            windowTail[0]    = windowTail[0] + 250
-        try:
-            poptTail         = blLinFit(windowTail, ts[i], wfCorr[i])
-        except ValueError:
-            print(f"Error {i}")
-            print(f"WindowTail {windowTail}")
-            # print(np.where(wfCorr[i]<0))
-            # print(np.where(np.isnan(wfCorr[i])))
-
-        noiseTail[i]     = findNoise(linFit, poptTail, windowTail, ts[i], wfCorr[i])
-    
+            noiseTail[i]     = findNoise(linFit, poptTail, windowTail, ts[i], wfCorr[i])
+        
     #####################################################################
     ### TDrift
     #####################################################################
