@@ -82,7 +82,7 @@ def extraction(paramArr, paramKeys, plotBool=False):
                   colour = terminalCMAP[0]):
         window           = blWindow(pa["tp_0"][i], pa["dt"][i])
         popt             = blLinFit(window, ts[i], wfIn[i])
-        if type(popt) == None:
+        if type(window) == None:
             noise[i] = 666
         else:
             noise[i]         = findNoise(linFit, popt, window, ts[i], wfIn[i])
