@@ -73,7 +73,7 @@ def extraction(paramArr, paramKeys, plotBool=False):
     #####################################################################
     ### Baseline and Noise
     #####################################################################
-    if np.isin(fname, "/noise") or np.isin(fname, "/noiseTail"): 
+    if np.any(np.isin(fname, "/noise")) or np.any(np.isin(fname, "/noiseTail")): 
         noise                = np.zeros(numWave)
         noiseTail            = np.zeros(numWave)
 
