@@ -249,7 +249,7 @@ def getP0(vals, popt, numWave = 100):
                     args    = vals[:dp0Num,:], 
                     method  = 'Nelder-Mead', 
                     tol     = 1e-4, 
-                    bounds  = ((60*40, 90*40), (1, 5*40),(0.01,0.012)))
+                    bounds  = ((60*40, 180*40), (1, 5*40),(0.01,0.022))) # 90*40 0.012
         
         # print(f"\nP0 fit parameters - {res.x/40}")
         popt = tuple(res.x)
