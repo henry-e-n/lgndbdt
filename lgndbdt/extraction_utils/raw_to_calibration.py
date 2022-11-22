@@ -44,18 +44,22 @@ def calibration(verbose=False, plotBool=False):
 
     dsp_files_clean, dsp_files_icpcs = cleanDSP(dsp_files)
 
-    if len(dsp_files_clean) >= 2:
+    try:
         calibration_files = dsp_files_clean[:2]
         energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "icpc1/dsp")
         energies = energy_stack["trapEmax"]
-    elif ((len(dsp_files_clean) <2) and (len(dsp_files_icpcs) >= 2)):
+    except TypeError:
         print("rtc 52: ICPCS")
         calibration_files = dsp_files_icpcs[:2]
         energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "icpcs/icpc1/dsp")
         energies = energy_stack["trapEmax"]
-    else:
-        print("rtc 57: ERROR ??")
-        calibration_files = dsp_files_clean
+    # if len(dsp_files_clean) >= 2:
+        
+    # elif ((len(dsp_files_clean) <2) and (len(dsp_files_icpcs) >= 2)):
+        
+    # else:
+    #     print("rtc 57: ERROR ??")
+    #     calibration_files = dsp_files_clean
 
     
     
