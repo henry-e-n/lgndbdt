@@ -58,6 +58,7 @@ def extraction(paramArr, paramKeys, plotBool=False):
                   colour = terminalCMAP[1]):
         deltasCorr[i]    = findSlopeCorr(wfIn[i, :], wfCorr[i, :], pa["dt"][i])
     
+    np.save(f"{savePath}/wfIn_{targetPeak}.npy", wfIn)
     np.save(f"{savePath}/wfCorr_{targetPeak}.npy", wfCorr)
     #####################################################################
     ### LQ80
