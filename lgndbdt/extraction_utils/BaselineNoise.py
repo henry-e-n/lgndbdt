@@ -35,9 +35,11 @@ def blWindow(startTime, dtime, buffer = 1):
             right = int(startCell - buffer*us2cell(dtime))
             if left >= right:
                 print("Invalid buffer Size, please choose a smaller buffer")
+                window = [0, int(startCell)]
                 return
             window = [left, right]
         except ValueError:
+            print("Value Error Exception")
             window = [0, int(300)]
     else:
         print("Sorry invalid buffer, please enter an integer or float >= 0")
