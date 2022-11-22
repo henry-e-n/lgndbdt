@@ -73,6 +73,8 @@ def extraction(paramArr, paramKeys, plotBool=False):
 
     np.save(f"{savePath}/energyArr_dsp.npy", pa["trapEmax"])
     np.save(f"{savePath}/energyArr_extracted.npy", energyArr)
+    np.save(f"{savePath}/energyArr_Eest.npy", Eest)
+
 
     #####################################################################
     ### Baseline and Noise
