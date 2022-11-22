@@ -26,7 +26,7 @@ def cleanDSP(dsp_files):
         try:
             checkFile = h5py.File(file)
             group  = openGroup(checkFile, [])
-            print(group)
+            # print(group)
             if group == ["/icpcs/icpc1/dsp/trapEmax"]:
                 dsp_files_icpcs.append(dsp_files[i])
                 delList.append(i)

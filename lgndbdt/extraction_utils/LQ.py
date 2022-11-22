@@ -52,17 +52,17 @@ def getLQ80(ts, vals):
         LQ80[i] = red-blue
         if LQ80[i] == 0:
 
-            from sys import exit
+            # from sys import exit
             print("FLAG")
             print(vals.shape, i, ind80, midInd, endOfInt, red, blue)
             print(f"vals {vals[i, ind80:midInd]}")
             print(f"ts {ts[i, ind80:midInd]}")
-            print(vals[i])
+            # print(vals[i])
 
             plt.plot(np.arange(len(vals[i])), vals[i])
             plt.show()
 
-            exit()
+            return LQ80
     return LQ80
 
 
