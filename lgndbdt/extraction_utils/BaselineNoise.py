@@ -96,6 +96,12 @@ def blLinFit(indexWindow, times, values):
         - values: Waveform ADC values
     
     """
+    try:
+        print(indexWindow[1])
+    except TypeError:
+        print(f"TYPE ERROR {indexWindow}")
+        indexWindow = [0, int(300)]
+        
     xs = times[indexWindow[0]: indexWindow[1]]
     [leftInd, rightInd] = indexWindow
     ys = values[leftInd:rightInd]
