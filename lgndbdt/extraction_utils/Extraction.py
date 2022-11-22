@@ -58,7 +58,7 @@ def extraction(paramArr, paramKeys, plotBool=False):
                   colour = terminalCMAP[1]):
         deltasCorr[i]    = findSlopeCorr(wfIn[i, :], wfCorr[i, :], pa["dt"][i])
     
-    np.save(f"{savePath}/wfCorr.npy", wfCorr)
+    np.save(f"{savePath}/wfCorr_{targetPeak}.npy", wfCorr)
     #####################################################################
     ### LQ80
     #####################################################################
@@ -72,9 +72,9 @@ def extraction(paramArr, paramKeys, plotBool=False):
     energyArr            = np.amax(energyArr, 1)
 
 
-    np.save(f"{savePath}/energyArr_dsp.npy", pa["trapEmax"])
-    np.save(f"{savePath}/energyArr_extracted.npy", energyArr)
-    np.save(f"{savePath}/energyArr_Eest.npy", Eest)
+    np.save(f"{savePath}/energyArr_dsp_{targetPeak}.npy", pa["trapEmax"])
+    np.save(f"{savePath}/energyArr_extracted_{targetPeak}.npy", energyArr)
+    np.save(f"{savePath}/energyArr_Eest_{targetPeak}.npy", Eest)
 
 
     #####################################################################
