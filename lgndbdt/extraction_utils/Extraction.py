@@ -73,9 +73,10 @@ def extraction(paramArr, paramKeys, plotBool=False):
     #####################################################################
     ### Baseline and Noise
     #####################################################################
+    noise                = np.zeros(numWave)
+    noiseTail            = np.zeros(numWave)
+    
     if np.any(np.isin(fname, "/noise")) or np.any(np.isin(fname, "/noiseTail")): 
-        noise                = np.zeros(numWave)
-        noiseTail            = np.zeros(numWave)
 
         for i in tqdm(range(0,numWave), 
                     desc   = "Calculating Noise.............", 
