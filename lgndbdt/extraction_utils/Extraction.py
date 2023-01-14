@@ -77,6 +77,7 @@ def extraction(paramArr, paramKeys, plotBool=False):
     np.save(f"{savePath}/energyArr_extracted_{targetPeak}.npy", energyArr)
     np.save(f"{savePath}/energyArr_Eest_{targetPeak}.npy", Eest)
 
+    energyArr            = pa["trapEmax"] # Currently uncalibrated
 
     #####################################################################
     ### Baseline and Noise
