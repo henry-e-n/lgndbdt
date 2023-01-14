@@ -9,8 +9,6 @@ import importlib
 import extraction_utils.config
 importlib.reload(extraction_utils.config)
 from extraction_utils.config import *
-
-from extraction_utils.h5utils import paramExtract
 from pygama import lh5
 
 def getEnergies(fitResults, verbose=False):
