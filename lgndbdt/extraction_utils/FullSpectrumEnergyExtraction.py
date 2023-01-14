@@ -11,11 +11,8 @@ importlib.reload(extraction_utils.config)
 from extraction_utils.config import *
 from pygama import lh5
 
-def getEnergies(fitResults, verbose=False):
+def getEnergies(verbose=False):
     # Fit Results [ [uncal energies, cal energies], [[1st peak fit param], 2nd peak fit...]] 
-    evE = fitResults[0][0]
-    adcE = fitResults[0][1]
-    peakFits = fitResults[1]
     
     dsptargetKeys = ["trapEmax", "tp_0"]
     rawtargetKeys = ["values"]
@@ -43,21 +40,16 @@ def getEnergies(fitResults, verbose=False):
             except TypeError:
                 raw_stack = lh5.load_nda(rawFile, rawtargetKeys, "icpcs/icpc1/raw/waveform")
                 RAWparamArr = [raw_stack["values"]]
-                
-            if DSPparamArr[0].shape != RAWparamArr[0].shape:
+            
+            # print(DSPparamArr[0].shape[0], RAWparamArr[0].shape[0])
+            if DSPparamArr[0].shape[0] != RAWparamArr[0].shape[0]:
                 print("Error in File - DSP and RAW size don't match.")
             else:
-                energies = DSPparamArr[0][:]
-
-                # peakEnergy = adcE[peakIndex]
-                # sigma = peakFits[peakIndex][2]
-
-                # selection_crit =  (energies>(peakEnergy-sigma))*(energies<(peakEnergy+sigma))
                 if file == 0:
                     for i in range(len(DSPparamArr)):
-                        paramArr[i] = DSPparamArr[i]#[selection_crit]
+                        paramArr[i] = DSPparamArr[i]
                     for i in range(len(RAWparamArr)):
-                        paramArr[i+len(DSPparamArr)] = RAWparamArr[i]#[selection_crit]
+                        paramArr[i+len(DSPparamArr)] = RAWparamArr[i]
                 if file >= 1:
                     for i in range(len(DSPparamArr)):
                         paramArr[i] = np.append(paramArr[i], DSPparamArr[i], axis = 0)
@@ -69,5 +61,6 @@ def getEnergies(fitResults, verbose=False):
         print(f"Number of features: {len(paramArrKeys)}")
         print(f"Number of Extracted Waveforms (pre-clean): {paramArr[1].shape[0]}")
     return paramArr, paramArrKeys
+
 
     
