@@ -78,7 +78,7 @@ def getTDriftInterpolate(times, values, startTime, dtimes):
     tdrift10 = np.zeros(values.shape[0])
 
     for i in range(values.shape[0]):
-        f1 = interp1d(times[0, :], values[i, :], fill_value="extrapolate")
+        f1 = interp1d(times, values[i, :], fill_value="extrapolate")
         
         startCell = int(startTime[i]/dtimes[i])
         
