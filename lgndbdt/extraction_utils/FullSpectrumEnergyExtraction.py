@@ -41,21 +41,19 @@ def getEnergies(verbose=False):
                 raw_stack = lh5.load_nda(rawFile, rawtargetKeys, "icpcs/icpc1/raw/waveform")
                 RAWparamArr = [raw_stack["values"]]
             
+<<<<<<< HEAD
             print(DSPparamArr[0].shape[0], RAWparamArr[0].shape[0])
+=======
+            # print(DSPparamArr[0].shape[0], RAWparamArr[0].shape[0])
+>>>>>>> 28aa60cf6e9208c9308c323df463948024fbfe52
             if DSPparamArr[0].shape[0] != RAWparamArr[0].shape[0]:
                 print("Error in File - DSP and RAW size don't match.")
             else:
-                energies = DSPparamArr[0][:]
-
-                # peakEnergy = adcE[peakIndex]
-                # sigma = peakFits[peakIndex][2]
-
-                # selection_crit =  (energies>(peakEnergy-sigma))*(energies<(peakEnergy+sigma))
                 if file == 0:
                     for i in range(len(DSPparamArr)):
-                        paramArr[i] = DSPparamArr[i]#[selection_crit]
+                        paramArr[i] = DSPparamArr[i]
                     for i in range(len(RAWparamArr)):
-                        paramArr[i+len(DSPparamArr)] = RAWparamArr[i]#[selection_crit]
+                        paramArr[i+len(DSPparamArr)] = RAWparamArr[i]
                 if file >= 1:
                     for i in range(len(DSPparamArr)):
                         paramArr[i] = np.append(paramArr[i], DSPparamArr[i], axis = 0)
@@ -66,4 +64,11 @@ def getEnergies(verbose=False):
     if verbose:
         print(f"Number of features: {len(paramArrKeys)}")
         print(f"Number of Extracted Waveforms (pre-clean): {paramArr[1].shape[0]}")
+<<<<<<< HEAD
     return paramArr, paramArrKeys
+=======
+    return paramArr, paramArrKeys
+
+
+    
+>>>>>>> 28aa60cf6e9208c9308c323df463948024fbfe52
