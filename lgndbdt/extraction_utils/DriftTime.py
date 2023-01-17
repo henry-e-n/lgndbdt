@@ -78,7 +78,7 @@ def getTDriftInterpolate(times, values, startTime, dtimes):
     tdrift10 = np.zeros(values.shape[0])
 
     for i in range(values.shape[0]):
-        f1 = interp1d(times[i, :], values[i, :], fill_value="extrapolate")
+        f1 = interp1d(times[0, :], values[i, :], fill_value="extrapolate")
         
         startCell = int(startTime[i]/dtimes[i])
         
@@ -89,7 +89,7 @@ def getTDriftInterpolate(times, values, startTime, dtimes):
         def getClosest(perc):
             baseOfPeak = values[i, startCell]
             base = startTime[i]
-            top = times[i, np.argmax(values[i, :])] + 10
+            top = times[0, np.argmax(values[i, :])] + 10
             testX = np.linspace(base, top, 20000)
             testY = f1(testX)
             percVal = perc*(np.max(values[i, :]) - baseOfPeak) + baseOfPeak
