@@ -29,7 +29,7 @@ data = data["runs"][jsonIndex]
 detName = data["detector_name"]#"V05612B"
 targetPeak = data["target_peak"]
 source = data["source"]
-savePath = os.getcwd()+f"/{data['detector_name']}"
+savePath = data["save_path"]#os.getcwd()+f"/{data['detector_name']}"
 if data["path_to_PSDs"] == "":
     psdPath = savePath
 else:
