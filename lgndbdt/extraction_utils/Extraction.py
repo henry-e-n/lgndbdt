@@ -70,7 +70,7 @@ def extraction(paramArr, paramKeys, plotBool=False):
     #####################################################################
 
     # energyArr            = trapENS(ts[:,:], wfCorr[:,:], pa["dt"][:])
-    energyArr            = np.amax(energyArr, 1) #pa["trapEmax"]
+    # energyArr            = np.amax(energyArr, 1) #pa["trapEmax"]
 
 
     # np.save(f"{savePath}/energyArr_dsp_{targetPeak}.npy", pa["trapEmax"])
