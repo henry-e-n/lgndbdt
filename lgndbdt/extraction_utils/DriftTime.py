@@ -89,7 +89,7 @@ def getTDriftInterpolate(times, values, startTime, dtimes):
         def getClosest(perc):
             baseOfPeak = values[i, startCell]
             base = startTime[i]
-            top = times[0, np.argmax(values[i, :])] + 10
+            top = times[np.argmax(values[i, :])] + 10
             testX = np.linspace(base, top, 20000)
             testY = f1(testX)
             percVal = perc*(np.max(values[i, :]) - baseOfPeak) + baseOfPeak
