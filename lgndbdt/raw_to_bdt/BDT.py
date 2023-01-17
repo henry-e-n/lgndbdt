@@ -205,6 +205,77 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                         desc   ="Running Visualization................", 
                         colour = terminalCMAP[1]):
             if i == 0:
+                minSize = np.min([sigPDM.shape[0], bkgPDM.shape[0]])
+
+                np.random.shuffle(sigPDM)
+                np.random.shuffle(bkgPDM)
+                
+                signalData   = sigPDM[:minSize, :]
+                bkgData      = bkgPDM[:minSize, :]
+
+                X_test = np.concatenate([signalData,bkgData], axis=0)
+                Y_test = np.array([1]*len(signalData) + [0] * len(bkgData))
+                params = {"num_iterations": 1, "learning_rate": 0.15967607193274216, "num_leaves": 688, "bagging_freq": 34, "bagging_fraction": 0.9411410478379901, "min_data_in_leaf": 54, "drop_rate": 0.030050388917525712, "min_gain_to_split": 0.24143821598351703, "max_bin": 454, "boosting": "dart", "objective": "binary", "metric": "binary_logloss", "verbose": -1, "silent":True}
+
+                lgb_train = lgb.Dataset(X_test[:,:len(fname)], Y_test,free_raw_data=False, feature_name = list(fname))
+                MSBDT     = lgb.Booster(model_file='BDT_unblind.txt')
+                params["num_iterations"] = 1
+
+                gbm = lgb.train(params, 
+                                lgb_train) 
+
+                MSBDTstr  = MSBDT.model_to_string()
+                explainer = shap.TreeExplainer(gbm.model_from_string(MSBDTstr))
+                
+                y_pred = gbm.predict(X_test[:,:len(fname)], num_iteration=gbm.best_iteration)
+
+                BDTDistrib(y_pred, Y_test)
+            elif i == 1:
+                Pos_sample = X_test[Y_test == 1,:len(fname)]
+                Neg_sample = X_test[Y_test == 0,:len(fname)]
+                np.random.shuffle(Pos_sample)
+                np.random.shuffle(Neg_sample)
+
+                sample = np.concatenate([Pos_sample[:10000], Neg_sample[:10000]],axis=0)
+                shap_values = explainer.shap_values(sample)
+                # Returns a list of matrices (# outputs, # samples x, # features)
+                BDTSummary(shap_values, sample)
+            elif i == 2:
+                explainer  = shap.TreeExplainer(gbm)
+                sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
+                sample_bkg  = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
+
+                sample_selector = sample_sig|sample_bkg
+                evnew = X_test[sample_selector,:len(fname)]
+                np.random.shuffle(evnew)
+                evnew = evnew[:10000]
+                shap_valuesDist = explainer.shap_values(evnew)
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift10", "/AvsE_c")
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift", "/AvsE_c")
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift50", "/AvsE_c"),
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift", "/AvsE_c", point=True),
+            elif i == 3:
+                index = 0
+                ROIdata = evnew
+                ROIdata     = ROIdata[ROIdata[:,selectDict["/tdrift"]] < 600]
+                sample      = ROIdata[index,:len(fname)].reshape(1,-1)
+                shap_values = explainer.shap_values(sample)
+                plot_SHAP_force(explainer, shap_values[1][0])
+            elif i == 10:
+                plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict)
+    return
+
+if __name__ == "__main__":
+    run_BDT()
+
+
+
+"""
+    if plots:
+        for i in tqdm(range(11), 
+                        desc   ="Running Visualization................", 
+                        colour = terminalCMAP[1]):
+            if i == 0:
                 
                 # print(f"Size SigPDM {sigPDM.shape}, BkgPDM {bkgPDM.shape}")
                 minSize = np.min([sigPDM.shape[0], bkgPDM.shape[0]])
@@ -260,8 +331,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
             #     # Define Outperforming events
             #     avseDistribution = X_test[:,selectDict["/AvsE_c"]]
             #     print(f"AvsE Distribution, Min: {np.min(avseDistribution)}, Max {np.max(avseDistribution)}, Mean {np.mean(avseDistribution)}")
-                explainer  = shap.TreeExplainer(gbm)
-                sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
+                # explainer  = shap.TreeExplainer(gbm)
+                # sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
             #     # Get Sig Outperforming SHAP
             #     shap_sig = explainer.shap_values(X_test[sample_sig,:len(fname)])
             #     # Get BDT and AvsE score 
@@ -277,7 +348,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
             #     covSIG      = np.corrcoef(shap_sigArr.T)
             #     plot_covariance(covSIG, "Signal Covariance", covName)
             # elif i == 4:
-                sample_bkg  = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
+                # sample_bkg  = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
             #     print(X_test.shape, len(sample_bkg), len(fname))
             #     shap_bkg    = explainer.shap_values(X_test[sample_bkg,:len(fname)])
             #     outBkgBDT   = y_pred[sample_bkg]
@@ -298,6 +369,10 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
 
                 # sample_selector1 = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
                 # sample_selector2 = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
+                explainer  = shap.TreeExplainer(gbm)
+                sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
+                sample_bkg  = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
+
                 sample_selector = sample_sig|sample_bkg
                 evnew = X_test[sample_selector,:len(fname)]
                 np.random.shuffle(evnew)
@@ -320,7 +395,5 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 plot_SHAP_force(explainer, shap_values[1][0])
             elif i == 10:
                 plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict)
-    return
 
-if __name__ == "__main__":
-    run_BDT()
+"""
