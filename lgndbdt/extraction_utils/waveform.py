@@ -5,14 +5,14 @@ from extraction_utils.config import terminalCMAP, savePath, detName
 
 from tqdm import tqdm
 
-def cTimes(wfParams, choosePeak, number, save=True):
+def cTimes(wfParams, number, save=True):
     [dt, t0, val] = wfParams
     t=np.zeros(val.shape)
     if number == -1:
-        rg = val.shape[0]
+        rg = 1 # Save small file of one row
     else:
-        rg = val.shape[0] # Actually always save full times file
-        
+        rg = val.shape[0] # Save full file
+
     for event in tqdm(range(rg), desc=f"Loading Raw Data.............:", ascii=False, ncols=75, colour = terminalCMAP[0]):#):
         t[event, 0] = t0[event]
         if event > 1 and t0[event] == t0[event-1] and dt[event] == dt[event-1]:

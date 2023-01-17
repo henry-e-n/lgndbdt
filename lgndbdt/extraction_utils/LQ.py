@@ -45,9 +45,9 @@ def getLQ80(ts, vals):
                   desc   ="Running LQ80..................", 
                   colour = terminalCMAP[0]):
         ind80 = find80(vals[i])
-        midInd, endOfInt, buffer = getMid(ts[i], ind80)
-        blue = (np.trapz(vals[i, ind80:midInd],ts[i, ind80:midInd]))
-        red = (np.trapz(vals[i, midInd:endOfInt],ts[i, midInd:endOfInt]))
+        midInd, endOfInt, buffer = getMid(ts[0], ind80)
+        blue = (np.trapz(vals[i, ind80:midInd],ts[0, ind80:midInd]))
+        red = (np.trapz(vals[i, midInd:endOfInt],ts[0, midInd:endOfInt]))
 
         LQ80[i] = red-blue
         if LQ80[i] == 0:

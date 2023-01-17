@@ -37,7 +37,7 @@ def extraction(paramArr, paramKeys, plotBool=False):
     # Make times array
     # if searchFile(f"timesArr_{detName}.npy", savePath) == None:
     #     print(f"Creating times array, please wait...")
-    cTimes([pa["dt"], pa["t0"], pa["values"]], detName, -1) # Can remove detname and number in lgndbdt update
+    cTimes([pa["dt"], pa["t0"], pa["values"]], number=-1) # Can remove detname and number in lgndbdt update
     ts = np.load(searchFile(f'timesArr_{detName}.npy', savePath))
     
     numWave = paramArr[0].shape[0]
@@ -69,13 +69,13 @@ def extraction(paramArr, paramKeys, plotBool=False):
     ### Energy - Redundent from Eest Line 131
     #####################################################################
 
-    energyArr            = trapENS(ts[:,:], wfCorr[:,:], pa["dt"][:])
-    energyArr            = np.amax(energyArr, 1)
+    # energyArr            = trapENS(ts[:,:], wfCorr[:,:], pa["dt"][:])
+    energyArr            = np.amax(energyArr, 1) #pa["trapEmax"]
 
 
-    np.save(f"{savePath}/energyArr_dsp_{targetPeak}.npy", pa["trapEmax"])
-    np.save(f"{savePath}/energyArr_extracted_{targetPeak}.npy", energyArr)
-    np.save(f"{savePath}/energyArr_Eest_{targetPeak}.npy", Eest)
+    # np.save(f"{savePath}/energyArr_dsp_{targetPeak}.npy", pa["trapEmax"])
+    # np.save(f"{savePath}/energyArr_extracted_{targetPeak}.npy", energyArr)
+    # np.save(f"{savePath}/energyArr_Eest_{targetPeak}.npy", Eest)
 
 
     #####################################################################
@@ -90,11 +90,11 @@ def extraction(paramArr, paramKeys, plotBool=False):
                     desc   = "Calculating Noise.............", 
                     colour = terminalCMAP[0]):
             window           = blWindow(pa["tp_0"][i], pa["dt"][i])
-            popt             = blLinFit(window, ts[i], wfIn[i])
+            popt             = blLinFit(window, ts[0], wfIn[i])
             if type(window) == None:
                 noise[i] = 666
             else:
-                noise[i]         = findNoise(linFit, popt, window, ts[i], wfIn[i])
+                noise[i]         = findNoise(linFit, popt, window, ts[0], wfIn[i])
 
             windowTail       = tailWindow(pa["tp_0"][i], pa["dt"][i])
             if windowTail[0] + 250 >= len(wfCorr[i])-100:
@@ -104,19 +104,19 @@ def extraction(paramArr, paramKeys, plotBool=False):
             else:
                 windowTail[0]    = windowTail[0] + 250
             try:
-                poptTail         = blLinFit(windowTail, ts[i], wfCorr[i])
+                poptTail         = blLinFit(windowTail, ts[0], wfCorr[i])
             except ValueError:
                 print(f"Error {i}")
                 print(f"WindowTail {windowTail}")
                 # print(np.where(wfCorr[i]<0))
                 # print(np.where(np.isnan(wfCorr[i])))
 
-            noiseTail[i]     = findNoise(linFit, poptTail, windowTail, ts[i], wfCorr[i])
+            noiseTail[i]     = findNoise(linFit, poptTail, windowTail, ts[0], wfCorr[i])
         
     #####################################################################
     ### TDrift
     #####################################################################
-    tdrift, tdrift50, tdrift10 = getTDriftInterpolate(ts[:numWave, :], pa["values"][:numWave, :], pa["tp_0"][:numWave], pa["dt"][:numWave])
+    tdrift, tdrift50, tdrift10 = getTDriftInterpolate(ts[0, :], pa["values"][:numWave, :], pa["tp_0"][:numWave], pa["dt"][:numWave])
     
     ### Save Parameters to LH5
     standardAnalysisArray = np.array([pa["dt"], pa["t0"], pa["tp_0"], maxA, deltasCorr, lqVal, noise, noiseTail, tdrift, tdrift50, tdrift10, energyArr, maxA/energyArr]) # replace energy Arr with Eest
