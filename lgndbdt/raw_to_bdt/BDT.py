@@ -278,7 +278,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 plot_covariance(covSIG, "Signal Covariance", covName)
             elif i == 4:
                 sample_bkg  = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
-                print(X_test.shape, sample_bkg, len(fname))
+                print(X_test.shape, len(sample_bkg), len(fname))
                 shap_bkg    = explainer.shap_values(X_test[sample_bkg,:len(fname)])
                 outBkgBDT   = y_pred[sample_bkg]
                 outBkgAvsE  = X_test[sample_bkg,selectDict["/AvsE_c"]]
