@@ -218,7 +218,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 params = {"num_iterations": 1, "learning_rate": 0.15967607193274216, "num_leaves": 688, "bagging_freq": 34, "bagging_fraction": 0.9411410478379901, "min_data_in_leaf": 54, "drop_rate": 0.030050388917525712, "min_gain_to_split": 0.24143821598351703, "max_bin": 454, "boosting": "dart", "objective": "binary", "metric": "binary_logloss", "verbose": -1}
 
                 lgb_train = lgb.Dataset(X_test[:,:len(fname)], Y_test,free_raw_data=False, feature_name = list(fname))
-                MSBDT     = lgb.Booster(model_file='BDT_unblind.txt', silent=True)
+                MSBDT     = lgb.Booster(model_file='BDT_unblind.txt')
                 # params["num_iterations"] = 1
 
                 gbm = lgb.train(params, 
