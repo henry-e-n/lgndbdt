@@ -248,45 +248,45 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 shap_values = explainer.shap_values(sample)
                 # Returns a list of matrices (# outputs, # samples x, # features)
                 BDTSummary(shap_values, sample)
-            elif i == 2:
-                continue
+            # elif i == 2:
+            #     continue
                 # shap_val = np.array(shap_values)[0]
                 # pcaRes, pcaNames = biVarCorr(shap_val, fname)
                 # printBVC(pcaRes, pcaNames)
                 # pcaMat = multiVarCorr(shap_val, 2)
                 # printMVC(pcaMat)
-            elif i == 3:
-                # Covariance Matrices
-                # Define Outperforming events
-                avseDistribution = X_test[:,selectDict["/AvsE_c"]]
-                print(f"AvsE Distribution, Min: {np.min(avseDistribution)}, Max {np.max(avseDistribution)}, Mean {np.mean(avseDistribution)}")
+            # elif i == 3:
+            #     # Covariance Matrices
+            #     # Define Outperforming events
+            #     avseDistribution = X_test[:,selectDict["/AvsE_c"]]
+            #     print(f"AvsE Distribution, Min: {np.min(avseDistribution)}, Max {np.max(avseDistribution)}, Mean {np.mean(avseDistribution)}")
                 explainer  = shap.TreeExplainer(gbm)
                 sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
-                # Get Sig Outperforming SHAP
-                shap_sig = explainer.shap_values(X_test[sample_sig,:len(fname)])
-                # Get BDT and AvsE score 
-                outSigBDT  = y_pred[sample_sig]
-                outSigAvsE = X_test[sample_sig,selectDict["/AvsE_c"]]
-                # Transform SHAP to array
-                shap_sigArr = np.array(shap_sig[0], dtype=float)
-                # Add BDT
-                shap_sigArr = np.insert(shap_sigArr, -1, outSigBDT, axis=1)
-                # Add AvsE
-                shap_sigArr = np.insert(shap_sigArr, -1, outSigAvsE, axis=1)
-                covName     = np.append(fname, ["BDT", "A/E"])
-                covSIG      = np.corrcoef(shap_sigArr.T)
-                plot_covariance(covSIG, "Signal Covariance", covName)
-            elif i == 4:
+            #     # Get Sig Outperforming SHAP
+            #     shap_sig = explainer.shap_values(X_test[sample_sig,:len(fname)])
+            #     # Get BDT and AvsE score 
+            #     outSigBDT  = y_pred[sample_sig]
+            #     outSigAvsE = X_test[sample_sig,selectDict["/AvsE_c"]]
+            #     # Transform SHAP to array
+            #     shap_sigArr = np.array(shap_sig[0], dtype=float)
+            #     # Add BDT
+            #     shap_sigArr = np.insert(shap_sigArr, -1, outSigBDT, axis=1)
+            #     # Add AvsE
+            #     shap_sigArr = np.insert(shap_sigArr, -1, outSigAvsE, axis=1)
+            #     covName     = np.append(fname, ["BDT", "A/E"])
+            #     covSIG      = np.corrcoef(shap_sigArr.T)
+            #     plot_covariance(covSIG, "Signal Covariance", covName)
+            # elif i == 4:
                 sample_bkg  = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
-                print(X_test.shape, len(sample_bkg), len(fname))
-                shap_bkg    = explainer.shap_values(X_test[sample_bkg,:len(fname)])
-                outBkgBDT   = y_pred[sample_bkg]
-                outBkgAvsE  = X_test[sample_bkg,selectDict["/AvsE_c"]]
-                shap_bkgArr = np.array(shap_bkg[0], dtype=float)
-                shap_bkgArr = np.insert(shap_bkgArr, -1, outBkgBDT, axis=1)
-                shap_bkgArr = np.insert(shap_bkgArr, -1, outBkgAvsE, axis=1)
-                covBKG      = np.corrcoef(shap_bkgArr.T)
-                plot_covariance(covBKG, "Background Covariance", covName)
+            #     print(X_test.shape, len(sample_bkg), len(fname))
+            #     shap_bkg    = explainer.shap_values(X_test[sample_bkg,:len(fname)])
+            #     outBkgBDT   = y_pred[sample_bkg]
+            #     outBkgAvsE  = X_test[sample_bkg,selectDict["/AvsE_c"]]
+            #     shap_bkgArr = np.array(shap_bkg[0], dtype=float)
+            #     shap_bkgArr = np.insert(shap_bkgArr, -1, outBkgBDT, axis=1)
+            #     shap_bkgArr = np.insert(shap_bkgArr, -1, outBkgAvsE, axis=1)
+            #     covBKG      = np.corrcoef(shap_bkgArr.T)
+            #     plot_covariance(covBKG, "Background Covariance", covName)
 
             elif i == 5:
                 # sigsave = sigRaw
