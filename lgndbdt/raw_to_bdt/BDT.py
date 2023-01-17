@@ -179,7 +179,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                     lgbTrain,
                     feature_name = list(fname), 
                     valid_sets   = lgbEval,
-                    callbacks    = [lgb.early_stopping(10), lgb.print_evaluation(20), lgb.record_evaluation(evals_result)])
+                    callbacks    = [lgb.early_stopping(10), lgb.log_evaluation(20), lgb.record_evaluation(evals_result)])
 
     explainer = shap.TreeExplainer(gbm)
     gbm.save_model('BDT_unblind.txt') # Saves the BDT model as txt file
@@ -201,7 +201,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
 
     ######################################
     if plots:
-        for i in tqdm(range(11), 
+        for i in tqdm(range(4), 
                         desc   ="Running Visualization................", 
                         colour = terminalCMAP[1]):
             if i == 0:
@@ -219,7 +219,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
 
                 lgb_train = lgb.Dataset(X_test[:,:len(fname)], Y_test,free_raw_data=False, feature_name = list(fname))
                 MSBDT     = lgb.Booster(model_file='BDT_unblind.txt')
-                params["num_iterations"] = 1
+                # params["num_iterations"] = 1
 
                 gbm = lgb.train(params, 
                                 lgb_train) 
@@ -261,7 +261,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 sample      = ROIdata[index,:len(fname)].reshape(1,-1)
                 shap_values = explainer.shap_values(sample)
                 plot_SHAP_force(explainer, shap_values[1][0])
-            elif i == 10:
+            elif i == 4:
                 plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict)
     return
 
