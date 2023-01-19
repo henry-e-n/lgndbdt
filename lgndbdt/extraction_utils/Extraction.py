@@ -45,7 +45,7 @@ def extraction(paramArr, paramKeys, plotBool=False):
     ### AvsE
     #####################################################################
 
-    maxA, Eest = AvsE(ts, pa["values"], pa["dt"], plots = [], numWF = numWave)
+    maxA = AvsE(pa["values"], pa["dt"], plots = [], numWF = numWave)
 
     
     #####################################################################
@@ -69,15 +69,17 @@ def extraction(paramArr, paramKeys, plotBool=False):
     ### Energy - Redundent from Eest Line 131
     #####################################################################
 
-    # energyArr            = trapENS(ts[:,:], wfCorr[:,:], pa["dt"][:])
-    # energyArr            = np.amax(energyArr, 1) #pa["trapEmax"]
+    TRAP_RES            = trapENS(ts[:,:], wfCorr[:,:], pa["dt"][:])
+    TRAP_E              = np.amax(TRAP_RES, 1) 
+    DAQ_E               = pa["trapEmax"] # Currently uncalibrated
 
+
+    Norm_Vals           = Normalize_Waveforms(pa["values"]) # Currently Using non-PZ corrected
+    Norm_A              = AvsE(Norm_Vals, pa["dt"], plots = [], numWF = numWave)
 
     # np.save(f"{savePath}/energyArr_dsp_{targetPeak}.npy", pa["trapEmax"])
     # np.save(f"{savePath}/energyArr_extracted_{targetPeak}.npy", energyArr)
     # np.save(f"{savePath}/energyArr_Eest_{targetPeak}.npy", Eest)
-
-    energyArr            = pa["trapEmax"] # Currently uncalibrated
 
     #####################################################################
     ### Baseline and Noise
@@ -120,8 +122,8 @@ def extraction(paramArr, paramKeys, plotBool=False):
     tdrift, tdrift50, tdrift10 = getTDriftInterpolate(ts[0, :], pa["values"][:numWave, :], pa["tp_0"][:numWave], pa["dt"][:numWave])
     
     ### Save Parameters to LH5
-    standardAnalysisArray = np.array([pa["dt"], pa["t0"], pa["tp_0"], maxA, deltasCorr, lqVal, noise, noiseTail, tdrift, tdrift50, tdrift10, energyArr, maxA/energyArr]) # replace energy Arr with Eest
-    standardAnalysisNames = np.array(["dt", "t0", "tp_0", "maxA", "DCR", "LQ80", "noise", "noiseTail", "tdrift", "tdrift50", "tdrift10", "TrapEnergy", "AvsE_c"])
+    standardAnalysisArray = np.array([pa["dt"], pa["t0"], pa["tp_0"], maxA, deltasCorr, lqVal, noise, noiseTail, tdrift, tdrift50, tdrift10, TRAP_E, DAQ_E, Norm_A]) # replace energy Arr with Eest
+    standardAnalysisNames = np.array(["dt", "t0", "tp_0", "maxA", "DCR", "LQ80", "noise", "noiseTail", "tdrift", "tdrift50", "tdrift10", "TRAP_E", "DAQ_E", "Norm_A"])
     appNewh5(standardAnalysisArray, standardAnalysisNames, ts, wfCorr)
     
     if plotBool:

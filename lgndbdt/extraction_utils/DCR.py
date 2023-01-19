@@ -318,7 +318,16 @@ def trapENS(times, values, dtimes, intTimes = (3000, 5500)):
         trapArr[w, :] = np.dot(values[w], tensor.T)[:-bufferCell]/riseCell
     np.save(f"{savePath}/TrapArr.npy", trapArr)
     return trapArr
+###########################################################################################
 
+def Normalize_Waveforms(values):
+    newVals = np.zeros_like(values)
+    for i in range(len(values)):
+        maxVal = np.max(values[i, :])
+        newVals[i, :] = values[i,:]/maxVal
+    
+    return newVals
+    
 ###########################################################################################
 
 def DCRquantileCut(paramArr):

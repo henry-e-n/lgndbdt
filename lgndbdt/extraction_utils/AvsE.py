@@ -26,7 +26,7 @@ def getA(times, values, dtimes, currentEstimator = 100):
         slopes[i] = rise
     return slopes
 
-def AvsE(times, values, dtimes, plots = [], numWF = 2500, currentEstimator = 100):
+def AvsE(values, dtimes, plots = [], numWF = 2500, currentEstimator = 100):
     """
     Arguments:
         - ntimes array - [#Waveforms, #TimeCells]
@@ -37,7 +37,6 @@ def AvsE(times, values, dtimes, plots = [], numWF = 2500, currentEstimator = 100
         - False - no plots to be printed
         - E - energy array same length as times
     """
-    Eest = np.zeros(numWF)
     dWindow = int(currentEstimator/dtimes[0])
     wfdLen = values.shape[1]
     row = np.zeros(wfdLen)
@@ -55,7 +54,7 @@ def AvsE(times, values, dtimes, plots = [], numWF = 2500, currentEstimator = 100
                   desc = "Getting Current Amplitude.....",
                   colour = terminalCMAP[1]):
         maxA[w] = np.max(np.dot(values[w, :], tensor.T))
-    return maxA, Eest
+    return maxA
 
 def AvsE2(times, values, dtimes, plots = [], numWF = 2500, currentEstimator = 100):
     """
