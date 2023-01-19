@@ -122,8 +122,8 @@ def extraction(paramArr, paramKeys, plotBool=False):
     tdrift, tdrift50, tdrift10 = getTDriftInterpolate(ts[0, :], pa["values"][:numWave, :], pa["tp_0"][:numWave], pa["dt"][:numWave])
     
     ### Save Parameters to LH5
-    standardAnalysisArray = np.array([pa["dt"], pa["t0"], pa["tp_0"], maxA, deltasCorr, lqVal, noise, noiseTail, tdrift, tdrift50, tdrift10, TRAP_E, DAQ_E, Norm_A]) # replace energy Arr with Eest
-    standardAnalysisNames = np.array(["dt", "t0", "tp_0", "maxA", "DCR", "LQ80", "noise", "noiseTail", "tdrift", "tdrift50", "tdrift10", "TRAP_E", "DAQ_E", "Norm_A"])
+    standardAnalysisArray = np.array([pa["dt"], pa["t0"], pa["tp_0"], maxA, deltasCorr, lqVal, noise, noiseTail, tdrift, tdrift50, tdrift10, TRAP_E, DAQ_E, Norm_A, maxA/TRAP_E, maxA/DAQ_E]) # replace energy Arr with Eest
+    standardAnalysisNames = np.array(["dt", "t0", "tp_0", "maxA", "DCR", "LQ80", "noise", "noiseTail", "tdrift", "tdrift50", "tdrift10", "TRAP_E", "DAQ_E", "A_Norm", "A_/TrapE", "A_/DAQE"])
     appNewh5(standardAnalysisArray, standardAnalysisNames, ts, wfCorr)
     
     if plotBool:
