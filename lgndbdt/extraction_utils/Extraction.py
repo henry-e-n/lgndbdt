@@ -123,7 +123,7 @@ def extraction(paramArr, paramKeys, plotBool=False):
     
     ### Save Parameters to LH5
     standardAnalysisArray = np.array([pa["dt"], pa["t0"], pa["tp_0"], maxA, deltasCorr, lqVal, noise, noiseTail, tdrift, tdrift50, tdrift10, TRAP_E, DAQ_E, Norm_A, maxA/TRAP_E, maxA/DAQ_E]) # replace energy Arr with Eest
-    standardAnalysisNames = np.array(["dt", "t0", "tp_0", "maxA", "DCR", "LQ80", "noise", "noiseTail", "tdrift", "tdrift50", "tdrift10", "TRAP_E", "DAQ_E", "A_Norm", "A_/TrapE", "A_/DAQE"])
+    standardAnalysisNames = np.array(["dt", "t0", "tp_0", "maxA", "DCR", "LQ80", "noise", "noiseTail", "tdrift", "tdrift50", "tdrift10", "TRAP_E", "DAQ_E", "A_Norm", "A_TrapE", "A_DAQE"])
     appNewh5(standardAnalysisArray, standardAnalysisNames, ts, wfCorr)
     
     if plotBool:
