@@ -42,7 +42,6 @@ def psd_extraction(paramArr, paramKeys):
     
     cTimes([pa["dt"], pa["t0"], pa["values"]], number=-1) # Can remove detname and number in lgndbdt update
     ts = np.load(searchFile(f'timesArr_{detName}.npy', savePath))
-    print(ts.shape)
     numWave = paramArr[0].shape[0]
     #####################################################################
     ### AvsE
@@ -121,4 +120,5 @@ def psd_extraction(paramArr, paramKeys):
     wfCorr = np.delete(wfCorr, trash, axis=0)
     standardAnalysisNames = np.array(["dt", "t0", "tp_0", "maxA", "DCR", "LQ80", "noise", "noiseTail", "tdrift", "tdrift50", "tdrift10", "TRAP_E", "DAQ_E", "A_Norm", "A_TrapE", "A_DAQE"])
     appNewh5(standardAnalysisArray, standardAnalysisNames, ts, wfCorr)
+    print(f"Final Shape of PSD array, after removing late rise waveforms: {standardAnalysisArray.shape}")
     return

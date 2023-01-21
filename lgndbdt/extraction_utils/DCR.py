@@ -243,19 +243,17 @@ def getP0(vals, popt, numWave = 100):
         else:
             dp0Num = numWave
             
-        print(f"Running P0 minimization - Please Wait...")
-        res = minimize(dp0fx,
-                    [72*40, 2.1*40, 0.0105], 
-                    args    = vals[:dp0Num,:], 
-                    method  = 'Nelder-Mead', 
-                    tol     = 1e-4, 
-                    bounds  = ((60*40, 180*40), (1, 5*40),(0.01,0.022))) # 90*40 0.012
+        for i in tqdm(range(1),
+                        desc   = "Running PZ minimization.......",
+                        colour = terminalCMAP[1]):  
+            res = minimize(dp0fx,
+                        [72*40, 2.1*40, 0.0105], 
+                        args    = vals[:dp0Num,:], 
+                        method  = 'Nelder-Mead', 
+                        tol     = 1e-4, 
+                        bounds  = ((60*40, 180*40), (1, 5*40),(0.01,0.022))) # 90*40 0.012
         
-        # print(f"\nP0 fit parameters - {res.x/40}")
         popt = tuple(res.x)
-        # print(f"fitted value {dp0fx(res.x, vals[:1,:])}")
-        # print(f"initial value {dp0fx([72*40, 2.1*40, 0.0105], vals[:1,:])}\n")
-        print(f"POPT {popt}")
     wfIn, wfCorr  = dp0Vis(popt, vals[:numWave,:])
     return wfIn, wfCorr
 
@@ -291,7 +289,6 @@ def trapENS(times, values, dtimes, intTimes = (3000, 5500)):
     """
     riseTime   = intTimes[0] #us
     ftTime     = intTimes[1] #ns
-    print(f"Ramp Time {riseTime} ns, Flat-Top Time {ftTime} ns")
     riseCell   = us2cell(dtimes[0], riseTime)
     ftCell   = us2cell(dtimes[0], ftTime)
     bufferCell = 2*riseCell + ftCell
