@@ -1,9 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
-
 from tqdm import tqdm
-
 from matplotlib import cm
 from extraction_utils.config import *
 
@@ -63,8 +61,6 @@ def getLQ80(ts, vals):
 
             # return LQ80
     return LQ80
-
-
 
 def LQvis(ts, vals):
     """

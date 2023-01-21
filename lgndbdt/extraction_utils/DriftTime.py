@@ -1,4 +1,3 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
@@ -10,9 +9,6 @@ import scipy.optimize as spy
 cwd = os.getcwd()
 module_path = os.path.abspath(os.path.split(cwd)[0])
 sys.path.append(module_path)
-
-
-# from extraction_utils.h5Extract import *
 from extraction_utils.waveform import *
 from extraction_utils.AvsE import *
 from extraction_utils.DCR import *
@@ -69,9 +65,6 @@ def getTDrift(values, startTime, dtimes):
     
     return tdrift, tdrift50, tdrift10
 
-
-
-
 def getTDriftInterpolate(times, values, startTime, dtimes):
     tdrift = np.zeros(values.shape[0])
     tdrift50 = np.zeros(values.shape[0])
@@ -101,9 +94,3 @@ def getTDriftInterpolate(times, values, startTime, dtimes):
         tdrift50[i] = getClosest(0.5)-startTime[i]
         tdrift10[i] = getClosest(0.15)-startTime[i]
     return tdrift, tdrift50, tdrift10
-
-# plt.plot(times[i, :], values[i, :], '.')
-# plt.plot(times[i, :], f1(times[i, :]), '--')
-# plt.hlines(perc50, times[i, 1], times[i, -1])
-# plt.show()
-# print(testX[closest])

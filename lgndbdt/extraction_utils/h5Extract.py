@@ -82,17 +82,6 @@ def dsArray(filename, relativePathToFolder = ""):
     data = np.concatenate([rawDat1, appRawArr], axis=-1)
     
     return wfd, raw, data
-"""
-def paramExtract(filename, relativePathToFolder = ""):
-    filepath = checkPath(filename, relativePathToFolder)
-    wfd = h5.File(f"{filepath}", "r+")
-    
-    headKeys = list(wfd.keys()) # extracts group names within 'head' - only 'raw' exists
-    raw = wfd[f"{headKeys[0]}"]
-    
-    paramArr = [raw["A/E"], raw["dt"], raw["index"], raw["tp_0"], raw["waveform/dt"], raw["waveform/t0"], raw["waveform/values"]]
-    return wfd, raw, paramArr
-"""
 
 def paramExtract(filename, relativePathToFolder = "", og = "raw"):
     """
@@ -209,9 +198,6 @@ def pullFiles(detName, datapath):
         print("FNF")
         return
 
-
-
-
 #################################
 # General lh5 code
 #################################
@@ -240,9 +226,3 @@ def gpe(filename, relativePathToFolder, targetKeys):
         paramArr.append(wfd[keys[cut[0][0]]])
     
     return wfd, targetKeys, paramArr
-    # paramArr = [raw["A/E"], raw["dt"],
-    #                 raw["index"], raw["tp_0"],
-    #                 raw["waveform/dt"], 
-    #                 raw["waveform/t0"],
-    #                 raw["waveform/values"]]
-

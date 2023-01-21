@@ -3,19 +3,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.markers import MarkerStyle
-import matplotlib
 
 from tqdm import tqdm
-import os
-import sys
-import time
 import h5py as h5
 
 import importlib
 import extraction_utils.config
 importlib.reload(extraction_utils.config)
 from extraction_utils.config import *
-
 from extraction_utils.waveform import *
 from extraction_utils.AvsE import *
 from extraction_utils.DCR import *
@@ -23,20 +18,28 @@ from extraction_utils.BaselineNoise import *
 from extraction_utils.DriftTime import *
 from extraction_utils.LQ import *
 from extraction_utils.h5utils import paramExtract
-
-
-
 from extraction_utils.h5utils import *
 
+def clean_data(paramArr, verbose=False):
+    # print(f"Initial Shape: {paramArr[0].shape}")
+    nans = []
+    for i in range(len(paramArr)):
+        for w in range(len(paramArr[i])):
+            whereNan = np.where(np.isnan(paramArr[i][w]))
+            if len(whereNan[0])>0:
+                nans.append(w)
+    # print(nans)
+    for n in range(len(paramArr)):
+        paramArr[n] = np.delete(paramArr[n], nans, 0)
+    # print(f"Final Shape: {paramArr[0].shape}")
+    if verbose:
+        print(f"Number of Waveforms (post-clean) : {paramArr[0].shape}")
+    return paramArr
 
-def extraction(paramArr, paramKeys, plotBool=False):
+def psd_extraction(paramArr, paramKeys):
     # Make Dictionary for easy referencing of Parameters
     pa = dict(zip(paramKeys, paramArr))
-    # print(detName)
-    # print(pa)
-    # Make times array
-    # if searchFile(f"timesArr_{detName}.npy", savePath) == None:
-    #     print(f"Creating times array, please wait...")
+    
     cTimes([pa["dt"], pa["t0"], pa["values"]], number=-1) # Can remove detname and number in lgndbdt update
     ts = np.load(searchFile(f'timesArr_{detName}.npy', savePath))
     
@@ -44,10 +47,7 @@ def extraction(paramArr, paramKeys, plotBool=False):
     #####################################################################
     ### AvsE
     #####################################################################
-
     maxA = AvsE(pa["values"], pa["dt"], plots = [], numWF = numWave)
-
-    
     #####################################################################
     ### DCR - P0 corrected
     #####################################################################
@@ -64,15 +64,12 @@ def extraction(paramArr, paramKeys, plotBool=False):
     ### LQ80
     #####################################################################
     lqVal                = getLQ80(ts, wfCorr)
-    
     #####################################################################
     ### Energy - Redundent from Eest Line 131
     #####################################################################
-
     TRAP_RES            = trapENS(ts[:,:], wfCorr[:,:], pa["dt"][:])
     TRAP_E              = np.amax(TRAP_RES, 1) 
     DAQ_E               = pa["trapEmax"] # Currently uncalibrated
-
 
     Norm_Vals           = Normalize_Waveforms(pa["values"]) # Currently Using non-PZ corrected
     Norm_A              = AvsE(Norm_Vals, pa["dt"], plots = [], numWF = numWave)
@@ -111,9 +108,6 @@ def extraction(paramArr, paramKeys, plotBool=False):
             except ValueError:
                 print(f"Error {i}")
                 print(f"WindowTail {windowTail}")
-                # print(np.where(wfCorr[i]<0))
-                # print(np.where(np.isnan(wfCorr[i])))
-
             noiseTail[i]     = findNoise(linFit, poptTail, windowTail, ts[0], wfCorr[i])
         
     #####################################################################
@@ -125,14 +119,4 @@ def extraction(paramArr, paramKeys, plotBool=False):
     standardAnalysisArray = np.array([pa["dt"], pa["t0"], pa["tp_0"], maxA, deltasCorr, lqVal, noise, noiseTail, tdrift, tdrift50, tdrift10, TRAP_E, DAQ_E, Norm_A, maxA/TRAP_E, maxA/DAQ_E]) # replace energy Arr with Eest
     standardAnalysisNames = np.array(["dt", "t0", "tp_0", "maxA", "DCR", "LQ80", "noise", "noiseTail", "tdrift", "tdrift50", "tdrift10", "TRAP_E", "DAQ_E", "A_Norm", "A_TrapE", "A_DAQE"])
     appNewh5(standardAnalysisArray, standardAnalysisNames, ts, wfCorr)
-    
-    if plotBool:
-        # maxA hist
-        plt.hist(maxA, bins = 25)
-        plt.xlabel("Current Amplitude")
-        plt.ylabel("Number")
-        plt.title(f"Current spread")
-        plt.savefig(f'{savePath}/_AHist.jpg')
-        plt.close()    
-        plt.figure()
     return

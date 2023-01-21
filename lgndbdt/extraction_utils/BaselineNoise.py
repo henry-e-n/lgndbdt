@@ -142,12 +142,7 @@ def findNoise(func, popt, window, times, values):
 
 ###########################################################################################
 ###########################################################################################
-"""
-def visBL(window, startTime, blAvg, dtime, times, values, colorIter = 0.3):
-    startCell = int(startTime/dtime)
-    plt.plot(times[:startCell], values[:startCell], color = cmapNormal(colorIter), alpha = 0.5)
-    plt.plot(times[window[0]:window[1]],times[window[0]:window[1]]*0 + blAvg, color = cmapNormal(colorIter))
-"""
+
 def visBL2(window, startTime, func, popt, dtime, times, values, colorIter = 0.3):
     startCell = int(startTime/dtime)
     plt.plot(times[window[0]:window[1]], values[window[0]:window[1]], color = cmapNormal(colorIter), alpha = 0.5)

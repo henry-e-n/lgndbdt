@@ -15,13 +15,7 @@ cmapNormal   = LinearSegmentedColormap.from_list("Custom", ["#151515", '#13294B'
 cmapNormal_r = cmapNormal.reversed("cmapNormal_r")
 cmapDiv      = LinearSegmentedColormap.from_list("Custom", ['#13294B', "#F4E8DD", '#4B9CD3'], N=50) #["#EF426F", '#F4E8DD', '#00A5AD'], N=50)
 
-
-# indf = open(f"{os.getcwd()}/ind.json")
-
-# jsonData = json.load(indf)
-# jsonIndex = jsonData["index"]
 jsonIndex = 0
-# print(jsonIndex)
 
 f = open(f"{os.getcwd()}/paths.json")
 data = json.load(f)
@@ -55,15 +49,6 @@ for run in run_list:
     raw_file = raw_data_dir +  run + '.lh5'
     dsp_files.append(dsp_file)
     raw_files.append(raw_file)
-
-# dspFile = f"{data['path_to_dsp']}{data['detector_name']}/{data['run_list']}.lh5"
-# rawFile = f"{data['path_to_raw']}{data['detector_name']}/{data['run_list']}.lh5"
-
-# def __main__():
-#     global jsonIndex
-    
-
-#     return detName, savePath, plotPath, dspFile, rawFile
 """
 Package Dependencies
 numpy       =

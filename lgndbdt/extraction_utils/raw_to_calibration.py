@@ -18,7 +18,7 @@ from extraction_utils.config import *
 from extraction_utils.h5utils import paramExtract
 from extraction_utils.h5Extract import openGroup
 
-def cleanDSP(dsp_files):
+def clean_dsp(dsp_files):
     delList = []
     dsp_files_icpcs = []
     for i in range(len(dsp_files)):
@@ -39,10 +39,8 @@ def cleanDSP(dsp_files):
 
     return dsp_files, dsp_files_icpcs
 ##############################
-def calibration(verbose=False, plotBool=False):
-    
-
-    dsp_files_clean, dsp_files_icpcs = cleanDSP(dsp_files)
+def energy_calibration(verbose=False, plotBool=False):
+    dsp_files_clean, dsp_files_icpcs = clean_dsp(dsp_files)
 
     try:
         calibration_files = dsp_files_clean[:2]
@@ -53,22 +51,9 @@ def calibration(verbose=False, plotBool=False):
         calibration_files = dsp_files_icpcs[:2]
         energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "icpcs/icpc1/dsp")
         energies = energy_stack["trapEmax"]
-    # if len(dsp_files_clean) >= 2:
-        
-    # elif ((len(dsp_files_clean) <2) and (len(dsp_files_icpcs) >= 2)):
-        
-    # else:
-    #     print("rtc 57: ERROR ??")
-    #     calibration_files = dsp_files_clean
-
-    
     
     if verbose:
         print(f"Number of events for Calibration: {len(energies)}")
-
-
-    # dsp, keys, energies = paramExtract(dspFile, ["trapEmax"])
-    # energies = energies[0]
 
     #####################################
     # First Calibration Pass
@@ -124,9 +109,6 @@ def calibration(verbose=False, plotBool=False):
                 if err < best_err:
                     best_err, best_m, best_b = err, m, b
 
-        # print(i, best_err)
-        # print("cal:",cal)
-        # print("data:",data)
         if plotBool:
         # Plots Scatter of Calibration Pass
             plt.scatter(data, cal, label='min.err:{:.2e}'.format(err))
@@ -144,7 +126,6 @@ def calibration(verbose=False, plotBool=False):
         return [best_m, best_b], [cal, data]
 
     linear_cal, fitDat = match_peaks(uncal_peaks, cal_peaks)
-    # print(linear_cal)
 
     def linearFit(en, linCal):
         calibratedEnergy = en*linCal[0] + linCal[1]
@@ -185,18 +166,11 @@ def calibration(verbose=False, plotBool=False):
         widths = sigmas * 3
 
     n_peaks = uncal_peaks.shape[0]
-    # fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24)) 
-    # labels = [r'$^{228}$Th', r'$^{60}$Co', r'$^{60}$Co', r'$^{228}$Th', r'$^{228}$Th SEP'] #If other peaks are chosen, make sure to modify this
-
     for i in range(n_peaks):
         #Get histogram for peak within bounds of 5 sigma
         hi, lo = modes[i] + widths[i], modes[i] - widths[i]
         hist, bins, var = pgh.get_hist(energies, bins=100, range=(lo, hi))
         bin_centers = pgh.get_bin_centers(bins)
-
-        #Plot data 
-        # axs[i].semilogy(bin_centers, hist, ds="steps-mid", color="k", label=labels[i])
-        # axs[i].legend(fontsize=30, loc='best')
 
     #Perform fits for a gaussian plus a step function
 
@@ -218,13 +192,6 @@ def calibration(verbose=False, plotBool=False):
 
         fit_pars.append(pars_i)
         fit_errs.append(errs_i)
-
-    #print the fit errors for each parameter, useful for debugging
-    # print(fit_errs)
-
-
-    #Plot fit results and compare to data
-    # fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24)) 
 
     sigmas = []
     fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24))

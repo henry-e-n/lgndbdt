@@ -20,24 +20,8 @@ def mkdir(detectorName):
         print(f"{detectorName} Path already exists")
     return
 
-def cleanData(paramArr, verbose=False):
-    # print(f"Initial Shape: {paramArr[0].shape}")
-    nans = []
-    for i in range(len(paramArr)):
-        for w in range(len(paramArr[i])):
-            whereNan = np.where(np.isnan(paramArr[i][w]))
-            if len(whereNan[0])>0:
-                nans.append(w)
-    # print(nans)
-    for n in range(len(paramArr)):
-        paramArr[n] = np.delete(paramArr[n], nans, 0)
-    # print(f"Final Shape: {paramArr[0].shape}")
-    if verbose:
-        print(f"Number of Waveforms (post-clean) : {paramArr[0].shape}")
-    return paramArr
 
-
-def runPSD():
+def run_psd():
     import extraction_utils.config
     importlib.reload(extraction_utils.config)
     from extraction_utils.config import detName
@@ -45,11 +29,11 @@ def runPSD():
 
     mkdir(detName)
     calPar, fitResults, peakIndex = calibration() # Calibrate Energy
-    paramArr, paramKeys = getWFD(fitResults, peakIndex) # Return Selection Peak Criteria
+    paramArr, paramKeys = extract_waveforms(fitResults, peakIndex) # Return Selection Peak Criteria
 
     paramArr = cleanData(paramArr)
 
     # run Extraction
-    extraction(paramArr, paramKeys)
+    psd_extraction(paramArr, paramKeys)
 
     return

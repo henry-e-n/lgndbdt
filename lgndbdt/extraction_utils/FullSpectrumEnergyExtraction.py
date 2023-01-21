@@ -39,13 +39,7 @@ def getEnergies(verbose=False):
                 RAWparamArr = [raw_stack["values"]]
             except TypeError:
                 raw_stack = lh5.load_nda(rawFile, rawtargetKeys, "icpcs/icpc1/raw/waveform")
-                RAWparamArr = [raw_stack["values"]]
-            
-<<<<<<< HEAD
-            print(DSPparamArr[0].shape[0], RAWparamArr[0].shape[0])
-=======
-            # print(DSPparamArr[0].shape[0], RAWparamArr[0].shape[0])
->>>>>>> 28aa60cf6e9208c9308c323df463948024fbfe52
+                RAWparamArr = [raw_stack["values"]]            
             if DSPparamArr[0].shape[0] != RAWparamArr[0].shape[0]:
                 print("Error in File - DSP and RAW size don't match.")
             else:
@@ -64,11 +58,7 @@ def getEnergies(verbose=False):
     if verbose:
         print(f"Number of features: {len(paramArrKeys)}")
         print(f"Number of Extracted Waveforms (pre-clean): {paramArr[1].shape[0]}")
-<<<<<<< HEAD
-    return paramArr, paramArrKeys
-=======
     return paramArr, paramArrKeys
 
 
     
->>>>>>> 28aa60cf6e9208c9308c323df463948024fbfe52
