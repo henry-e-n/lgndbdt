@@ -117,12 +117,8 @@ def psd_extraction(paramArr, paramKeys):
     
     ### Save Parameters to LH5
     standardAnalysisArray = np.array([pa["dt"], pa["t0"], pa["tp_0"], maxA, deltasCorr, lqVal, noise, noiseTail, tdrift, tdrift50, tdrift10, TRAP_E, DAQ_E, Norm_A, maxA/TRAP_E, maxA/DAQ_E]) # replace energy Arr with Eest
-    print(standardAnalysisArray.shape)
     standardAnalysisArray = np.delete(standardAnalysisArray, trash, axis=1)
     wfCorr = np.delete(wfCorr, trash, axis=0)
-
-    print(standardAnalysisArray.shape, ts.shape, wfCorr.shape)
-
     standardAnalysisNames = np.array(["dt", "t0", "tp_0", "maxA", "DCR", "LQ80", "noise", "noiseTail", "tdrift", "tdrift50", "tdrift10", "TRAP_E", "DAQ_E", "A_Norm", "A_TrapE", "A_DAQE"])
     appNewh5(standardAnalysisArray, standardAnalysisNames, ts, wfCorr)
     return
