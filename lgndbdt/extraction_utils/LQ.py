@@ -60,6 +60,10 @@ def getLQ80(ts, vals):
             plt.show()
 
             # return LQ80
+        trash_ind = []
+        if midInd>=(endOfInt-2):
+            trash_ind.append(i)
+    print(trash_ind)
     return LQ80
 
 def LQvis(ts, vals):
