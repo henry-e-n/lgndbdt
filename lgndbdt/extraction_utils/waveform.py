@@ -23,7 +23,7 @@ def cTimes(wfParams, number, save=True):
             
     if save:
         np.save(f"{savePath}/timesArr_{detName}.npy", t)
-    
+    print(t.shape)
     return t
 
 def plotWF(times, values):

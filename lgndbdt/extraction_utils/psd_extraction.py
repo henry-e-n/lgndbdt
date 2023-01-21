@@ -42,7 +42,7 @@ def psd_extraction(paramArr, paramKeys):
     
     cTimes([pa["dt"], pa["t0"], pa["values"]], number=-1) # Can remove detname and number in lgndbdt update
     ts = np.load(searchFile(f'timesArr_{detName}.npy', savePath))
-    
+    print(ts.shape)
     numWave = paramArr[0].shape[0]
     #####################################################################
     ### AvsE
