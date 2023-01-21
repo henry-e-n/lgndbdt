@@ -10,7 +10,6 @@ def find80(vals, buffer = 100):
     """ 
     Finds the index along waveform rise = 80% of max
     """
-    totalPeak = np.max(vals[:-2])
     totalPeakInd = np.argmax(vals[:-2])
     if totalPeakInd >= len(vals)-buffer:
         return -1
@@ -46,7 +45,6 @@ def getLQ80(ts, vals):
     for i in range(vals.shape[0]):
         ind80 = find80(vals[i])
         if ind80 == -1:
-            print("FOUND ONE")
             trash_ind.append(i)
         else:
             midInd, endOfInt, buffer = getMid(ts[0], ind80)
