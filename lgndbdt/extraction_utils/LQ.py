@@ -10,13 +10,16 @@ def find80(vals, buffer = 100):
     """ 
     Finds the index along waveform rise = 80% of max
     """
+    totalPeak = np.max(vals[:-2])
+    totalPeakInd = np.argmax(vals[:-2])
+    if totalPeakInd >= len(vals)-buffer:
+        return -1
     peak = np.max(vals[:-buffer])
     peakInd = vals[:-buffer].argmax()
-    val97 = 0.80*peak
-    diffArr = np.absolute(vals - val97)
+    val80 = 0.80*peak
+    diffArr = np.absolute(vals - val80)
     closestFromPeak = diffArr[:peakInd].argmin()
     closest = closestFromPeak
-
     return closest
 
 def getMid(ts, ind80, buffer = 100):
@@ -39,32 +42,21 @@ def getLQ80(ts, vals):
         vals - Pole 0 Corrected dependent variable of waveform
     """
     LQ80 = np.zeros(vals.shape[0])
-    for i in tqdm(range(vals.shape[0]), 
-                  desc   ="Running LQ80..................", 
-                  colour = terminalCMAP[0]):
+    trash_ind = []
+    for i in range(vals.shape[0]):
         ind80 = find80(vals[i])
-        midInd, endOfInt, buffer = getMid(ts[0], ind80)
-        blue = (np.trapz(vals[i, ind80:midInd],ts[0, ind80:midInd]))
-        red = (np.trapz(vals[i, midInd:endOfInt],ts[0, midInd:endOfInt]))
-
-        LQ80[i] = red-blue
-        if LQ80[i] == 0:
-
-            # from sys import exit
-            print(f"FLAG {i}, {ind80}, {midInd}, {endOfInt}")
-            # print(f"vals {vals[i, ind80:midInd]}")
-            # print(f"ts {ts[i, ind80:midInd]}")
-            # print(vals[i])
-
-            plt.plot(np.arange(len(vals[i])), vals[i])
-            plt.show()
-
-            # return LQ80
-        trash_ind = []
-        if midInd>=(endOfInt-2):
+        if ind80 == -1:
+            print("FOUND ONE")
             trash_ind.append(i)
-    print(trash_ind)
-    return LQ80
+        else:
+            midInd, endOfInt, buffer = getMid(ts[0], ind80)
+            blue = (np.trapz(vals[i, ind80:midInd],ts[0, ind80:midInd]))
+            red = (np.trapz(vals[i, midInd:endOfInt],ts[0, midInd:endOfInt]))
+
+            LQ80[i] = red-blue
+        
+    print(f"Trash Indeces: {trash_ind}")
+    return LQ80, trash_ind
 
 def LQvis(ts, vals):
     """
