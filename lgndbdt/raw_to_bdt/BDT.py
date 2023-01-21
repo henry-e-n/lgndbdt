@@ -248,7 +248,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift", "/AvsE_c")
                 make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift50", "/AvsE_c"),
                 make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift", "/AvsE_c", point=True),
-            elif i == 3:
+            elif i == 3 and np.any(np.isin("/AvsE_c", fname)):
                 index = 0
                 ROIdata = evnew
                 ROIdata     = ROIdata[ROIdata[:,selectDict["/tdrift"]] < 600]
