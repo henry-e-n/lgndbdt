@@ -234,7 +234,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 shap_values = explainer.shap_values(sample)
                 # Returns a list of matrices (# outputs, # samples x, # features)
                 BDTSummary(shap_values, sample)
-            elif i == 2:
+            elif i == 2 and np.any(np.isin("/AvsE_c", fname)):
                 explainer  = shap.TreeExplainer(gbm)
                 sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
                 sample_bkg  = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector

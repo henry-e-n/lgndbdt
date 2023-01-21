@@ -196,7 +196,7 @@ def dp0Vis(popt, wfArray):
     
     for wf in tqdm(range(wfArray.shape[0]),
                     desc="Applying P0 to waveforms......",
-                    colour = terminalCMAP[0]):
+                    colour = terminalCMAP[1]):
         wf_in = wfArray[wf,:]
         wf_in = (wf_in-wf_in.min())/(wf_in.max()-wf_in.min())*max_amp
         wfInAdj[wf, :] = wf_in
@@ -245,7 +245,7 @@ def getP0(vals, popt, numWave = 100):
             
         for i in tqdm(range(1),
                         desc   = "Running PZ minimization.......",
-                        colour = terminalCMAP[1]):  
+                        colour = terminalCMAP[0]):  
             res = minimize(dp0fx,
                         [72*40, 2.1*40, 0.0105], 
                         args    = vals[:dp0Num,:], 
@@ -276,7 +276,7 @@ def trapENS3(times, values, dtimes, intTimes = (1000, 5000)):
     trapArr = np.zeros([np.shape(values)[0], np.shape(values)[1]-bufferCell])
     for m in tqdm(range(np.shape(values)[0]), 
                   desc   ="Running Trap Filter...........", 
-                  colour = terminalCMAP[1]):
+                  colour = terminalCMAP[0]):
         for i in range(np.shape(values)[1]-bufferCell):
             leftInt  = np.mean(values[m, i:i+riseCell])
             rightInt = np.mean(values[m, i+riseCell+ftCell:i+riseCell+riseCell+ftCell])
