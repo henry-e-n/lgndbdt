@@ -68,10 +68,10 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
         avse = np.zeros(paramArr[0].shape[0])
         for i in range(len(paramArr)):
             print(paramArr[i].name.upper())
-            if np.any(np.isin(map(str.upper, fname), paramArr[i].name.upper())):
+            if np.any(np.isin(fname, paramArr[i].name)): #np.any(np.isin(map(str.upper, fname), paramArr[i].name.upper())):
                 dataDict.append([paramArr[i].name, paramArr[i][:]])
                 dataArr[counter, :] = paramArr[i]
-                select.append([paramArr[i].name.upper(), counter])
+                select.append([paramArr[i].name, counter]) #.upper()
                 counter += 1
             if np.any(np.isin("/times", map(str.lower, paramArr[i].name))):
                 wfd[0] = paramArr[i]
@@ -261,7 +261,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 plot_SHAP_force(explainer, shap_values[1][0])
             elif i == 4:
                 l = list(map(str.upper, selectDict))
-                result = list(filter(lambda x: "a_" in x, l))
+                result = list(filter(lambda x: "a_" in x, selectDict))
                 print(result)
                 sigavse = sigRaw[selectDict[result[0]]]
                 bkgavse = bkgRaw[selectDict[result[0]]]
