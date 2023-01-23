@@ -80,7 +80,14 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
             #     avse = paramArr[i][:]
         dataDictionary = dict(dataDict)
         selectDictionary = dict(select)
-        
+
+
+        result = list(filter(lambda x: "A_" in x, selectDict))
+        print(result)
+        avse = dataDictionary[result[0]]
+        print(avse)
+
+
         dataArr = np.stack(dataArr, 1)
         print(f"Returned {fpath}{filename}")#, shape {dataArr.shape}")
         file.close()
@@ -261,6 +268,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 print(result)
                 sigavse = sigRaw[selectDict[result[0]]]
                 bkgavse = bkgRaw[selectDict[result[0]]]
+                print(sigavse, bkgavse)
                 plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_ext=np.any(np.isin("/AvsE_c", fname)))
     return
 
