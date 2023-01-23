@@ -76,10 +76,17 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 wfd[0] = paramArr[i]
             if np.any(np.isin("/wfdCorr", paramArr[i].name)):
                 wfd[1] = paramArr[i]
-            if np.any(np.isin("/_E", paramArr[i].name)):
-                avse = paramArr[i][:]
+            # if np.any(np.isin("/_E", paramArr[i].name)):
+            #     avse = paramArr[i][:]
         dataDictionary = dict(dataDict)
+        print(f"dataDictionary {dataDictionary}")
         selectDictionary = dict(select)
+        print(f"SelectDictionary {selectDictionary}")
+        result = list(filter(lambda x: "_E" in x, dataDictionary))
+        print(f"result {result}")
+
+        avse = dataDictionary(result)
+
         dataArr = np.stack(dataArr, 1)
         print(f"Returned {fpath}{filename}")#, shape {dataArr.shape}")
         file.close()
