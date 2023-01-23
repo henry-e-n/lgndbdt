@@ -261,7 +261,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 plot_SHAP_force(explainer, shap_values[1][0])
             elif i == 4:
                 l = list(map(str.upper, selectDict))
-                result = list(filter(lambda x: "a_" in x, selectDict))
+                result = list(filter(lambda x: "A_" in x, selectDict))
                 print(result)
                 sigavse = sigRaw[selectDict[result[0]]]
                 bkgavse = bkgRaw[selectDict[result[0]]]
