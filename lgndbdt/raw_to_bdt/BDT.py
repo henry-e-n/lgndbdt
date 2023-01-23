@@ -195,7 +195,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
 
     ######################################
     if plots:
-        for i in tqdm(range(4), 
+        for i in tqdm(range(5), 
                         desc   ="Running Visualization................", 
                         colour = terminalCMAP[1]):
             if i == 0:
