@@ -80,15 +80,14 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
             #     avse = paramArr[i][:]
         dataDictionary = dict(dataDict)
         selectDictionary = dict(select)
-        result = list(filter(lambda x: "A_" in x, dataDictionary))
-        avse = dataDictionary[result[0]]
+        
         dataArr = np.stack(dataArr, 1)
         print(f"Returned {fpath}{filename}")#, shape {dataArr.shape}")
         file.close()
-        return dataArr, dataDictionary, wfd, avse, selectDictionary
+        return dataArr, selectDictionary
 
-    sigRaw, sigDict, sigWFD, sigavse, selectDict = getRaw(f"{filename}DEP.lh5", f"{fpath}")
-    bkgRaw, bkgDict, bkgWFD, bkgavse, selectDict = getRaw(f"{filename}{SEPorFEP}.lh5", f"{fpath}")
+    sigRaw, selectDict = getRaw(f"{filename}DEP.lh5", f"{fpath}")
+    bkgRaw, selectDict = getRaw(f"{filename}{SEPorFEP}.lh5", f"{fpath}")
 
     ###################################################################
     # DATA MATCHING
@@ -258,6 +257,10 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 shap_values = explainer.shap_values(sample)
                 plot_SHAP_force(explainer, shap_values[1][0])
             elif i == 4:
+                result = list(filter(lambda x: "A_" in x, selectDict))
+                print(result)
+                sigavse = sigRaw[result[0]]
+                bkgavse = bkgRaw[result[0]]
                 plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_ext=np.any(np.isin("/AvsE_c", fname)))
     return
 
