@@ -141,6 +141,7 @@ def plot_SHAP_force(explainer, shap_values):
 
 
 def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_ext = True):
+    print(sigavse, bkgavse)
     cleanSig = np.delete(sigavse, np.argwhere(np.isnan(sigavse)))
     cleanBkg = np.delete(bkgavse, np.argwhere(np.isnan(bkgavse)))
 
