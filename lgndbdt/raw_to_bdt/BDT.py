@@ -81,13 +81,6 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
         dataDictionary = dict(dataDict)
         selectDictionary = dict(select)
 
-
-        result = list(filter(lambda x: "A_" in x, dataDictionary))
-        print(result)
-        avse = dataDictionary[result[0]]
-        print(avse)
-
-
         dataArr = np.stack(dataArr, 1)
         print(f"Returned {fpath}{filename}")#, shape {dataArr.shape}")
         file.close()
@@ -264,7 +257,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 shap_values = explainer.shap_values(sample)
                 plot_SHAP_force(explainer, shap_values[1][0])
             elif i == 4:
-                result = list(filter(lambda x: "A_" in x, selectDict))
+                l = list(map(str.lower, selectDict))
+                result = list(filter(lambda x: "a_" in x, l))
                 print(result)
                 sigavse = sigRaw[selectDict[result[0]]]
                 bkgavse = bkgRaw[selectDict[result[0]]]
