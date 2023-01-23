@@ -67,14 +67,14 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
         wfd = np.zeros(2, dtype = object)
         avse = np.zeros(paramArr[0].shape[0])
         for i in range(len(paramArr)):
-            if np.any(np.isin(fname, paramArr[i].name)):
+            if np.any(np.isin(map(str.lower, fname), map(str.lower, paramArr[i].name))):
                 dataDict.append([paramArr[i].name, paramArr[i][:]])
                 dataArr[counter, :] = paramArr[i]
                 select.append([paramArr[i].name, counter])
                 counter += 1
-            if np.any(np.isin("/times", paramArr[i].name)):
+            if np.any(np.isin("/times", map(str.lower, paramArr[i].name))):
                 wfd[0] = paramArr[i]
-            if np.any(np.isin("/wfdCorr", paramArr[i].name)):
+            if np.any(np.isin("/wfdCorr", map(str.lower, paramArr[i].name))):
                 wfd[1] = paramArr[i]
             # if np.any(np.isin("/_E", paramArr[i].name)):
             #     avse = paramArr[i][:]
