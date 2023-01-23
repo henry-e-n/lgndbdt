@@ -76,7 +76,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 wfd[0] = paramArr[i]
             if np.any(np.isin("/wfdCorr", paramArr[i].name)):
                 wfd[1] = paramArr[i]
-            if np.any(np.isin("/E", paramArr[i].name)):
+            if np.any(np.isin("/_E", paramArr[i].name)):
                 avse = paramArr[i][:]
         dataDictionary = dict(dataDict)
         selectDictionary = dict(select)
