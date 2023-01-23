@@ -67,10 +67,10 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
         wfd = np.zeros(2, dtype = object)
         avse = np.zeros(paramArr[0].shape[0])
         for i in range(len(paramArr)):
-            if np.any(np.isin(map(str.lower, fname), map(str.lower, paramArr[i].name))):
+            if np.any(np.isin(map(str.upper, fname), map(str.upper, paramArr[i].name))):
                 dataDict.append([paramArr[i].name, paramArr[i][:]])
                 dataArr[counter, :] = paramArr[i]
-                select.append([paramArr[i].name, counter])
+                select.append([map(str.upper, paramArr[i].name), counter])
                 counter += 1
             if np.any(np.isin("/times", map(str.lower, paramArr[i].name))):
                 wfd[0] = paramArr[i]
@@ -80,6 +80,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
             #     avse = paramArr[i][:]
         dataDictionary = dict(dataDict)
         selectDictionary = dict(select)
+        print(f"fnames {fname}")
+        print(f"selectDict {selectDictionary}")
 
         dataArr = np.stack(dataArr, 1)
         print(f"Returned {fpath}{filename}")#, shape {dataArr.shape}")
@@ -257,7 +259,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 shap_values = explainer.shap_values(sample)
                 plot_SHAP_force(explainer, shap_values[1][0])
             elif i == 4:
-                l = list(map(str.lower, selectDict))
+                l = list(map(str.upper, selectDict))
                 result = list(filter(lambda x: "a_" in x, l))
                 print(result)
                 sigavse = sigRaw[selectDict[result[0]]]
