@@ -82,7 +82,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
         selectDictionary = dict(select)
 
 
-        result = list(filter(lambda x: "A_" in x, selectDict))
+        result = list(filter(lambda x: "A_" in x, dataDictionary))
         print(result)
         avse = dataDictionary[result[0]]
         print(avse)
