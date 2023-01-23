@@ -79,14 +79,9 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
             # if np.any(np.isin("/_E", paramArr[i].name)):
             #     avse = paramArr[i][:]
         dataDictionary = dict(dataDict)
-        print(f"dataDictionary {dataDictionary}")
         selectDictionary = dict(select)
-        print(f"SelectDictionary {selectDictionary}")
         result = list(filter(lambda x: "A_" in x, dataDictionary))
-        print(f"result {result}")
-
         avse = dataDictionary[result[0]]
-
         dataArr = np.stack(dataArr, 1)
         print(f"Returned {fpath}{filename}")#, shape {dataArr.shape}")
         file.close()
