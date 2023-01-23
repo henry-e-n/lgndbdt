@@ -34,6 +34,8 @@ plotPath = f"{savePath}/Plots"#os.getcwd()
 # modPath = data["mod_path"]
 
 fname = np.array(data["feature_names"]) # features to use in BDT
+fname = map(str.upper, fname)
+
 distMatch = np.array(data["distribution_names"])
 distStep = np.array(data["distribution_step"])
 
