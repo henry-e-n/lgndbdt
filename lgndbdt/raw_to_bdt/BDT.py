@@ -259,9 +259,9 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
             elif i == 4:
                 result = list(filter(lambda x: "A_" in x, selectDict))
                 print(f"{result}, {selectDict[result[0]]}")
-                sigavse = sigRaw[selectDict[result[0]]]
-                bkgavse = bkgRaw[selectDict[result[0]]]
-                print(sigavse, bkgavse)
+                sigavse = sigRaw[:,selectDict[result[0]]]
+                bkgavse = bkgRaw[:,selectDict[result[0]]]
+                print(sigavse.shape, bkgavse)
                 print(f"ypred {y_pred}")
                 plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_ext=False) #np.any(np.isin("/AvsE_c", fname))
                 # New Files don't have a PYGAMA AvsE to use remove this redundancy in future versions
