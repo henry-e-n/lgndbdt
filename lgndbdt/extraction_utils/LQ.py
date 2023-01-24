@@ -43,16 +43,18 @@ def getLQ80(ts, vals, trashPZ):
     LQ80 = np.zeros(vals.shape[0])
     trash_ind = []
     for i in range(vals.shape[0]):
-        ind80 = find80(vals[i])
-        print(f"{i}, {i in trashPZ}")
-        if ind80 == -1 or i in trashPZ:
+        if i in trashPZ:
             trash_ind.append(i)
+            print(f"{i}, {i in trashPZ}")
         else:
-            midInd, endOfInt, buffer = getMid(ts[0], ind80)
-            blue = (np.trapz(vals[i, ind80:midInd],ts[0, ind80:midInd]))
-            red = (np.trapz(vals[i, midInd:endOfInt],ts[0, midInd:endOfInt]))
-
-            LQ80[i] = red-blue
+            ind80 = find80(vals[i])
+            if ind80 == -1:
+                trash_ind.append(i)
+            else:
+                midInd, endOfInt, buffer = getMid(ts[0], ind80)
+                blue = (np.trapz(vals[i, ind80:midInd],ts[0, ind80:midInd]))
+                red = (np.trapz(vals[i, midInd:endOfInt],ts[0, midInd:endOfInt]))
+                LQ80[i] = red-blue
     return LQ80, trash_ind
 
 def LQvis(ts, vals):
