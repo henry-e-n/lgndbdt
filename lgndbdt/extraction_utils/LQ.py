@@ -55,6 +55,7 @@ def getLQ80(ts, vals, trashPZ):
                 red = (np.trapz(vals[i, midInd:endOfInt],ts[0, midInd:endOfInt]))
                 LQ80[i] = red-blue
                 if LQ80[i] < 0:
+                    print(endOfInt-midInd, midInd-ind80)
                     print(i, LQ80[i])
     return LQ80, trash_ind
 
