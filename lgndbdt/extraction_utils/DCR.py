@@ -226,8 +226,9 @@ def dp0Vis(popt, wfArray):
                 wfCorr[wf, i] = e1 - frac*e3
         except RuntimeWarning:
             print(f"RuntimeWarning {wf}")
+            wf_in = wfArray[wf,:]
             print(f"wfin.min {wf_in.min()}, max {wf_in.max()}")
-            print(f"{(wf_in-wf_in.min())}/{(wf_in.max()-wf_in.min())}")
+            print(f"/{(wf_in.max()-wf_in.min())}")
             trash.append[wf]
     return wfInAdj, wfCorr, trash
 
