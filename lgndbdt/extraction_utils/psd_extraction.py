@@ -104,7 +104,7 @@ def psd_extraction(paramArr, paramKeys):
                 windowTail[0]    = windowTail[0] + 250
             try:
                 poptTail         = blLinFit(windowTail, ts[0], wfCorr[i])
-            except ValueError:
+            except:
                 print(f"Error {i}")
                 print(f"WindowTail {windowTail}")
             noiseTail[i]     = findNoise(linFit, poptTail, windowTail, ts[0], wfCorr[i])
@@ -116,7 +116,7 @@ def psd_extraction(paramArr, paramKeys):
     
     ### Save Parameters to LH5
     standardAnalysisArray = np.array([pa["dt"], pa["t0"], pa["tp_0"], maxA, deltasCorr, lqVal, noise, noiseTail, tdrift, tdrift50, tdrift10, TRAP_E, DAQ_E, Norm_A, maxA/TRAP_E, maxA/DAQ_E]) # replace energy Arr with Eest
-    deleteArr = np.concatenate([trashPZ, trash])
+    deleteArr = list(np.concatenate([trashPZ, trash]))
     print(deleteArr)
     standardAnalysisArray = np.delete(standardAnalysisArray, deleteArr, axis=1)
     wfCorr = np.delete(wfCorr, deleteArr, axis=0)
