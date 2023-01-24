@@ -195,14 +195,13 @@ def dp0Vis(popt, wfArray):
     wfCorr = np.zeros(wfArray.shape)
     max_amp = 10
     trash = []
-    import warnings
-    warnings.filterwarnings("error")
     for wf in tqdm(range(wfArray.shape[0]),
                     desc="Applying P0 to waveforms......",
                     colour = terminalCMAP[1]):
         try:
             wf_in = wfArray[wf,:]
             wf_in = (wf_in-wf_in.min())/(wf_in.max()-wf_in.min())*max_amp
+            print(f"{wf} wfin.min {wf_in.min()}, max {wf_in.max()},")
             wfInAdj[wf, :] = wf_in
             wf_out = np.zeros(len(wf_in))
             # Defines the constant terms
