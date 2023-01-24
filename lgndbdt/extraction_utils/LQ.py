@@ -45,7 +45,6 @@ def getLQ80(ts, vals, trashPZ):
     for i in range(vals.shape[0]):
         if i in trashPZ:
             trash_ind.append(i)
-            print(f"{i}, {i in trashPZ}")
         else:
             ind80 = find80(vals[i])
             if ind80 == -1:

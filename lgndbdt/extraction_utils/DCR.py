@@ -201,7 +201,6 @@ def dp0Vis(popt, wfArray):
         wf_in = wfArray[wf,:]
         if wf_in.min()<-5000:
             trash.append(wf)
-            print(f"HIT ONE {wf} wfin.min {wf_in.min()}, max {wf_in.max()},")
         else:
             wf_in = (wf_in-wf_in.min())/(wf_in.max()-wf_in.min())*max_amp
             wfInAdj[wf, :] = wf_in
