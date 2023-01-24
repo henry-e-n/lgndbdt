@@ -164,11 +164,7 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
         Extfpr, Exttpr, Extthresholds    = roc_curve(avseExtLabels, avseExt)
         Extauc  = roc_auc_score(avseExtLabels, avseExt)
         hlineExt  = np.argmin(np.abs(Exttpr-0.76))
-        # print(f"76% thresholds - BDT : {BDTthresholds[hlineBDT]}, PYGAMA : {ogthresholds[hlineOG]}, Extracted {Extthresholds[hlineExt]}")
-    # else:
-        # print(f"76% thresholds - BDT : {BDTthresholds[hlineBDT]}, PYGAMA : {ogthresholds[hlineOG]}")
-    
-    # plt.rcParams["font.size"]=24
+
     plt.figure(figsize=(15,16))
     plt.plot([0],[0],color="white",label = "Classifier             DEP           FEP        AUC    ")
     plt.plot(BDTfpr, BDTtpr, color = "#EF426F" , linestyle = "-", linewidth = 4, label = f"    BDT               75.0%        {np.round(100*BDTfpr[hlineBDT],1)}%    {np.round(BDTauc, 3)}")
@@ -184,7 +180,6 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
     plt.legend(loc="lower right")
     plt.xlabel("False Positivity Rate", fontsize = 40)
     plt.ylabel("True Positivity Rate", fontsize = 40)
-    # plt.suptitle("BDT ROC curve", fontsize = 30, fontweight = 15)
     plt.title("BDT vs traditional A/E ROC performance", fontsize = 40) #, fontsize = 24, pad = 15, fontstyle='italic')
     plt.savefig(f"{plotPath}/ROC3.png",dpi=300, transparent=True)
     plt.cla()
