@@ -309,7 +309,7 @@ def trapENS(times, values, dtimes, intTimes = (3000, 5500)):
     
     tensor = np.triu(tensor, -1)
 
-    trapArr = np.zeros([np.shape(values)[0], np.shape(values)[1]-bufferCell])
+    trapArr = np.ones([np.shape(values)[0], np.shape(values)[1]-bufferCell])
     for w in tqdm(range(values.shape[0]), 
                   desc   ="Running Trap Filter...........", 
                   colour = terminalCMAP[1]):
