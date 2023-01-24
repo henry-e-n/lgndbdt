@@ -188,6 +188,8 @@ def dp0fx(popt, wfArray):
 
 ###########################################################################################
 
+import warnings
+warnings.filterwarnings("error")
 def dp0Vis(popt, wfArray):
     [tau1, tau2, f] = popt
     wfInAdj = np.zeros(wfArray.shape)
