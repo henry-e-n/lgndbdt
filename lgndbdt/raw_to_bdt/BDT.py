@@ -65,7 +65,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
         select = []
         counter = 0
         wfd = np.zeros(2, dtype = object)
-        print(f"Extracting {fname} from {paramArr}")
+        print(f"Extracting {fname} from {paramArr.keys()}")
         for i in range(len(paramArr)):
             if np.any(np.isin(fname, paramArr[i].name)): #np.any(np.isin(map(str.upper, fname), paramArr[i].name.upper())):
                 dataDict.append([paramArr[i].name, paramArr[i][:]])
