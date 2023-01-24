@@ -69,8 +69,6 @@ def psd_extraction(paramArr, paramKeys):
     TRAP_RES            = trapENS(ts[:,:], wfCorr[:,:], pa["dt"][:])
     TRAP_E              = np.amax(TRAP_RES, 1) 
     DAQ_E               = pa["trapEmax"] # Currently uncalibrated
-
-    print(TRAP_E, DAQ_E)
     
     Norm_Vals           = Normalize_Waveforms(pa["values"]) # Currently Using non-PZ corrected
     Norm_A              = AvsE(Norm_Vals, pa["dt"], plots = [], numWF = numWave)

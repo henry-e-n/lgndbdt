@@ -223,7 +223,6 @@ def dp0Vis(popt, wfArray):
                 e3 += wf_in[i] - e2 - e3*const2
                 e2  = wf_in[i]
                 wfCorr[wf, i] = e1 - frac*e3
-    print(trash)
     return wfInAdj, wfCorr, trash
 
 ###########################################################################################
