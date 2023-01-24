@@ -203,7 +203,6 @@ def dp0Vis(popt, wfArray):
             trash.append(wf)
             print(f"HIT ONE {wf} wfin.min {wf_in.min()}, max {wf_in.max()},")
         else:
-            print(f"{wf} wfin.min {wf_in.min()}, max {wf_in.max()},")
             wf_in = (wf_in-wf_in.min())/(wf_in.max()-wf_in.min())*max_amp
             wfInAdj[wf, :] = wf_in
             wf_out = np.zeros(len(wf_in))
