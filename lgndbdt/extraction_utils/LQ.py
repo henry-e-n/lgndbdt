@@ -63,11 +63,11 @@ def getLQ802(ts, vals, trashPZ):
     LQ80 = np.zeros(vals.shape[0])
     trash_ind = []
     for i in range(vals.shape[0]):
-        ind80 = findPerc(vals[i])
-        indPeak = findPerc(vals[i], percent = .99)
         if i in trashPZ:
             trash_ind.append(i)
         else:
+            ind80 = findPerc(vals[i])
+            indPeak = findPerc(vals[i], percent = .99)
             if ind80 == -1:
                 trash_ind.append(i)
             else:
