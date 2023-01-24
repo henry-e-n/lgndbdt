@@ -166,9 +166,9 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
         hlineExt  = np.argmin(np.abs(Exttpr-0.76))
 
     plt.figure(figsize=(15,16))
-    plt.plot([0],[0],color="white",label = "Classifier             DEP           FEP        AUC    ")
-    plt.plot(BDTfpr, BDTtpr, color = "#EF426F" , linestyle = "-", linewidth = 4, label = f"    BDT               75.0%        {np.round(100*BDTfpr[hlineBDT],1)}%    {np.round(BDTauc, 3)}")
-    plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"Extracted A/E       75.0%        {np.round(100*ogfpr[hlineOG],1)}%    {np.round(ogauc, 3)}")
+    plt.plot([0],[0],color="white",label = " Classifier             DEP           FEP        AUC    ")
+    plt.plot(BDTfpr, BDTtpr, color = "#EF426F" , linestyle = "-", linewidth = 4, label = f"     BDT               75.0%        {np.round(100*BDTfpr[hlineBDT],1)}%    {np.round(BDTauc, 3)}")
+    plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"Extracted A/E      75.0%        {np.round(100*ogfpr[hlineOG],1)}%    {np.round(ogauc, 3)}")
     if inc_ext:
         plt.plot(Extfpr , Exttpr , color = "#B87333", linestyle = "-.", linewidth = 4, label = f"Extracted A/E    75.0%        {np.round(100*Extfpr[hlineExt],1)}%    {np.round(Extauc, 3)}")
         plt.vlines(x = Extfpr[hlineExt]  , ymin = 0, ymax = Exttpr[hlineExt]  , linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
