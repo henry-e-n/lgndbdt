@@ -6,7 +6,7 @@ from matplotlib import cm
 from extraction_utils.config import *
 
 
-def find80(vals, buffer = 100):
+def findPerc(vals, buffer = 100, percent = 0.8):
     """ 
     Finds the index along waveform rise = 80% of max
     """
@@ -15,7 +15,7 @@ def find80(vals, buffer = 100):
         return -1
     peak = np.max(vals[:-buffer])
     peakInd = vals[:-buffer].argmax()
-    val80 = 0.80*peak
+    val80 = percent*peak
     diffArr = np.absolute(vals - val80)
     closestFromPeak = diffArr[:peakInd].argmin()
     closest = closestFromPeak
@@ -46,7 +46,7 @@ def getLQ80(ts, vals, trashPZ):
         if i in trashPZ:
             trash_ind.append(i)
         else:
-            ind80 = find80(vals[i])
+            ind80 = findPerc(vals[i])
             if ind80 == -1:
                 trash_ind.append(i)
             else:
@@ -63,8 +63,8 @@ def getLQ802(ts, vals, trashPZ):
     LQ80 = np.zeros(vals.shape[0])
     trash_ind = []
     for i in range(vals.shape[0]):
-        ind80 = find80(vals[i])
-        indPeak = find80(vals[i], percent = .99)
+        ind80 = findPerc(vals[i])
+        indPeak = findPerc(vals[i], percent = .99)
         if i in trashPZ:
             trash_ind.append(i)
         else:
@@ -90,7 +90,7 @@ def LQvis(ts, vals):
     """
     Visualizes the LQ algorithm
     """
-    ind80 = find80(vals)
+    ind80 = findPerc(vals)
     midInd, endOfInt, buffer = getMid(ts, ind80)
 
     plt.plot(ts[ind80-buffer:], vals[ind80-buffer:])
@@ -103,7 +103,7 @@ def LQvisZoom(ts, vals):
     """
     Zoomed in visualization of LQ
     """
-    ind80 = find80(vals)
+    ind80 = findPerc(vals)
     midInd, endOfInt, buffer = getMid(ts, ind80)
     peakInd = np.argmax(vals)
     meanTop = np.mean(vals[ind80:endOfInt])
