@@ -193,34 +193,37 @@ def dp0Vis(popt, wfArray):
     wfInAdj = np.zeros(wfArray.shape)
     wfCorr = np.zeros(wfArray.shape)
     max_amp = 10
-    
+    trash = []
     for wf in tqdm(range(wfArray.shape[0]),
                     desc="Applying P0 to waveforms......",
                     colour = terminalCMAP[1]):
-        wf_in = wfArray[wf,:]
-        wf_in = (wf_in-wf_in.min())/(wf_in.max()-wf_in.min())*max_amp
-        wfInAdj[wf, :] = wf_in
-        wf_out = np.zeros(len(wf_in))
-        # Defines the constant terms
-        const1 = 1 / tau1
-        const2 = 1 / tau2
-        # Defines the exponential terms
-        exp1 = np.exp(-1 / tau1)
-        exp2 = np.exp(-1 / tau2)
-        
-        frac = f
-        # Sets initial of output to same as input
-        wf_out[0] = wf_in[0]
-        e1 = e2 = wf_in[0]
-        e3 = 0
-        
-        for i in range(1, len(wf_in), 1): # Iterates over rest of wf
-            e1 += wf_in[i] - e2 + e2*const1
-            e3 += wf_in[i] - e2 - e3*const2
-            e2  = wf_in[i]
+        try:
+            wf_in = wfArray[wf,:]
+            wf_in = (wf_in-wf_in.min())/(wf_in.max()-wf_in.min())*max_amp
+            wfInAdj[wf, :] = wf_in
+            wf_out = np.zeros(len(wf_in))
+            # Defines the constant terms
+            const1 = 1 / tau1
+            const2 = 1 / tau2
+            # Defines the exponential terms
+            exp1 = np.exp(-1 / tau1)
+            exp2 = np.exp(-1 / tau2)
             
-            wfCorr[wf, i] = e1 - frac*e3
-    return wfInAdj, wfCorr
+            frac = f
+            # Sets initial of output to same as input
+            wf_out[0] = wf_in[0]
+            e1 = e2 = wf_in[0]
+            e3 = 0
+            
+            for i in range(1, len(wf_in), 1): # Iterates over rest of wf
+                e1 += wf_in[i] - e2 + e2*const1
+                e3 += wf_in[i] - e2 - e3*const2
+                e2  = wf_in[i]
+                
+                wfCorr[wf, i] = e1 - frac*e3
+        except RuntimeWarning:
+            trash.append[wf]
+    return wfInAdj, wfCorr, trash
 
 ###########################################################################################
 
