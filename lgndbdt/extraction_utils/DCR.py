@@ -222,6 +222,8 @@ def dp0Vis(popt, wfArray):
                 
                 wfCorr[wf, i] = e1 - frac*e3
         except RuntimeWarning:
+            print(f"RuntimeWarning {wf}")
+            print(f"wfin.min {wf_in.min()}, max {wf_in.max()}")
             trash.append[wf]
     return wfInAdj, wfCorr, trash
 
@@ -257,8 +259,8 @@ def getP0(vals, popt, numWave = 100):
                         bounds  = ((60*40, 180*40), (1, 5*40),(0.01,0.022))) # 90*40 0.012
         
         popt = tuple(res.x)
-    wfIn, wfCorr  = dp0Vis(popt, vals[:numWave,:])
-    return wfIn, wfCorr
+    wfIn, wfCorr, trashPZ  = dp0Vis(popt, vals[:numWave,:])
+    return wfIn, wfCorr, trashPZ
 
 ###########################################################################################
 
