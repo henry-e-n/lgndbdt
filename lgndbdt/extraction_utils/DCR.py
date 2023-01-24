@@ -198,7 +198,7 @@ def dp0Vis(popt, wfArray):
     for wf in tqdm(range(wfArray.shape[0]),
                     desc="Applying P0 to waveforms......",
                     colour = terminalCMAP[1]):
-        if 1<0:
+        if wf_in.min()<-5000:
             trash.append[wf]
             print(f"HIT ONE {wf} wfin.min {wf_in.min()}, max {wf_in.max()},")
         else:
