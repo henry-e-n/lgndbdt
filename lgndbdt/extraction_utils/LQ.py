@@ -68,6 +68,8 @@ def getLQ802(ts, vals, trashPZ):
         else:
             ind80 = findPerc(vals[i])
             indPeak = findPerc(vals[i], percent = .99)
+            if indPeak-ind80 <0:
+                print(i, indPeak, ind80)
             if ind80 == -1:
                 trash_ind.append(i)
             else:
@@ -83,6 +85,7 @@ def getLQ802(ts, vals, trashPZ):
                 # plt.xlim(9500,10600)
                 if LQ80[i] < 0:
                     print(i, LQ80[i])
+                    trash_ind.append(i)
     return LQ80, trash_ind
 
 
