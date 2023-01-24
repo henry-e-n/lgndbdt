@@ -54,7 +54,7 @@ def psd_extraction(paramArr, paramKeys):
     deltasCorr           = np.zeros(numWave)
     for i in tqdm(range(numWave), 
                   desc   ="Running DCR-P0................", 
-                  colour = terminalCMAP[1]):
+                  colour = terminalCMAP[0]):
         deltasCorr[i]    = findSlopeCorr(wfIn[i, :], wfCorr[i, :], pa["dt"][i])
     
     np.save(f"{savePath}/wfIn_{targetPeak}.npy", wfIn)
