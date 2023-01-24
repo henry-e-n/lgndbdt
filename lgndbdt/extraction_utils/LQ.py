@@ -71,6 +71,7 @@ def getLQ802(ts, vals, trashPZ):
             if indPeak-ind80 <0:
                 print(i, indPeak, ind80)
                 trash_ind.append(i)
+            else:
                 if ind80 == -1:
                     trash_ind.append(i)
                 else:
