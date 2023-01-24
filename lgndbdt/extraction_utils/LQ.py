@@ -33,7 +33,7 @@ def getMid(ts, ind80, buffer = 100):
     midInd = int(remaining/2) + ind80
     return midInd, endOfInt, buffer
 
-def getLQ80(ts, vals):
+def getLQ80(ts, vals, trashPZ):
     """
     Returns the LQ80 of a waveform - the area above the turning peak
     Parameters: 
@@ -44,7 +44,7 @@ def getLQ80(ts, vals):
     trash_ind = []
     for i in range(vals.shape[0]):
         ind80 = find80(vals[i])
-        if ind80 == -1:
+        if ind80 == -1 or i in trashPZ:
             trash_ind.append(i)
         else:
             midInd, endOfInt, buffer = getMid(ts[0], ind80)
