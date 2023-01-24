@@ -73,7 +73,7 @@ def getLQ802(ts, vals, trashPZ):
             else:
                 midInd, endOfInt, buffer = getMid(ts[0], ind80)
                 avgTailVal = np.mean(vals[i, midInd:endOfInt])
-                print(avgTailVal)
+                # print(avgTailVal)
                 auc = (np.trapz(vals[i, ind80:indPeak],ts[0, ind80:indPeak]))
                 # print(avgTailVal*np.ones(midInd-ind80))
                 auMean = (np.trapz(avgTailVal*np.ones(indPeak-ind80),ts[0, ind80:indPeak]))
@@ -83,7 +83,7 @@ def getLQ802(ts, vals, trashPZ):
                 # plt.xlim(9500,10600)
                 if LQ80[i] < 0:
                     print(i, LQ80[i])
-    return LQ80
+    return LQ80, trash_ind
 
 
 def LQvis(ts, vals):
