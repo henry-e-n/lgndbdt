@@ -70,22 +70,23 @@ def getLQ802(ts, vals, trashPZ):
             indPeak = findPerc(vals[i], percent = .99)
             if indPeak-ind80 <0:
                 print(i, indPeak, ind80)
-            if ind80 == -1:
                 trash_ind.append(i)
-            else:
-                midInd, endOfInt, buffer = getMid(ts[0], ind80)
-                avgTailVal = np.mean(vals[i, midInd:endOfInt])
-                # print(avgTailVal)
-                auc = (np.trapz(vals[i, ind80:indPeak],ts[0, ind80:indPeak]))
-                # print(avgTailVal*np.ones(midInd-ind80))
-                auMean = (np.trapz(avgTailVal*np.ones(indPeak-ind80),ts[0, ind80:indPeak]))
-                LQ80[i] = auMean-auc
-                # plt.fill_between(ts[0, ind80:indPeak], avgTailVal, vals[i, ind80:indPeak],  linewidth=1, color = terminalCMAP[0], alpha=.4, hatch='\\\\')
-                # plt.plot(ts[0, ind80-10:indPeak+10], vals[i, ind80-10:indPeak+10])
-                # plt.xlim(9500,10600)
-                if LQ80[i] < 0:
-                    print(i, LQ80[i])
+                if ind80 == -1:
                     trash_ind.append(i)
+                else:
+                    midInd, endOfInt, buffer = getMid(ts[0], ind80)
+                    avgTailVal = np.mean(vals[i, midInd:endOfInt])
+                    # print(avgTailVal)
+                    auc = (np.trapz(vals[i, ind80:indPeak],ts[0, ind80:indPeak]))
+                    # print(avgTailVal*np.ones(midInd-ind80))
+                    auMean = (np.trapz(avgTailVal*np.ones(indPeak-ind80),ts[0, ind80:indPeak]))
+                    LQ80[i] = auMean-auc
+                    # plt.fill_between(ts[0, ind80:indPeak], avgTailVal, vals[i, ind80:indPeak],  linewidth=1, color = terminalCMAP[0], alpha=.4, hatch='\\\\')
+                    # plt.plot(ts[0, ind80-10:indPeak+10], vals[i, ind80-10:indPeak+10])
+                    # plt.xlim(9500,10600)
+                    if LQ80[i] < 0:
+                        print(i, LQ80[i])
+                        trash_ind.append(i)
     return LQ80, trash_ind
 
 
