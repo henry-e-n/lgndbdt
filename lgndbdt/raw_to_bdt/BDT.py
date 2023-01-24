@@ -66,8 +66,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
         counter = 0
         wfd = np.zeros(2, dtype = object)
         avse = np.zeros(paramArr[0].shape[0])
+        print(paramArr.names())
         for i in range(len(paramArr)):
-            print(paramArr[i].name)
             if np.any(np.isin(fname, paramArr[i].name)): #np.any(np.isin(map(str.upper, fname), paramArr[i].name.upper())):
                 dataDict.append([paramArr[i].name, paramArr[i][:]])
                 dataArr[counter, :] = paramArr[i]
@@ -258,11 +258,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 plot_SHAP_force(explainer, shap_values[1][0])
             elif i == 4:
                 result = list(filter(lambda x: "A_" in x, selectDict))
-                print(f"{result}, {selectDict[result[0]]}")
                 sigavse = sigRaw[:,selectDict[result[0]]]
                 bkgavse = bkgRaw[:,selectDict[result[0]]]
-                print(sigavse.shape, bkgavse)
-                print(f"ypred {y_pred}")
                 plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_ext=False) #np.any(np.isin("/AvsE_c", fname))
                 # New Files don't have a PYGAMA AvsE to use remove this redundancy in future versions
     return
