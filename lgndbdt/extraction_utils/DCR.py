@@ -109,6 +109,7 @@ def findSlopeCorr(values, valuesCorrected, dtimes):
     avg2, left2 = boxAverage(valuesCorrected, -1, 'right', dtimes)
     
     delta = (avg2 - avg1)/(left2-left1)
+    print(delta)
     return delta
 
 ###########################################################################################
