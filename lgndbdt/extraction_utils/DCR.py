@@ -109,7 +109,6 @@ def findSlopeCorr(values, valuesCorrected, dtimes):
     avg2, left2 = boxAverage(valuesCorrected, -1, 'right', dtimes)
     
     delta = (avg2 - avg1)/(left2-left1)
-    print(delta)
     return delta
 
 ###########################################################################################
@@ -312,7 +311,7 @@ def trapENS(times, values, dtimes, intTimes = (3000, 5500)):
     trapArr = np.zeros([np.shape(values)[0], np.shape(values)[1]-bufferCell])
     for w in tqdm(range(values.shape[0]), 
                   desc   ="Running Trap Filter...........", 
-                  colour = terminalCMAP[1]):
+                  colour = terminalCMAP[0]):
 
         blEstimate = np.mean(values[w, :200])
         values[w] = values[w]-blEstimate

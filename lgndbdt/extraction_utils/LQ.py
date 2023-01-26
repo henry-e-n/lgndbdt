@@ -62,14 +62,16 @@ def getLQ80(ts, vals, trashPZ):
 def getLQ802(ts, vals, trashPZ):
     LQ80 = np.zeros(vals.shape[0])
     trash_ind = []
-    for i in range(vals.shape[0]):
+    for i in tqdm(range(vals.shape[0]), 
+                  desc   ="Running LQ80..................", 
+                  colour = terminalCMAP[1]):
         if i in trashPZ:
             trash_ind.append(i)
         else:
             ind80 = findPerc(vals[i])
             indPeak = findPerc(vals[i], percent = .99)
             if indPeak-ind80 <0:
-                print(i, indPeak, ind80)
+                # print(i, indPeak, ind80)
                 trash_ind.append(i)
             else:
                 if ind80 == -1:
@@ -86,7 +88,7 @@ def getLQ802(ts, vals, trashPZ):
                     # plt.plot(ts[0, ind80-10:indPeak+10], vals[i, ind80-10:indPeak+10])
                     # plt.xlim(9500,10600)
                     if LQ80[i] < 0:
-                        print(i, LQ80[i])
+                        # print(i, LQ80[i])
                         trash_ind.append(i)
     return LQ80, trash_ind
 
