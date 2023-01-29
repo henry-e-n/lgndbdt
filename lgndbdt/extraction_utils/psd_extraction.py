@@ -34,7 +34,7 @@ def clean_data(paramArr, verbose=False):
                     nans.append(w)
     # print(nans)
     for n in range(len(paramArr)):
-        isInt = isinstance(paramArr[i], int)
+        isInt = isinstance(paramArr[n], int)
         if isInt:
             print("IS AN INT")
         else:
@@ -47,7 +47,7 @@ def clean_data(paramArr, verbose=False):
 def psd_extraction(paramArr, paramKeys):
     # Make Dictionary for easy referencing of Parameters
     pa = dict(zip(paramKeys, paramArr))
-    print(pa)
+    print(paramKeys)
 
 
     cTimes([pa["dt"], pa["t0"], pa["values"]], number=-1) # Can remove detname and number in lgndbdt update
