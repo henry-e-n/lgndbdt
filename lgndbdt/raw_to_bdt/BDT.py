@@ -61,7 +61,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
     def getRaw(filename, fpath):
         file, names, paramArr = paramExtract(filename, fpath, False)
         dataDict = []
-        dataArr = np.zeros((len(fname), paramArr[0].shape[0]))
+        dataArr = np.zeros((len(fname)+1, paramArr[0].shape[0]))
         select = []
         counter = 0
         wfd = np.zeros(2, dtype = object)
