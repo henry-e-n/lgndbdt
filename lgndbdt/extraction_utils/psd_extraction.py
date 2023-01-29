@@ -25,9 +25,7 @@ def clean_data(paramArr, verbose=False):
     nans = []
     for i in range(len(paramArr)):
         isInt = isinstance(paramArr[i], int)
-        if isInt:
-            print("IS AN INT")
-        else:
+        if not isInt:
             for w in range(len(paramArr[i])):
                 whereNan = np.where(np.isnan(paramArr[i][w]))
                 if len(whereNan[0])>0:
@@ -35,9 +33,7 @@ def clean_data(paramArr, verbose=False):
     # print(nans)
     for n in range(len(paramArr)):
         isInt = isinstance(paramArr[n], int)
-        if isInt:
-            print("IS AN INT")
-        else:
+        if not isInt:
             paramArr[n] = np.delete(paramArr[n], nans, 0)
     # print(f"Final Shape: {paramArr[0].shape}")
     if verbose:
@@ -125,7 +121,7 @@ def psd_extraction(paramArr, paramKeys):
     tdrift, tdrift50, tdrift10 = getTDriftInterpolate(ts[0, :], pa["values"][:numWave, :], pa["tp_0"][:numWave], pa["dt"][:numWave])
     
     ### Save Parameters to LH5
-    standardAnalysisArray = np.array([pa["dt"], pa["t0"], pa["tp_0"], pa["sidebandNum"], maxA, deltasCorr, lqVal, noise, noiseTail, tdrift, tdrift50, tdrift10, TRAP_E, DAQ_E, Norm_A, maxA/TRAP_E, maxA/DAQ_E]) # replace energy Arr with Eest
+    standardAnalysisArray = np.array([pa["dt"], pa["t0"], pa["tp_0"], [pa["sidebandNum"]], maxA, deltasCorr, lqVal, noise, noiseTail, tdrift, tdrift50, tdrift10, TRAP_E, DAQ_E, Norm_A, maxA/TRAP_E, maxA/DAQ_E]) # replace energy Arr with Eest
     standardAnalysisArray = np.delete(standardAnalysisArray, trash, axis=1)
     wfCorr = np.delete(wfCorr, trash, axis=0)
     print(f"Trash {len(trash)}, Shape {wfCorr.shape}")
