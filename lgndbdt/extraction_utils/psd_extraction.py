@@ -34,7 +34,11 @@ def clean_data(paramArr, verbose=False):
                     nans.append(w)
     # print(nans)
     for n in range(len(paramArr)):
-        paramArr[n] = np.delete(paramArr[n], nans, 0)
+        isInt = isinstance(paramArr[i], int)
+        if isInt:
+            print("IS AN INT")
+        else:
+            paramArr[n] = np.delete(paramArr[n], nans, 0)
     # print(f"Final Shape: {paramArr[0].shape}")
     if verbose:
         print(f"Number of Waveforms (post-clean) : {paramArr[0].shape}")
