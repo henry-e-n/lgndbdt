@@ -63,13 +63,13 @@ def extract_waveforms(fitResults, peakIndex, verbose=False):
                         paramArr[i] = DSPparamArr[i][selection_crit]
                     for i in range(len(RAWparamArr)):
                         paramArr[i+len(DSPparamArr)] = RAWparamArr[i][selection_crit]
-                    paramArr[len(RAWparamArr)+len(DSPparamArr)] = np.sum(sideband_crit)
+                    paramArr[len(RAWparamArr)+len(DSPparamArr)] = int(np.sum(sideband_crit))
                 if file >= 1:
                     for i in range(len(DSPparamArr)):
                         paramArr[i] = np.append(paramArr[i], DSPparamArr[i][selection_crit], axis = 0)
                     for i in range(len(RAWparamArr)):
                         paramArr[i+len(DSPparamArr)] = np.append(paramArr[i+len(DSPparamArr)], RAWparamArr[i][selection_crit], axis = 0)
-                    paramArr[len(RAWparamArr)+len(DSPparamArr)] += np.sum(sideband_crit)
+                    paramArr[len(RAWparamArr)+len(DSPparamArr)] += int(np.sum(sideband_crit))
         except ValueError:
             print(f"Value Error {dspFile}")
     if verbose:

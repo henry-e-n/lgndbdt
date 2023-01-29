@@ -24,10 +24,14 @@ def clean_data(paramArr, verbose=False):
     # print(f"Initial Shape: {paramArr[0].shape}")
     nans = []
     for i in range(len(paramArr)):
-        for w in range(len(paramArr[i])):
-            whereNan = np.where(np.isnan(paramArr[i][w]))
-            if len(whereNan[0])>0:
-                nans.append(w)
+        isInt = isinstance(paramArr[i], int)
+        if isInt:
+            print("IS AN INT")
+        else:
+            for w in range(len(paramArr[i])):
+                whereNan = np.where(np.isnan(paramArr[i][w]))
+                if len(whereNan[0])>0:
+                    nans.append(w)
     # print(nans)
     for n in range(len(paramArr)):
         paramArr[n] = np.delete(paramArr[n], nans, 0)
