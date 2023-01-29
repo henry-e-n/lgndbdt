@@ -23,8 +23,9 @@ def extract_waveforms(fitResults, peakIndex, verbose=False):
     dsptargetKeys = ["trapEmax", "tp_0"]
     rawtargetKeys = ["t0", "dt", "values"]
 
-    paramArr = np.empty(len(dsptargetKeys)+len(rawtargetKeys), dtype = object)
-    paramArrKeys = dsptargetKeys + rawtargetKeys
+
+    paramArr = np.empty(len(dsptargetKeys)+len(rawtargetKeys)+1, dtype = object)
+    paramArrKeys = dsptargetKeys + rawtargetKeys + ["sidebandNum"]
     
     if verbose:
         print(f"Number of files: {len(dsp_files)}")
@@ -56,19 +57,38 @@ def extract_waveforms(fitResults, peakIndex, verbose=False):
                 sigma = peakFits[peakIndex][2]
 
                 selection_crit =  (energies>(peakEnergy-sigma))*(energies<(peakEnergy+sigma))
+                sideband_crit = (energies>(peakEnergy+1.5*sigma))*(energies<(peakEnergy+3.5*sigma))
                 if file == 0:
                     for i in range(len(DSPparamArr)):
                         paramArr[i] = DSPparamArr[i][selection_crit]
                     for i in range(len(RAWparamArr)):
                         paramArr[i+len(DSPparamArr)] = RAWparamArr[i][selection_crit]
+                    paramArr[len(RAWparamArr)+len(DSPparamArr)] = np.sum(sideband_crit)
                 if file >= 1:
                     for i in range(len(DSPparamArr)):
                         paramArr[i] = np.append(paramArr[i], DSPparamArr[i][selection_crit], axis = 0)
                     for i in range(len(RAWparamArr)):
                         paramArr[i+len(DSPparamArr)] = np.append(paramArr[i+len(DSPparamArr)], RAWparamArr[i][selection_crit], axis = 0)
+                    paramArr[len(RAWparamArr)+len(DSPparamArr)] += np.sum(sideband_crit)
         except ValueError:
             print(f"Value Error {dspFile}")
     if verbose:
         print(f"Number of features: {len(paramArrKeys)}")
         print(f"Number of Extracted Waveforms (pre-clean): {paramArr[1].shape[0]}")
     return paramArr, paramArrKeys
+
+
+"""
+SideBand Subtraction:
+
+For each peakIndex:
+
+Take 2*sigma size window starting 1.5 sigma to left or right
+
+selection criteria of new window
+
+save within paramArr with name.
+
+Make sure to always open sidebandNumber in BDT code
+
+"""

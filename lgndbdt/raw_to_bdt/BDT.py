@@ -76,6 +76,11 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 wfd[0] = paramArr[i]
             if np.any(np.isin("/wfdCorr", paramArr[i].name)):
                 wfd[1] = paramArr[i]
+            if np.any(np.isin("/SIDEBANDNUM", paramArr[i].name)):
+                dataDict.append([paramArr[i].name, paramArr[i][:]])
+                dataArr[counter, :] = paramArr[i]
+                select.append([paramArr[i].name, counter]) #.upper()
+                counter += 1
             # if np.any(np.isin("/_E", paramArr[i].name)):
             #     avse = paramArr[i][:]
         dataDictionary = dict(dataDict)
