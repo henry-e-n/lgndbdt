@@ -61,7 +61,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
     def getRaw(filename, fpath):
         file, names, paramArr = paramExtract(filename, fpath, False)
         dataDict = []
-        dataArr = np.zeros((len(fname)+1, paramArr[0].shape[0]))
+        dataArr = np.zeros((len(fname), paramArr[0].shape[0]))
         select = []
         counter = 0
         wfd = np.zeros(2, dtype = object)
@@ -77,12 +77,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
             if np.any(np.isin("/wfdCorr", paramArr[i].name)):
                 wfd[1] = paramArr[i]
             if np.any(np.isin("/SIDEBANDNUM", paramArr[i].name)):
-                dataDict.append([paramArr[i].name, paramArr[i][:]])
-                dataArr[counter, :] = paramArr[i]
-                select.append([paramArr[i].name, counter]) #.upper()
-                counter += 1
-            # if np.any(np.isin("/_E", paramArr[i].name)):
-            #     avse = paramArr[i][:]
+                sidebandNum =  paramArr[i]
+
         dataDictionary = dict(dataDict)
         selectDictionary = dict(select)
         dataArr = np.stack(dataArr, 1)
