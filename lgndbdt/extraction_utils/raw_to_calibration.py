@@ -65,13 +65,13 @@ def energy_calibration(verbose=False, plotBool=False):
                           1592.5, # 228Th DEP
                           2103.5, # 228Th SEP
                           2614.53]) # 228Th -> 208Tl (99.8%) 
-        if np.isin("228ThDEP", targetPeak):
+        if "228ThDEP" in targetPeak:
             print(f"Calibrating on 228Th DEP")
             peakIndex = 3
-        elif np.isin("228ThSEP", targetPeak):
+        elif "228ThSEP" in targetPeak:
             print(f"Calibrating on 228Th SEP")
             peakIndex = 4
-        elif np.isin("228ThFEP", targetPeak):
+        elif "228ThFEP" in targetPeak:
             print(f"Calibrating on 228Th FEP")
             peakIndex = 5
         
