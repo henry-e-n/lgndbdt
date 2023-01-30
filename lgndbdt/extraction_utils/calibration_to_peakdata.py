@@ -24,8 +24,8 @@ def extract_waveforms(fitResults, peakIndex, verbose=False):
     rawtargetKeys = ["t0", "dt", "values"]
 
 
-    paramArr = np.empty(len(dsptargetKeys)+len(rawtargetKeys)+1, dtype = object)
-    paramArrKeys = dsptargetKeys + rawtargetKeys + ["sidebandNum"]
+    paramArr = np.empty(len(dsptargetKeys)+len(rawtargetKeys), dtype = object)
+    paramArrKeys = dsptargetKeys + rawtargetKeys# + ["sidebandNum"]
     
     if verbose:
         print(f"Number of files: {len(dsp_files)}")
