@@ -24,17 +24,13 @@ def clean_data(paramArr, verbose=False):
     # print(f"Initial Shape: {paramArr[0].shape}")
     nans = []
     for i in range(len(paramArr)):
-        isInt = isinstance(paramArr[i], int)
-        if not isInt:
-            for w in range(len(paramArr[i])):
-                whereNan = np.where(np.isnan(paramArr[i][w]))
-                if len(whereNan[0])>0:
-                    nans.append(w)
+        for w in range(len(paramArr[i])):
+            whereNan = np.where(np.isnan(paramArr[i][w]))
+            if len(whereNan[0])>0:
+                nans.append(w)
     # print(nans)
     for n in range(len(paramArr)):
-        isInt = isinstance(paramArr[n], int)
-        if not isInt:
-            paramArr[n] = np.delete(paramArr[n], nans, 0)
+        paramArr[n] = np.delete(paramArr[n], nans, 0)
     # print(f"Final Shape: {paramArr[0].shape}")
     if verbose:
         print(f"Number of Waveforms (post-clean) : {paramArr[0].shape}")
