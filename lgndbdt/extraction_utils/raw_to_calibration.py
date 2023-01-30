@@ -65,13 +65,13 @@ def energy_calibration(verbose=False, plotBool=False):
                           1592.5, # 228Th DEP
                           2103.5, # 228Th SEP
                           2614.53]) # 228Th -> 208Tl (99.8%) 
-        if targetPeak == "228ThDEP":
+        if np.isin("228ThDEP", targetPeak):
             print(f"Calibrating on 228Th DEP")
             peakIndex = 3
-        elif targetPeak == "228ThSEP":
+        elif np.isin("228ThSEP", targetPeak):
             print(f"Calibrating on 228Th SEP")
             peakIndex = 4
-        elif targetPeak == "228ThFEP":
+        elif np.isin("228ThFEP", targetPeak):
             print(f"Calibrating on 228Th FEP")
             peakIndex = 5
         
@@ -155,7 +155,7 @@ def energy_calibration(verbose=False, plotBool=False):
 
     #Plot histograms and fit initial functions
 
-    if targetPeak == "228ThDEP" or targetPeak=="228ThSEP":
+    if np.isin("228ThDEP", targetPeak) or np.isin("228ThSEP", targetPeak):
         widths = np.array([sigmas[0]*3,
                    sigmas[1]*4, 
                    sigmas[2]*6,

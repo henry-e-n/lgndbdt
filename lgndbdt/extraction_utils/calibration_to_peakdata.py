@@ -53,23 +53,28 @@ def extract_waveforms(fitResults, peakIndex, verbose=False):
             else:
                 energies = DSPparamArr[0][:]
 
+                
                 peakEnergy = adcE[peakIndex]
                 sigma = peakFits[peakIndex][2]
 
+                if np.isin("_sideband", targetPeak):
+                    peakEnergy = peakEnergy+2.5*sigma
+                    print("SIDEBAND TIME!!")
+                    
                 selection_crit =  (energies>(peakEnergy-sigma))*(energies<(peakEnergy+sigma))
-                sideband_crit = (energies>(peakEnergy+1.5*sigma))*(energies<(peakEnergy+3.5*sigma))
+                # sideband_crit = (energies>(peakEnergy+1.5*sigma))*(energies<(peakEnergy+3.5*sigma))
                 if file == 0:
                     for i in range(len(DSPparamArr)):
                         paramArr[i] = DSPparamArr[i][selection_crit]
                     for i in range(len(RAWparamArr)):
                         paramArr[i+len(DSPparamArr)] = RAWparamArr[i][selection_crit]
-                    paramArr[len(RAWparamArr)+len(DSPparamArr)] = int(np.sum(sideband_crit))
+                    # paramArr[len(RAWparamArr)+len(DSPparamArr)] = int(np.sum(sideband_crit))
                 if file >= 1:
                     for i in range(len(DSPparamArr)):
                         paramArr[i] = np.append(paramArr[i], DSPparamArr[i][selection_crit], axis = 0)
                     for i in range(len(RAWparamArr)):
                         paramArr[i+len(DSPparamArr)] = np.append(paramArr[i+len(DSPparamArr)], RAWparamArr[i][selection_crit], axis = 0)
-                    paramArr[len(RAWparamArr)+len(DSPparamArr)] += int(np.sum(sideband_crit))
+                    # paramArr[len(RAWparamArr)+len(DSPparamArr)] += int(np.sum(sideband_crit))
         except ValueError:
             print(f"Value Error {dspFile}")
     if verbose:
