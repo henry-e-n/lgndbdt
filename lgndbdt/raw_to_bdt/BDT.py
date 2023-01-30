@@ -76,9 +76,6 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 wfd[0] = paramArr[i]
             if np.any(np.isin("/wfdCorr", paramArr[i].name)):
                 wfd[1] = paramArr[i]
-            if np.any(np.isin("/SIDEBANDNUM", paramArr[i].name)):
-                sidebandNum =  paramArr[i]
-
         dataDictionary = dict(dataDict)
         selectDictionary = dict(select)
         dataArr = np.stack(dataArr, 1)
