@@ -187,7 +187,7 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
     plt.close()
 
 def getROC_sideband(peaks_known, peaks_pred, bkg_SS, bkg_MS, sigavse, bkgavse):
-    boundary_line = np.arange(-.01, 1.1, 0.01)
+    boundary_line = np.arange(-.01, 1.1, 0.001)
     tpr = []
     fpr = []
     pred_1 = peaks_pred[peaks_known==1] # predicted values that are known to be SS
@@ -225,8 +225,8 @@ def getROC_sideband(peaks_known, peaks_pred, bkg_SS, bkg_MS, sigavse, bkgavse):
 
 
     plt.plot([0],[0],color="white",                                              label = " Classifier     AUC    ")
-    plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"   A/E      {ogauc}")
-    plt.plot(fpr, tpr, color = "#EF426F" , linestyle = "-", linewidth = 4,       label = f"   BDT      {bdtauc}")
+    plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"   A/E      {np.round(ogauc, 3)}")
+    plt.plot(fpr, tpr, color = "#EF426F" , linestyle = "-", linewidth = 4,       label = f"   BDT      {np.round(bdtauc, 3)}")
     plt.xlim((0,1))
     plt.ylim((0,1))
     plt.legend(loc="lower right")
