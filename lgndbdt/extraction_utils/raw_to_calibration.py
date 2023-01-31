@@ -233,10 +233,10 @@ def energy_calibration(verbose=False, plotBool=False):
     if plotBool:
         plt.hist(cal_energies_first[(cal_energies_first>1450)*(cal_energies_first<1700)], bins=1000, color='k', ec='k')
         plt.axvline(peaks[3], 0, 5e5, color='r', lw=1, alpha=0.75)
-        plt.axvline(peaks[3] + widths[3], 0, 5e5, color='r', lw=1, alpha=0.75)
-        plt.axvline(peaks[3] - widths[3], 0, 5e5, color='r', lw=1, alpha=0.75)
-        plt.axvline(peaks[3] + 1.5* widths[3], 0, 5e5, color='r', lw=1, alpha=0.75)
-        plt.axvline(peaks[3] + 3.5*widths[3], 0, 5e5, color='r', lw=1, alpha=0.75)
+        plt.axvline(peaks[3] + sigmas[3], 0, 5e5, color='r', lw=2, alpha=0.75)
+        plt.axvline(peaks[3] - sigmas[3], 0, 5e5, color='r', lw=2, alpha=0.75)
+        plt.axvline(peaks[3] + 1.5* sigmas[3], 0, 5e5, color='b', lw=2, alpha=0.75)
+        plt.axvline(peaks[3] + 3.5*sigmas[3], 0, 5e5, color='b', lw=2, alpha=0.75)
         
         plt.xlabel('Energy (keV)', fontsize=24)
         plt.ylabel('Counts', fontsize=24)
