@@ -146,20 +146,6 @@ def energy_calibration(verbose=False, plotBool=False):
         plt.clf()
         plt.cla()
 
-        plt.hist(cal_energies_first[(cal_energies_first>1450)*(cal_energies_first<1700)], bins=1000, color='k', ec='k')
-        for peak in peaks:
-            plt.axvline(peak, 0, 5e5, color='r', lw=1, alpha=0.75)
-
-        plt.xlabel('Energy (keV)', fontsize=24)
-        plt.ylabel('Counts', fontsize=24)
-        plt.yscale('log')
-        plt.xlim(1450, 1700)
-        plt.savefig(f"{savePath}/EnergyHist_DEP.jpg")
-        plt.clf()
-        plt.cla()
-
-
-
 
 
     #####################################
@@ -242,6 +228,25 @@ def energy_calibration(verbose=False, plotBool=False):
     mu_errs = np.asarray([fit_errs[i][1] for i in range(len(fit_pars))]) 
 
     cal_pars, fitData = match_peaks(mus, cal_peaks)
+
+
+    if plotBool:
+        plt.hist(cal_energies_first[(cal_energies_first>1450)*(cal_energies_first<1700)], bins=1000, color='k', ec='k')
+        plt.axvline(peaks[3], 0, 5e5, color='r', lw=1, alpha=0.75)
+        plt.axvline(peaks[3] + widths[3], 0, 5e5, color='r', lw=1, alpha=0.75)
+        plt.axvline(peaks[3] - widths[3], 0, 5e5, color='r', lw=1, alpha=0.75)
+        plt.axvline(peaks[3] + 1.5* widths[3], 0, 5e5, color='r', lw=1, alpha=0.75)
+        plt.axvline(peaks[3] + 3.5*widths[3], 0, 5e5, color='r', lw=1, alpha=0.75)
+        
+        plt.xlabel('Energy (keV)', fontsize=24)
+        plt.ylabel('Counts', fontsize=24)
+        plt.yscale('log')
+        plt.xlim(1450, 1700)
+        plt.savefig(f"{savePath}/EnergyHist_DEP.jpg")
+        plt.clf()
+        plt.cla()
+
+
 
     if verbose:
         print(f"Known Energy: {fitData[0][peakIndex]}, Calibrated ADC {fitData[1][peakIndex]}")

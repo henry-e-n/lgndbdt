@@ -191,6 +191,7 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     boundary_line = np.arange(0, 1+dx, dx)
     tpr = []
     fpr = []
+    tpr_unc = []
     pred_1 = peaks_pred[peaks_known==1] # predicted values that are known to be SS
     pred_0 = peaks_pred[peaks_known==0] # predicted values that are known to be MS
     
@@ -213,7 +214,7 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
         fpr = np.append(fpr, fprarr)
 
         unc_LHS = (N_sig + tau_sig **2 * B_sig)/ (N_sig - tau_sig * B_sig)**2 + (Nc_sig + tau_sig **2 * Bc_sig) / (Nc_sig - tau_sig * Bc_sig)**2 - 2*(Nc_sig + tau_sig **2 * Bc_sig)/((N_sig - tau_sig * B_sig) * (Nc_sig - tau_sig * Bc_sig))
-        tpr_unc = tpr*(unc_LHS)**(0.5)
+        tpr_unc = np.append(tpr_unc, tpr*(unc_LHS)**(0.5))
 
 
 
