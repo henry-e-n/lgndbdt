@@ -220,7 +220,7 @@ def getROC_sideband(peaks_known, peaks_pred, bkg_SS, bkg_MS, sigavse, bkgavse):
     avseOgLabels = np.concatenate((np.ones(len(cleanSig)), np.zeros(len(cleanBkg))))
     ogfpr, ogtpr, ogthresholds    = roc_curve(avseOgLabels, avseOriginal)
     
-    bdtauc = auc(fpr, tpr)
+    bdtauc = auc(boundary_line, tpr)
     ogauc  = roc_auc_score(avseOgLabels, avseOriginal)
 
 
