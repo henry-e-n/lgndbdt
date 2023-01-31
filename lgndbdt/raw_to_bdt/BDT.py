@@ -271,7 +271,12 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 sig_sideband_pred = gbm.predict(sig_sideband_RAW, num_iteration=gbm.best_iteration)
                 bkg_sideband_pred = gbm.predict(bkg_sideband_RAW, num_iteration=gbm.best_iteration)
 
-                tpr, fpr = getROC_sideband(Y_test, y_pred, sig_sideband_pred, bkg_sideband_pred)     
+                result = list(filter(lambda x: "A_" in x, selectDict))
+                sigavse = sigRaw[:,selectDict[result[0]]]
+                bkgavse = bkgRaw[:,selectDict[result[0]]]
+
+
+                tpr, fpr = getROC_sideband(Y_test, y_pred, sig_sideband_pred, bkg_sideband_pred, sigavse, bkgavse)     
             elif i == 5:
                 result = list(filter(lambda x: "A_" in x, selectDict))
                 sigavse = sigRaw[:,selectDict[result[0]]]

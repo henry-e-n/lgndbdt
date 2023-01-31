@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import shap
 import lightgbm as lgb
 import numpy as np
-from sklearn.metrics import roc_curve, roc_auc_score
+from sklearn.metrics import roc_curve, roc_auc_score, auc
 from sklearn.decomposition import PCA
 import itertools
 
@@ -186,7 +186,7 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
     plt.clf()
     plt.close()
 
-def getROC_sideband(peaks_known, peaks_pred, bkg_SS, bkg_MS):
+def getROC_sideband(peaks_known, peaks_pred, bkg_SS, bkg_MS, sigavse, bkgavse):
     boundary_line = np.arange(-.01, 1.1, 0.01)
     tpr = []
     fpr = []
@@ -211,7 +211,22 @@ def getROC_sideband(peaks_known, peaks_pred, bkg_SS, bkg_MS):
         tpr = np.append(tpr, tprarr.sum())
         fpr = np.append(fpr, fprarr.sum())
 
-    plt.plot(fpr, tpr, color = "#EF426F" , linestyle = "-", linewidth = 4, label = f"BDT")
+
+
+    cleanSig = np.delete(sigavse, np.argwhere(np.isnan(sigavse)))
+    cleanBkg = np.delete(bkgavse, np.argwhere(np.isnan(bkgavse)))
+
+    avseOriginal = np.concatenate((cleanSig,cleanBkg))
+    avseOgLabels = np.concatenate((np.ones(len(cleanSig)), np.zeros(len(cleanBkg))))
+    ogfpr, ogtpr, ogthresholds    = roc_curve(avseOgLabels, avseOriginal)
+    
+    bdtauc = auc(fpr, tpr)
+    ogauc  = roc_auc_score(avseOgLabels, avseOriginal)
+
+
+    plt.plot([0],[0],color="white",                                              label = " Classifier     AUC    ")
+    plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"   A/E      {ogauc}")
+    plt.plot(fpr, tpr, color = "#EF426F" , linestyle = "-", linewidth = 4,       label = f"   BDT      {bdtauc}")
     plt.xlim((0,1))
     plt.ylim((0,1))
     plt.legend(loc="lower right")
