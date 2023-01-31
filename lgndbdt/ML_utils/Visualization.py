@@ -212,6 +212,9 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
         tpr = np.append(tpr, tprarr)
         fpr = np.append(fpr, fprarr)
 
+        unc_LHS = (N_sig + tau_sig **2 * B_sig)/ (N_sig - tau_sig * B_sig)**2 + (Nc_sig + tau_sig **2 * Bc_sig) / (Nc_sig - tau_sig * Bc_sig)**2 - 2*(Nc_sig + tau_sig **2 * Bc_sig)/((N_sig - tau_sig * B_sig) * (Nc_sig - tau_sig * Bc_sig))
+        tpr_unc = tpr*(unc_LHS)**(0.5)
+
 
 
     cleanSig = np.delete(sigavse, np.argwhere(np.isnan(sigavse)))
@@ -228,6 +231,8 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     plt.plot([0],[0],color="white",                                              label = " Classifier     AUC    ")
     plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"   A/E      {np.round(ogauc, 3)}")
     plt.plot(fpr, tpr, color = "#EF426F" , linestyle = "-", linewidth = 4,       label = f"   BDT      {np.round(bdtauc, 3)}")
+    plt.fill_between(fpr, tpr+tpr_unc, tpr-tpr_unc, color = "#EF426F" , alpha = 0.3, linestyle = "-", linewidth = 4,       label = f"   BDT      {np.round(bdtauc, 3)}")
+    
     plt.xlim((0,1))
     plt.ylim((0,1.1))
     plt.legend(loc="lower right")

@@ -146,6 +146,22 @@ def energy_calibration(verbose=False, plotBool=False):
         plt.clf()
         plt.cla()
 
+        plt.hist(cal_energies_first[(cal_energies_first>1450)*(cal_energies_first<1700)], bins=1000, color='k', ec='k')
+        for peak in peaks:
+            plt.axvline(peak, 0, 5e5, color='r', lw=1, alpha=0.75)
+
+        plt.xlabel('Energy (keV)', fontsize=24)
+        plt.ylabel('Counts', fontsize=24)
+        plt.yscale('log')
+        plt.xlim(1450, 1700)
+        plt.savefig(f"{savePath}/EnergyHist_DEP.jpg")
+        plt.clf()
+        plt.cla()
+
+
+
+
+
     #####################################
     # Second Calibration Pass
     #####################################
