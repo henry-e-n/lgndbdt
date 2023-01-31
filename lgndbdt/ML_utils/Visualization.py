@@ -210,6 +210,18 @@ def getROC_sideband(peaks_known, peaks_pred, bkg_SS, bkg_MS):
         fprarr = (Nc_bkg-tau_bkg*Bc_bkg)/(N_bkg-tau_bkg*B_bkg)
         tpr = np.append(tpr, tprarr.sum())
         fpr = np.append(fpr, fprarr.sum())
+
+    plt.plot(fpr, tpr, color = "#EF426F" , linestyle = "-", linewidth = 4, label = f"BDT")
+    plt.xlim((0,1))
+    plt.ylim((0,1))
+    plt.legend(loc="lower right")
+    plt.xlabel("False Positivity Rate", fontsize = 40)
+    plt.ylabel("True Positivity Rate", fontsize = 40)
+    plt.title("BDT vs traditional A/E ROC performance", fontsize = 40) #, fontsize = 24, pad = 15, fontstyle='italic')
+    plt.savefig(f"{plotPath}/ROC_sideband.png",dpi=300, transparent=True)
+    plt.cla()
+    plt.clf()
+    plt.close()
     return tpr, fpr
 
 def printMVC(pcaMat):
