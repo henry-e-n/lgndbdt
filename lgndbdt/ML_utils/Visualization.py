@@ -186,6 +186,31 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
     plt.clf()
     plt.close()
 
+def getROC_sideband(peaks_known, peaks_pred, bkg_SS, bkg_MS):
+    boundary_line = np.arange(-.01, 1.1, 0.01)
+    tpr = []
+    fpr = []
+    pred_1 = peaks_pred[peaks_known==1] # predicted values that are known to be SS
+    pred_0 = peaks_pred[peaks_known==0] # predicted values that are known to be MS
+    
+    N_sig = len(pred_1)
+    B_sig = len(bkg_SS)
+    N_bkg = len(pred_0)
+    B_bkg = len(bkg_MS)
+    tau_sig = 1 # energy width ratio between the signal and background windows
+    tau_bkg = 1
+    for i in range(len(boundary_line)):
+        Nc_sig = np.sum(pred_1>boundary_line[i])
+        Bc_sig = np.sum(bkg_SS>boundary_line[i])
+
+        Nc_bkg = np.sum(pred_0>boundary_line[i])
+        Bc_bkg = np.sum(bkg_MS>boundary_line[i])
+
+        tprarr = (Nc_sig-tau_sig*Bc_sig)/(N_sig-tau_sig*B_sig)
+        fprarr = (Nc_bkg-tau_bkg*Bc_bkg)/(N_bkg-tau_bkg*B_bkg)
+        tpr = np.append(tpr, tprarr.sum())
+        fpr = np.append(fpr, fprarr.sum())
+    return tpr, fpr
 
 def printMVC(pcaMat):
     plt.imshow(pcaMat, cmap=cmapDiv)

@@ -220,6 +220,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 explainer = shap.TreeExplainer(gbm.model_from_string(MSBDTstr))
                 
                 y_pred = gbm.predict(X_test[:,:len(fname)], num_iteration=gbm.best_iteration)
+                np.save("Y_test.npy", Y_test)
+                np.save("Y_pred.npy", y_pred)
 
                 BDTDistrib(y_pred, Y_test)
             elif i == 1:
