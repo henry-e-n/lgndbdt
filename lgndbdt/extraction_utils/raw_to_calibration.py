@@ -241,7 +241,7 @@ def energy_calibration(verbose=False, plotBool=False):
         plt.xlabel('Energy (keV)', fontsize=24)
         plt.ylabel('Counts', fontsize=24)
         plt.yscale('log')
-        plt.xlim(1450, 1700)
+        plt.xlim(peaks[3] - 1.5*widths[3], peaks[3] + 1.5*widths[3])
         plt.savefig(f"{savePath}/EnergyHist_DEP.jpg")
         plt.clf()
         plt.cla()

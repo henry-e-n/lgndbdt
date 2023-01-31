@@ -187,8 +187,8 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
     plt.close()
 
 def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavse):
-    dx=0.001
-    boundary_line = np.arange(0, 1+dx, dx)
+    dx=0.05
+    boundary_line = np.arange(0.6, 1+dx, dx)
     tpr = []
     fpr = []
     tpr_unc = []
@@ -207,7 +207,7 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
 
         Nc_bkg = np.sum(pred_0>boundary_line[i])
         Bc_bkg = np.sum(side_bkg>boundary_line[i])
-
+        print(f"Nc_sig, tau_sig, Bc_sig, N_sig, B_sig {Nc_sig, tau_sig, Bc_sig, N_sig, B_sig}")
         tprarr = (Nc_sig-tau_sig*Bc_sig)/(N_sig-tau_sig*B_sig)
         fprarr = (Nc_bkg-tau_bkg*Bc_bkg)/(N_bkg-tau_bkg*B_bkg)
         tpr = np.append(tpr, tprarr)
