@@ -228,7 +228,7 @@ def getROC_sideband(peaks_known, peaks_pred, bkg_SS, bkg_MS, sigavse, bkgavse):
     plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"   A/E      {np.round(ogauc, 3)}")
     plt.plot(fpr, tpr, color = "#EF426F" , linestyle = "-", linewidth = 4,       label = f"   BDT      {np.round(bdtauc, 3)}")
     plt.xlim((0,1))
-    plt.ylim((0,1))
+    plt.ylim((0,1.1))
     plt.legend(loc="lower right")
     plt.xlabel("False Positivity Rate", fontsize = 40)
     plt.ylabel("True Positivity Rate", fontsize = 40)
