@@ -210,6 +210,7 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
         Bc_bkg = np.sum(side_bkg>boundary_line[i])
         print(f"linePos, Nc_sig, tau_sig, Bc_sig, N_sig, B_sig, num, den, {boundary_line[i], Nc_sig, tau_sig, Bc_sig, N_sig, B_sig, Nc_sig-tau_sig*Bc_sig, N_sig-tau_sig*B_sig}")
         tprarr = (Nc_sig-tau_sig*Bc_sig)/(N_sig-tau_sig*B_sig)
+        print(tprarr)
         fprarr = (Nc_bkg-tau_bkg*Bc_bkg)/(N_bkg-tau_bkg*B_bkg)
         tpr = np.append(tpr, tprarr)
         fpr = np.append(fpr, fprarr)
