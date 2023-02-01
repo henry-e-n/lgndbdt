@@ -229,7 +229,8 @@ def energy_calibration(verbose=False, plotBool=False):
 
     cal_pars, fitData = match_peaks(mus, cal_peaks)
     print(f"Cal pars {cal_pars}")
-    
+    print(f"Fit Data {fitData}")
+
     if plotBool:
         print(f"DEP sigma {sigmas[3]}")
         plt.hist(cal_energies_first[(cal_energies_first>peaks[3]-200)*(cal_energies_first<peaks[3]+200)], bins=1000, color='k', ec='k')

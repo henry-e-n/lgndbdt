@@ -59,6 +59,7 @@ def extract_waveforms(cal_pars, fitResults, peakIndex, verbose=False):
                 sigmaKEV = peakFits[peakIndex][2]
                 sigmaADC = sigmaKEV*cal_pars[0] + cal_pars[1]
                 sigma = sigmaADC
+                print(f"Selection Window : {(peakEnergy-sigma)} - {(peakEnergy+sigma)}, mean ADC: {peakEnergy}, sigma {sigma}")
 
                 if "_sideband" in targetPeak:
                     tau = 2
