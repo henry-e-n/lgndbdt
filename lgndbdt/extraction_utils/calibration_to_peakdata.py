@@ -14,8 +14,8 @@ from extraction_utils.config import *
 from extraction_utils.h5utils import paramExtract
 from pygama import lh5
 
-def extract_waveforms(fitResults, peakIndex, verbose=False):
-    print(fitResults)
+def extract_waveforms(cal_pars, fitResults, peakIndex, verbose=False):
+    print(cal_pars)
     # Fit Results [ [uncal energies, cal energies], [[1st peak fit param], 2nd peak fit...]] 
     evE = fitResults[0][0]
     adcE = fitResults[0][1]
@@ -56,8 +56,10 @@ def extract_waveforms(fitResults, peakIndex, verbose=False):
 
                 
                 peakEnergy = adcE[peakIndex]
-                sigma = peakFits[peakIndex][2]
-
+                sigmaKEV = peakFits[peakIndex][2]
+                sigmaADC = sigmaKEV*cal_pars[1] + cal_pars[0]
+                sigma = sigmaADC
+                
                 if "_sideband" in targetPeak:
                     tau = 2
                     peakEnergy = peakEnergy-(1.5 + tau)*sigma
