@@ -59,7 +59,7 @@ def extract_waveforms(fitResults, peakIndex, verbose=False):
 
                 if "_sideband" in targetPeak:
                     tau = 2
-                    peakEnergy = peakEnergy-(0.5 + tau*sigma)
+                    peakEnergy = peakEnergy-(1.5 + tau)*sigma
                     sigma = tau*sigma
                     print("SIDEBAND TIME!!")
 
