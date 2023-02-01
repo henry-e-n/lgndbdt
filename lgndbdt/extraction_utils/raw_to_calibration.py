@@ -228,8 +228,8 @@ def energy_calibration(verbose=False, plotBool=False):
     mu_errs = np.asarray([fit_errs[i][1] for i in range(len(fit_pars))]) 
 
     cal_pars, fitData = match_peaks(mus, cal_peaks)
-
-
+    print(f"Cal pars {cal_pars}")
+    print(f"fitData {fitData}")
     if plotBool:
         print(f"DEP sigma {sigmas[3]}")
         plt.hist(cal_energies_first[(cal_energies_first>peaks[3]-200)*(cal_energies_first<peaks[3]+200)], bins=1000, color='k', ec='k')

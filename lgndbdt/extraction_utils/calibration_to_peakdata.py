@@ -15,6 +15,7 @@ from extraction_utils.h5utils import paramExtract
 from pygama import lh5
 
 def extract_waveforms(fitResults, peakIndex, verbose=False):
+    print(fitResults)
     # Fit Results [ [uncal energies, cal energies], [[1st peak fit param], 2nd peak fit...]] 
     evE = fitResults[0][0]
     adcE = fitResults[0][1]
