@@ -316,7 +316,7 @@ def trapENS(times, values, dtimes, intTimes = (3000, 5500)):
         blEstimate = np.mean(values[w, :200])
         values[w] = values[w]-blEstimate
         trapArr[w, :] = np.dot(values[w], tensor.T)[:-bufferCell]/riseCell
-    np.save(f"{savePath}/TrapArr.npy", trapArr)
+    # np.save(f"{savePath}/TrapArr.npy", trapArr)
     trapArr[trapArr==0.] = 1
     return trapArr
 ###########################################################################################
