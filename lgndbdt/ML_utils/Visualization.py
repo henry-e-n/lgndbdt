@@ -188,7 +188,7 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
 
 def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavse):
     dx=0.05
-    boundary_line = np.arange(0.0, 1+dx, dx)
+    boundary_line = np.arange(0.0, 0.65, dx)
     print(boundary_line)
     tpr = []
     fpr = []
@@ -208,15 +208,16 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
 
         Nc_bkg = np.sum(pred_0>boundary_line[i])
         Bc_bkg = np.sum(side_bkg>boundary_line[i])
-        print(f"linePos, Nc_sig, tau_sig, Bc_sig, N_sig, B_sig, num, den, {boundary_line[i], Nc_sig, tau_sig, Bc_sig, N_sig, B_sig, Nc_sig-tau_sig*Bc_sig, N_sig-tau_sig*B_sig}")
+        print(f"linePos, Nc_sig, Bc_sig, N_sig, B_sig, num, den, {Nc_sig, Bc_sig, N_sig, B_sig, Nc_sig-tau_sig*Bc_sig, N_sig-tau_sig*B_sig}")
         tprarr = (Nc_sig-tau_sig*Bc_sig)/(N_sig-tau_sig*B_sig)
         fprarr = (Nc_bkg-tau_bkg*Bc_bkg)/(N_bkg-tau_bkg*B_bkg)
-        print(f"tprarr {tprarr}, fprarr {fprarr}")
+        
         tpr = np.append(tpr, tprarr)
         fpr = np.append(fpr, fprarr)
 
         unc_LHS = (N_sig + tau_sig **2 * B_sig)/ (N_sig - tau_sig * B_sig)**2 + (Nc_sig + tau_sig **2 * Bc_sig) / (Nc_sig - tau_sig * Bc_sig)**2 - 2*(Nc_sig + tau_sig **2 * Bc_sig)/((N_sig - tau_sig * B_sig) * (Nc_sig - tau_sig * Bc_sig))
         tpr_unc = np.append(tpr_unc, tprarr*(unc_LHS)**(0.5))
+        print(f"tprarr {tprarr} +- {tprarr*(unc_LHS)**(0.5)}, fprarr {fprarr}")
 
 
 
