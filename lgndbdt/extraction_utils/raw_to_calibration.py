@@ -235,8 +235,8 @@ def energy_calibration(verbose=False, plotBool=False):
         plt.axvline(peaks[3], 0, 5e5, color='r', lw=1, alpha=0.75)
         plt.axvline(peaks[3] + sigmas[3], 0, 5e5, color='r', lw=2, alpha=0.75)
         plt.axvline(peaks[3] - sigmas[3], 0, 5e5, color='r', lw=2, alpha=0.75)
-        plt.axvline(peaks[3] - (0.5 + 2*sigmas[3]), 0, 5e5, color='b', lw=2, alpha=0.75)
-        plt.axvline(peaks[3] - (0.5 + 4*sigmas[3]), 0, 5e5, color='b', lw=2, alpha=0.75)
+        plt.axvline(peaks[3] - (1.5*sigmas[3]+4*sigmas[3]), 0, 5e5, color='b', lw=2, alpha=0.75)
+        plt.axvline(peaks[3] - (1.5*sigmas[3]), 0, 5e5, color='b', lw=2, alpha=0.75)
         
         plt.xlabel('Energy (keV)', fontsize=24)
         plt.ylabel('Counts', fontsize=24)
