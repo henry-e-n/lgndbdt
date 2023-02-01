@@ -231,6 +231,7 @@ def energy_calibration(verbose=False, plotBool=False):
 
 
     if plotBool:
+        print(f"DEP sigma {sigmas[3]}")
         plt.hist(cal_energies_first[(cal_energies_first>peaks[3]-200)*(cal_energies_first<peaks[3]+200)], bins=1000, color='k', ec='k')
         plt.axvline(peaks[3], 0, 5e5, color='r', lw=1, alpha=0.75)
         plt.axvline(peaks[3] + sigmas[3], 0, 5e5, color='r', lw=2, alpha=0.75)
@@ -246,6 +247,8 @@ def energy_calibration(verbose=False, plotBool=False):
         plt.clf()
         plt.cla()
 
+
+        print(f"SEP sigma {sigmas[4]}")
         plt.hist(cal_energies_first[(cal_energies_first>peaks[4]-200)*(cal_energies_first<peaks[4]+200)], bins=200, color='k', ec='k')
         plt.axvline(peaks[4], 0, 5e5, color='r', lw=1, alpha=0.75)
         plt.axvline(peaks[4] + sigmas[4], 0, 5e5, color='r', lw=2, alpha=0.75)
@@ -267,6 +270,7 @@ def energy_calibration(verbose=False, plotBool=False):
 
     if verbose:
         print(f"Known Energy: {fitData[0][peakIndex]}, Calibrated ADC {fitData[1][peakIndex]}")
+
     return cal_pars, [fitData, fit_pars], peakIndex
 
 if __name__ == "__main__":

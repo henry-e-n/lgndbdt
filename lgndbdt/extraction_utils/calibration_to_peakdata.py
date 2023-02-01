@@ -64,7 +64,7 @@ def extract_waveforms(fitResults, peakIndex, verbose=False):
                     print("SIDEBAND TIME!!")
 
                 selection_crit =  (energies>(peakEnergy-sigma))*(energies<(peakEnergy+sigma))
-                print(f"Selection Window : {(peakEnergy-sigma)} - {(peakEnergy+sigma)}, mean : {peakEnergy}")
+                print(f"Selection Window : {(peakEnergy-sigma)} - {(peakEnergy+sigma)}, mean ADC: {peakEnergy}, sigma {sigma}")
                 # sideband_crit = (energies>(peakEnergy+1.5*sigma))*(energies<(peakEnergy+3.5*sigma))
                 if file == 0:
                     for i in range(len(DSPparamArr)):
