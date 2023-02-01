@@ -58,9 +58,8 @@ def energy_calibration(verbose=False, plotBool=False):
     #####################################
     # First Calibration Pass
     #####################################
-    if source == "60Co":
-        peaks = np.array([583.187, # 228Th -> 208Tl (85%)
-                          1173.24, # 60Co
+    if source == "60Co": # 583.187, # 228Th -> 208Tl (85%)
+        peaks = np.array([1173.24, # 60Co
                           1332.5, # 60Co,
                           1592.5, # 228Th DEP
                           2103.5, # 228Th SEP
@@ -158,8 +157,7 @@ def energy_calibration(verbose=False, plotBool=False):
     #Plot histograms and fit initial functions
 
     if np.isin("228ThDEP", targetPeak) or np.isin("228ThSEP", targetPeak):
-        widths = np.array([sigmas[0]*3,
-                   sigmas[1]*4, 
+        widths = np.array([sigmas[1]*4, # sigmas[0]*3, 
                    sigmas[2]*6,
                    sigmas[3]*5,
                    sigmas[4]*4, 
