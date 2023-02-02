@@ -200,8 +200,8 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     B_sig = len(side_sig)
     N_bkg = len(pred_0)
     B_bkg = len(side_bkg)
-    tau_sig = 1/2 # energy width ratio between the signal and background windows
-    tau_bkg = 1/2
+    tau_sig = 1/4 # energy width ratio between the signal and background windows
+    tau_bkg = 1/4
     for i in range(len(boundary_line)):
         Nc_sig = np.sum(pred_1>boundary_line[i])
         Bc_sig = np.sum(side_sig>boundary_line[i])

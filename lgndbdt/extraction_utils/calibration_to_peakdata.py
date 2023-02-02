@@ -62,17 +62,18 @@ def extract_waveforms(cal_pars, fitResults, peakIndex, verbose=False):
                 print(f"Selection Window : {(peakEnergy-sigma)} - {(peakEnergy+sigma)}, mean ADC: {peakEnergy}, sigma {sigma}")
 
                 if "_sideband" in targetPeak:
-                    tau = 2
-                    peakEnergy_left = peakEnergy-(1.5 + tau)*sigma
-                    peakEnergy_right = peakEnergy+(1.5 + tau)*sigma
+                    sideband_width_ratio = 2 # Make sure if you change this to also change it in Visualization ROC, and in rtc plot
+                    peakEnergy_left = peakEnergy-(2.5 + sideband_width_ratio)*sigma
+                    peakEnergy_right = peakEnergy+(2.5 + sideband_width_ratio)*sigma
 
-                    sigma = tau*sigma
+                    sigma = sideband_width_ratio*sigma
                     print("SIDEBAND TIME!!")
                     selection_crit =  (energies>(peakEnergy_left-sigma))*(energies<(peakEnergy_left+sigma))*(energies>(peakEnergy_right-sigma))*(energies<(peakEnergy_right+sigma))
+                    print(f"Selection Window : {(peakEnergy_left-sigma)} - {(peakEnergy_left+sigma)}, {(peakEnergy_left-sigma)} - {(peakEnergy_left+sigma)}, mean ADC: {peakEnergy}, sigma {sigma}")
+
                 else:
                     selection_crit =  (energies>(peakEnergy-sigma))*(energies<(peakEnergy+sigma))
-
-                # print(f"Selection Window : {(peakEnergy-sigma)} - {(peakEnergy+sigma)}, mean ADC: {peakEnergy}, sigma {sigma}")
+                    print(f"Selection Window : {(peakEnergy-sigma)} - {(peakEnergy+sigma)}, mean ADC: {peakEnergy}, sigma {sigma}")
                 # sideband_crit = (energies>(peakEnergy+1.5*sigma))*(energies<(peakEnergy+3.5*sigma))
                 if file == 0:
                     for i in range(len(DSPparamArr)):

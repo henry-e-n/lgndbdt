@@ -230,46 +230,50 @@ def energy_calibration(verbose=False, plotBool=False):
     print(f"Fit Data {fitData}")
 
     if plotBool:
-        print(f"DEP sigma {sigmas[2]}")
-        sideband_LE_left = peaks[2]-(1.5*sigmas[2]+4*sigmas[2])
-        sideband_LE_right = peaks[2]-(1.5*sigmas[2])
-        sideband_HE_left = peaks[2]+(1.5*sigmas[2]+4*sigmas[2])
-        sideband_HE_right = peaks[2]+(1.5*sigmas[2])
+        for i in range(2, 4):
+            sideband_LE_left = peaks[i]-(2.5*sigmas[i]+4*sigmas[i])
+            sideband_LE_right = peaks[i]-(2.5*sigmas[i])
+            sideband_HE_left = peaks[i]+(2.5*sigmas[i]+4*sigmas[i])
+            sideband_HE_right = peaks[i]+(2.5*sigmas[i])
 
-        plt.hist(cal_energies_first[(cal_energies_first>peaks[2]-200)*(cal_energies_first<peaks[2]+200)], bins=1000, color='k', ec='k')
-        plt.axvline(peaks[2], 0, 5e5, color='r', lw=1, alpha=0.75)
-        plt.axvline(peaks[2] + sigmas[2], 0, 5e5, color='r', lw=2, alpha=0.75)
-        plt.axvline(peaks[2] - sigmas[2], 0, 5e5, color='r', lw=2, alpha=0.75)
-        plt.axvline(sideband_LE_left, 0, 5e5, color='b', lw=2, alpha=1)
-        plt.axvline(sideband_LE_right, 0, 5e5, color='b', lw=2, alpha=1)
-        plt.axvline(sideband_HE_left, 0, 5e5, color='b', lw=2, alpha=1)
-        plt.axvline(sideband_HE_right, 0, 5e5, color='b', lw=2, alpha=1)
+            plt.hist(cal_energies_first[(cal_energies_first>peaks[i]-200)*(cal_energies_first<peaks[i]+200)], bins=1000, color='k', ec='k')
+            plt.axvline(peaks[i], 0, 5e5, color='r', lw=1, alpha=0.75)
+            plt.axvline(peaks[i] + sigmas[i], 0, 5e5, color='r', lw=2, alpha=0.75)
+            plt.axvline(peaks[i] - sigmas[i], 0, 5e5, color='r', lw=2, alpha=0.75)
+            plt.axvline(sideband_LE_left, 0, 5e5, color='b', lw=2, alpha=1)
+            plt.axvline(sideband_LE_right, 0, 5e5, color='b', lw=2, alpha=1)
+            plt.axvline(sideband_HE_left, 0, 5e5, color='b', lw=2, alpha=1)
+            plt.axvline(sideband_HE_right, 0, 5e5, color='b', lw=2, alpha=1)
+            
+            plt.xlabel('Energy (keV)', fontsize=24)
+            plt.ylabel('Counts', fontsize=24)
+            plt.yscale('log')
+            plt.xlim(peaks[i] - 10*sigmas[i], peaks[i] + 10*sigmas[i])
+            if i == 2:
+                plt.tile("DEP Peak")
+                plt.savefig(f"{savePath}/EnergyHist_DEP.jpg")
+            if i == 3:
+                plt.title("SEP Peak")
+                plt.savefig(f"{savePath}/EnergyHist_SEP.jpg")
+            plt.clf()
+            plt.cla()
+
+
+        # plt.hist(cal_energies_first[(cal_energies_first>peaks[3]-200)*(cal_energies_first<peaks[3]+200)], bins=200, color='k', ec='k')
+        # plt.axvline(peaks[3], 0, 5e5, color='r', lw=1, alpha=0.75)
+        # plt.axvline(peaks[3] + sigmas[3], 0, 5e5, color='r', lw=2, alpha=0.75)
+        # plt.axvline(peaks[3] - sigmas[3], 0, 5e5, color='r', lw=2, alpha=0.75)
+        # plt.axvline(peaks[3]-(1.5 + 2)*sigmas[3], 0, 5e5, color='b', lw=2, alpha=0.75)
+        # plt.axvline(peaks[3]-(1.5 + 2)*sigmas[3]-2*sigmas[3], 0, 5e5, color='b', lw=2, alpha=0.75)
+        # plt.axvline(peaks[3]-(1.5 + 2)*sigmas[3]+2*sigmas[3], 0, 5e5, color='b', lw=2, alpha=0.75)
         
-        plt.xlabel('Energy (keV)', fontsize=24)
-        plt.ylabel('Counts', fontsize=24)
-        plt.yscale('log')
-        plt.xlim(peaks[2] - 10*sigmas[2], peaks[2] + 10*sigmas[2])
-        plt.savefig(f"{savePath}/EnergyHist_DEP.jpg")
-        plt.clf()
-        plt.cla()
-
-
-        print(f"SEP sigma {sigmas[3]}")
-        plt.hist(cal_energies_first[(cal_energies_first>peaks[3]-200)*(cal_energies_first<peaks[3]+200)], bins=200, color='k', ec='k')
-        plt.axvline(peaks[3], 0, 5e5, color='r', lw=1, alpha=0.75)
-        plt.axvline(peaks[3] + sigmas[3], 0, 5e5, color='r', lw=2, alpha=0.75)
-        plt.axvline(peaks[3] - sigmas[3], 0, 5e5, color='r', lw=2, alpha=0.75)
-        plt.axvline(peaks[3]-(1.5 + 2)*sigmas[3], 0, 5e5, color='b', lw=2, alpha=0.75)
-        plt.axvline(peaks[3]-(1.5 + 2)*sigmas[3]-2*sigmas[3], 0, 5e5, color='b', lw=2, alpha=0.75)
-        plt.axvline(peaks[3]-(1.5 + 2)*sigmas[3]+2*sigmas[3], 0, 5e5, color='b', lw=2, alpha=0.75)
-        
-        plt.xlabel('Energy (keV)', fontsize=24)
-        plt.ylabel('Counts', fontsize=24)
-        plt.yscale('log')
-        plt.xlim(peaks[3] - 7*sigmas[3], peaks[3] + 7*sigmas[3])
-        plt.savefig(f"{savePath}/EnergyHist_SEP.jpg")
-        plt.clf()
-        plt.cla()
+        # plt.xlabel('Energy (keV)', fontsize=24)
+        # plt.ylabel('Counts', fontsize=24)
+        # plt.yscale('log')
+        # plt.xlim(peaks[3] - 7*sigmas[3], peaks[3] + 7*sigmas[3])
+        # plt.savefig(f"{savePath}/EnergyHist_SEP.jpg")
+        # plt.clf()
+        # plt.cla()
 
 
 
