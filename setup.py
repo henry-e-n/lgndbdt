@@ -7,7 +7,7 @@ from subprocess import check_call
 
 HERE         = pathlib.Path(__file__).parent
 PACKAGE_NAME = 'lgndbdt'
-VERSION      = '0.889'
+VERSION      = '0.8891'
 AUTHOR       = 'Henry Nachman'
 AUTHOR_EMAIL = 'henachman@unc.edu'
 URL          = 'https://github.com/henry-e-n/lgndbdt.git'
@@ -15,7 +15,7 @@ DESCRIPTION  ='Python package for extracting PSDs and training a BDT'
 LICENSE ='Apache-2.0'
 LONG_DESCRIPTION = (HERE/"README.md").read_text()
 LONG_DESC_TYPE   = 'text/markdown'
-INSTALL_REQUIRES =['numpy=1.22',
+INSTALL_REQUIRES =['numpy==1.22',
 					'matplotlib',
 					'scipy',
 					'lightgbm',
