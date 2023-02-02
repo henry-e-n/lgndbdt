@@ -250,7 +250,7 @@ def energy_calibration(verbose=False, plotBool=False):
             plt.yscale('log')
             plt.xlim(peaks[i] - 10*sigmas[i], peaks[i] + 10*sigmas[i])
             if i == 2:
-                plt.tile("DEP Peak")
+                plt.title("DEP Peak")
                 plt.savefig(f"{savePath}/EnergyHist_DEP.jpg")
             if i == 3:
                 plt.title("SEP Peak")
