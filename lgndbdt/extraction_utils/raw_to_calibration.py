@@ -158,9 +158,9 @@ def energy_calibration(verbose=False, plotBool=False):
     print(f"Check Sigmas {sigmas}")
     if np.isin("228ThDEP", targetPeak) or np.isin("228ThSEP", targetPeak):
         widths = np.array([sigmas[0]*4, # 515 peak sigma*3
-                   sigmas[1]*6, #  
+                   sigmas[1]*8, #  
                    sigmas[2]*10,
-                   sigmas[3]*10,
+                   sigmas[3]*15,
                    sigmas[4]*20])
     else:
         widths = sigmas * 3
