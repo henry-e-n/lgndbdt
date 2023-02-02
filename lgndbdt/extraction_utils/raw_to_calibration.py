@@ -43,12 +43,12 @@ def energy_calibration(verbose=False, plotBool=False):
     dsp_files_clean, dsp_files_icpcs = clean_dsp(dsp_files)
 
     try:
-        calibration_files = dsp_files_clean[:2]
+        calibration_files = dsp_files_clean[:4]
         energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "icpc1/dsp")
         energies = energy_stack["trapEmax"]
     except TypeError:
         print("rtc 52: ICPCS")
-        calibration_files = dsp_files_icpcs[:2]
+        calibration_files = dsp_files_icpcs[:4]
         energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "icpcs/icpc1/dsp")
         energies = energy_stack["trapEmax"]
     
