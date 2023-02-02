@@ -164,6 +164,7 @@ def energy_calibration(verbose=False, plotBool=False):
                    sigmas[4]*20])
     else:
         widths = sigmas * 3
+    print(f"Check widths {widths}")
 
     n_peaks = uncal_peaks.shape[0]
     for i in range(n_peaks):
