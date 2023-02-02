@@ -233,9 +233,9 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
 
 
     plt.plot([0],[0],color="white",                                              label = " Classifier     AUC    ")
-    plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"   A/E      {np.round(ogauc, 3)}")
-    plt.plot(fpr, tpr, color = "#EF426F" , linestyle = "-", linewidth = 4,       label = f"   BDT      {np.round(bdtauc, 3)}")
-    plt.fill_between(fpr, tpr+tpr_unc, tpr-tpr_unc, color = "#EF426F" , alpha = 0.3, linestyle = "-", linewidth = 4,       label = f"   BDT      {np.round(bdtauc, 3)}")
+    plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"   A/E         {np.round(ogauc, 3)}")
+    plt.plot(fpr, tpr, color = "#EF426F" , linestyle = "-", linewidth = 4,       label = f"   BDT        {np.round(bdtauc, 3)}")
+    plt.fill_between(fpr, tpr+tpr_unc, tpr-tpr_unc, color = "#EF426F" , alpha = 0.3, linestyle = "-", linewidth = 4)
     plt.hlines(y = 1, xmin = 0, xmax = 1, linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
     plt.xlim((0,1))
     plt.ylim((0,1.1))
