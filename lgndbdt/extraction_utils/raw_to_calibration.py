@@ -159,7 +159,7 @@ def energy_calibration(verbose=False, plotBool=False):
     if "228ThDEP" in targetPeak or "228ThSEP" in targetPeak:
         widths = np.array([sigmas[0]*4, # 515 peak sigma*3
                    sigmas[1]*8, #  
-                   sigmas[2]*10,
+                   sigmas[2]*4,
                    sigmas[3]*15,
                    sigmas[4]*20])
     else:
