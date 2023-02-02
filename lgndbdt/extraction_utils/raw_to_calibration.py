@@ -117,7 +117,7 @@ def energy_calibration(verbose=False, plotBool=False):
             plt.xlabel("Energy (ADC)", fontsize=24)
             plt.ylabel("Energy (keV)", fontsize=24)
             plt.legend(loc='best', fontsize=20)
-            plt.savefig(f"{savePath}/CalibrationFit.jpg")
+            plt.savefig(f"{savePath}/CalibrationFit.png")
             plt.clf()
             plt.cla()
         # plt.show()
@@ -141,7 +141,7 @@ def energy_calibration(verbose=False, plotBool=False):
         plt.ylabel('Counts', fontsize=24)
         plt.yscale('log')
         plt.xlim(0,3000)
-        plt.savefig(f"{savePath}/EnergyHist.jpg")
+        plt.savefig(f"{savePath}/EnergyHist.png")
         plt.clf()
         plt.cla()
 
@@ -252,10 +252,10 @@ def energy_calibration(verbose=False, plotBool=False):
             plt.xlim(peaks[i] - 10*sigmas[i], peaks[i] + 10*sigmas[i])
             if i == 2:
                 plt.title("DEP Peak")
-                plt.savefig(f"{savePath}/EnergyHist_DEP.jpg")
+                plt.savefig(f"{savePath}/EnergyHist_DEP.png")
             if i == 3:
                 plt.title("SEP Peak")
-                plt.savefig(f"{savePath}/EnergyHist_SEP.jpg")
+                plt.savefig(f"{savePath}/EnergyHist_SEP.png")
             plt.clf()
             plt.cla()
 
@@ -272,7 +272,7 @@ def energy_calibration(verbose=False, plotBool=False):
         # plt.ylabel('Counts', fontsize=24)
         # plt.yscale('log')
         # plt.xlim(peaks[3] - 7*sigmas[3], peaks[3] + 7*sigmas[3])
-        # plt.savefig(f"{savePath}/EnergyHist_SEP.jpg")
+        # plt.savefig(f"{savePath}/EnergyHist_SEP.png")
         # plt.clf()
         # plt.cla()
 
