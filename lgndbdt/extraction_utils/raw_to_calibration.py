@@ -59,21 +59,20 @@ def energy_calibration(verbose=False, plotBool=False):
     # First Calibration Pass
     #####################################
     if source == "60Co": # 583.187, # 228Th -> 208Tl (85%)
-        peaks = np.array([583.187,
-                          1173.24, # 60Co
+        peaks = np.array([1173.24, # 60Co
                           1332.5, # 60Co,
                           1592.5, # 228Th DEP
                           2103.5, # 228Th SEP
                           2614.53]) # 228Th -> 208Tl (99.8%) 
         if "228ThDEP" in targetPeak:
             print(f"Calibrating on 228Th DEP")
-            peakIndex = 3
+            peakIndex = 2
         elif "228ThSEP" in targetPeak:
             print(f"Calibrating on 228Th SEP")
-            peakIndex = 4
+            peakIndex = 3
         elif "228ThFEP" in targetPeak:
             print(f"Calibrating on 228Th FEP")
-            peakIndex = 5
+            peakIndex = 4
         
     else:
         peaks = np.array([583.187, # 228Th -> 208Tl (85%)
@@ -158,12 +157,11 @@ def energy_calibration(verbose=False, plotBool=False):
     #Plot histograms and fit initial functions
 
     if np.isin("228ThDEP", targetPeak) or np.isin("228ThSEP", targetPeak):
-        widths = np.array([sigmas[0]*3,
-                   sigmas[1]*4, #  
-                   sigmas[2]*6,
-                   sigmas[3]*5,
-                   sigmas[4]*4, 
-                   sigmas[5]*8])
+        widths = np.array([sigmas[0]*4, # 515 peak sigma*3
+                   sigmas[1]*6, #  
+                   sigmas[2]*5,
+                   sigmas[3]*4,
+                   sigmas[4]*8])
     else:
         widths = sigmas * 3
 
@@ -232,36 +230,43 @@ def energy_calibration(verbose=False, plotBool=False):
     print(f"Fit Data {fitData}")
 
     if plotBool:
-        print(f"DEP sigma {sigmas[3]}")
-        plt.hist(cal_energies_first[(cal_energies_first>peaks[3]-200)*(cal_energies_first<peaks[3]+200)], bins=1000, color='k', ec='k')
-        plt.axvline(peaks[3], 0, 5e5, color='r', lw=1, alpha=0.75)
-        plt.axvline(peaks[3] + sigmas[3], 0, 5e5, color='r', lw=2, alpha=0.75)
-        plt.axvline(peaks[3] - sigmas[3], 0, 5e5, color='r', lw=2, alpha=0.75)
-        plt.axvline(peaks[3] - (1.5*sigmas[3]+4*sigmas[3]), 0, 5e5, color='b', lw=2, alpha=0.75)
-        plt.axvline(peaks[3] - (1.5*sigmas[3]), 0, 5e5, color='b', lw=2, alpha=0.75)
+        print(f"DEP sigma {sigmas[2]}")
+        sideband_LE_left = peaks[2]-(1.5*sigmas[2]+4*sigmas[2])
+        sideband_LE_right = peaks[2]-(1.5*sigmas[2])
+        sideband_HE_left = peaks[2]+(1.5*sigmas[2]+4*sigmas[2])
+        sideband_HE_right = peaks[2]+(1.5*sigmas[2])
+
+        plt.hist(cal_energies_first[(cal_energies_first>peaks[2]-200)*(cal_energies_first<peaks[2]+200)], bins=1000, color='k', ec='k')
+        plt.axvline(peaks[2], 0, 5e5, color='r', lw=1, alpha=0.75)
+        plt.axvline(peaks[2] + sigmas[2], 0, 5e5, color='r', lw=2, alpha=0.75)
+        plt.axvline(peaks[2] - sigmas[2], 0, 5e5, color='r', lw=2, alpha=0.75)
+        plt.axvline(sideband_LE_left, 0, 5e5, color='b', lw=2, alpha=1)
+        plt.axvline(sideband_LE_right, 0, 5e5, color='b', lw=2, alpha=1)
+        plt.axvline(sideband_HE_left, 0, 5e5, color='b', lw=2, alpha=1)
+        plt.axvline(sideband_HE_right, 0, 5e5, color='b', lw=2, alpha=1)
         
         plt.xlabel('Energy (keV)', fontsize=24)
         plt.ylabel('Counts', fontsize=24)
         plt.yscale('log')
-        plt.xlim(peaks[3] - 7*sigmas[3], peaks[3] + 7*sigmas[3])
+        plt.xlim(peaks[2] - 10*sigmas[2], peaks[2] + 10*sigmas[2])
         plt.savefig(f"{savePath}/EnergyHist_DEP.jpg")
         plt.clf()
         plt.cla()
 
 
-        print(f"SEP sigma {sigmas[4]}")
-        plt.hist(cal_energies_first[(cal_energies_first>peaks[4]-200)*(cal_energies_first<peaks[4]+200)], bins=200, color='k', ec='k')
-        plt.axvline(peaks[4], 0, 5e5, color='r', lw=1, alpha=0.75)
-        plt.axvline(peaks[4] + sigmas[4], 0, 5e5, color='r', lw=2, alpha=0.75)
-        plt.axvline(peaks[4] - sigmas[4], 0, 5e5, color='r', lw=2, alpha=0.75)
-        plt.axvline(peaks[4]-(1.5 + 2)*sigmas[4], 0, 5e5, color='b', lw=2, alpha=0.75)
-        plt.axvline(peaks[4]-(1.5 + 2)*sigmas[4]-2*sigmas[4], 0, 5e5, color='b', lw=2, alpha=0.75)
-        plt.axvline(peaks[4]-(1.5 + 2)*sigmas[4]+2*sigmas[4], 0, 5e5, color='b', lw=2, alpha=0.75)
+        print(f"SEP sigma {sigmas[3]}")
+        plt.hist(cal_energies_first[(cal_energies_first>peaks[3]-200)*(cal_energies_first<peaks[3]+200)], bins=200, color='k', ec='k')
+        plt.axvline(peaks[3], 0, 5e5, color='r', lw=1, alpha=0.75)
+        plt.axvline(peaks[3] + sigmas[3], 0, 5e5, color='r', lw=2, alpha=0.75)
+        plt.axvline(peaks[3] - sigmas[3], 0, 5e5, color='r', lw=2, alpha=0.75)
+        plt.axvline(peaks[3]-(1.5 + 2)*sigmas[3], 0, 5e5, color='b', lw=2, alpha=0.75)
+        plt.axvline(peaks[3]-(1.5 + 2)*sigmas[3]-2*sigmas[3], 0, 5e5, color='b', lw=2, alpha=0.75)
+        plt.axvline(peaks[3]-(1.5 + 2)*sigmas[3]+2*sigmas[3], 0, 5e5, color='b', lw=2, alpha=0.75)
         
         plt.xlabel('Energy (keV)', fontsize=24)
         plt.ylabel('Counts', fontsize=24)
         plt.yscale('log')
-        plt.xlim(peaks[4] - 7*sigmas[4], peaks[4] + 7*sigmas[4])
+        plt.xlim(peaks[3] - 7*sigmas[3], peaks[3] + 7*sigmas[3])
         plt.savefig(f"{savePath}/EnergyHist_SEP.jpg")
         plt.clf()
         plt.cla()
