@@ -159,9 +159,9 @@ def energy_calibration(verbose=False, plotBool=False):
     if np.isin("228ThDEP", targetPeak) or np.isin("228ThSEP", targetPeak):
         widths = np.array([sigmas[0]*4, # 515 peak sigma*3
                    sigmas[1]*6, #  
-                   sigmas[2]*5,
-                   sigmas[3]*4,
-                   sigmas[4]*8])
+                   sigmas[2]*10,
+                   sigmas[3]*10,
+                   sigmas[4]*10])
     else:
         widths = sigmas * 3
 
@@ -195,7 +195,7 @@ def energy_calibration(verbose=False, plotBool=False):
 
     sigmas = []
     fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24))
-    labels = [r'$^{228}$Th -> Tl', r'$^{60}$Co', r'$^{60}$Co', r'$^{228}$Th DEP', r'$^{228}$Th SEP', r'$^{228}$Th -> Tl']
+    labels = [r'$^{60}$Co', r'$^{60}$Co', r'$^{228}$Th DEP', r'$^{228}$Th SEP', r'$^{228}$Th -> Tl']
 
     for i in range(n_peaks):
 
@@ -211,7 +211,7 @@ def energy_calibration(verbose=False, plotBool=False):
 
         #Plot data and fit components
         if plotBool:
-            axs[i].semilogy(bin_centers, hist, ds="steps-mid", color="k")#, label=labels[i])
+            axs[i].semilogy(bin_centers, hist, ds="steps-mid", color="k", label=labels[i])
             axs[i].semilogy(bin_centers, fit, color="r", label='fit')
             axs[i].semilogy(bin_centers, gaussian, color="orange", label="gaussian")
             axs[i].semilogy(bin_centers, step, color="cyan", label="step")
