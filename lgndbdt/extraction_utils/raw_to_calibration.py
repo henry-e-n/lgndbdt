@@ -155,13 +155,13 @@ def energy_calibration(verbose=False, plotBool=False):
     sigmas = np.asarray([pars_list[i][1] for i in range(len(pars_list))]) 
 
     #Plot histograms and fit initial functions
-
+    print(f"Check Sigmas {sigmas}")
     if np.isin("228ThDEP", targetPeak) or np.isin("228ThSEP", targetPeak):
         widths = np.array([sigmas[0]*4, # 515 peak sigma*3
                    sigmas[1]*6, #  
                    sigmas[2]*10,
                    sigmas[3]*10,
-                   sigmas[4]*10])
+                   sigmas[4]*20])
     else:
         widths = sigmas * 3
 
