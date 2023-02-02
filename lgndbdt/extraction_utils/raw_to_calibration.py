@@ -219,7 +219,7 @@ def energy_calibration(verbose=False, plotBool=False):
             axs[i].set_ylim(hist[-1:]+1, np.amax(hist)+100)
             axs[i].legend(fontsize=18, loc='best')
     
-    # plt.savefig(f"{savePath}/fitPeaks.jpg")
+    plt.savefig(f"{savePath}/fitPeaks.png")
     plt.cla()
     plt.clf()
 
