@@ -44,7 +44,7 @@ def energy_calibration(verbose=False, plotBool=False):
 
     try:
         calibration_files = dsp_files_clean[:4]
-        energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "icpc1/dsp")
+        energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "ORGretina4MWaveformDecoder/dsp")
         energies = energy_stack["trapEmax"]
     except TypeError:
         print("rtc 52: ICPCS")

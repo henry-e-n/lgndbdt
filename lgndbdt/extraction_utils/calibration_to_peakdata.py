@@ -36,14 +36,14 @@ def extract_waveforms(cal_pars, fitResults, peakIndex, verbose=False):
         rawFile = raw_files[file]
         try: 
             try:
-                dsp_stack = lh5.load_nda(dspFile, dsptargetKeys, "icpc1/dsp")
+                dsp_stack = lh5.load_nda(dspFile, dsptargetKeys, "ORGretina4MWaveformDecoder/dsp")
                 DSPparamArr = [dsp_stack["trapEmax"], dsp_stack["tp_0"]]
             except TypeError:
                 dsp_stack = lh5.load_nda(dspFile, dsptargetKeys, "icpcs/icpc1/dsp")
                 DSPparamArr = [dsp_stack["trapEmax"], dsp_stack["tp_0"]]
 
             try:
-                raw_stack = lh5.load_nda(rawFile, rawtargetKeys, "icpc1/raw/waveform")
+                raw_stack = lh5.load_nda(rawFile, rawtargetKeys, "ORGretina4MWaveformDecoder/raw/waveform")
                 RAWparamArr = [raw_stack["t0"], raw_stack["dt"], raw_stack["values"]]
             except TypeError:
                 raw_stack = lh5.load_nda(rawFile, rawtargetKeys, "icpcs/icpc1/raw/waveform")
