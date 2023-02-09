@@ -259,8 +259,12 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 sig_sideband_RAW, selectDict = getRaw(f"{filename}DEP_sideband.lh5", f"{fpath}")
                 bkg_sideband_RAW, selectDict = getRaw(f"{filename}{SEPorFEP}_sideband.lh5", f"{fpath}")
                 
-                np.random.shuffle(sig_sideband_RAW)
-                np.random.shuffle(bkg_sideband_RAW)
+                sig_sideband_Save, sig_sideband_Ratio = dataSplit(sigRaw, 0.3)
+                bkg_sideband_Save, bkg_sideband_Ratio = dataSplit(bkgRaw, 0.3)
+                
+    
+                np.random.shuffle(sig_sideband_Ratio)
+                np.random.shuffle(bkg_sideband_Ratio)
                 
                 MSBDT     = lgb.Booster(model_file='BDT_unblind.txt')
                 gbm = lgb.train(params, 
@@ -268,14 +272,15 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
                 MSBDTstr  = MSBDT.model_to_string()
                 explainer = shap.TreeExplainer(gbm.model_from_string(MSBDTstr))
                 
-                sig_sideband_pred = gbm.predict(sig_sideband_RAW, num_iteration=gbm.best_iteration)
-                bkg_sideband_pred = gbm.predict(bkg_sideband_RAW, num_iteration=gbm.best_iteration)
+                sig_sideband_pred = gbm.predict(sig_sideband_Ratio, num_iteration=gbm.best_iteration)
+                bkg_sideband_pred = gbm.predict(bkg_sideband_Ratio, num_iteration=gbm.best_iteration)
 
                 result = list(filter(lambda x: "A_" in x, selectDict))
                 sigavse = sigRaw[:,selectDict[result[0]]]
                 bkgavse = bkgRaw[:,selectDict[result[0]]]
-
-
+                
+                # print(sigPDM.shape, sigSave.shape)
+                
                 tpr, fpr = getROC_sideband(Y_test, y_pred, sig_sideband_pred, bkg_sideband_pred, sigavse, bkgavse)     
             elif i == 5:
                 result = list(filter(lambda x: "A_" in x, selectDict))

@@ -187,9 +187,8 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
     plt.close()
 
 def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavse):
-    dx=0.05
+    dx=0.005
     boundary_line = np.arange(0, 1+dx, dx)
-    print(boundary_line)
     tpr = []
     fpr = []
     tpr_unc = []
@@ -208,7 +207,6 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
 
         Nc_bkg = np.sum(pred_0>boundary_line[i])
         Bc_bkg = np.sum(side_bkg>boundary_line[i])
-        # print(f"linePos, Nc_sig, Bc_sig, N_sig, B_sig, num, den, {Nc_sig, Bc_sig, N_sig, B_sig, Nc_sig-tau_sig*Bc_sig, N_sig-tau_sig*B_sig}")
         tprarr = (Nc_sig-tau_sig*Bc_sig)/(N_sig-tau_sig*B_sig)
         fprarr = (Nc_bkg-tau_bkg*Bc_bkg)/(N_bkg-tau_bkg*B_bkg)
         
@@ -217,7 +215,6 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
 
         unc_LHS = (N_sig + tau_sig **2 * B_sig)/ (N_sig - tau_sig * B_sig)**2 + (Nc_sig + tau_sig **2 * Bc_sig) / (Nc_sig - tau_sig * Bc_sig)**2 - 2*(Nc_sig + tau_sig **2 * Bc_sig)/((N_sig - tau_sig * B_sig) * (Nc_sig - tau_sig * Bc_sig))
         tpr_unc = np.append(tpr_unc, tprarr*(unc_LHS)**(0.5))
-        print(f"tprarr {tprarr} +- {tprarr*(unc_LHS)**(0.5)}, fprarr {fprarr}")
 
 
 
@@ -229,22 +226,30 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     ogfpr, ogtpr, ogthresholds    = roc_curve(avseOgLabels, avseOriginal)
     
     bdtauc = auc(boundary_line, tpr)
-    ogauc  = roc_auc_score(avseOgLabels, avseOriginal)
-
+    ogauc  = auc(np.arange(0,1,1/len(ogtpr)), ogtpr) # roc_auc_score(avseOgLabels, avseOriginal)
+    
+    hlineBDT = np.argmin(np.abs(tpr-0.90))
+    hlineOG  = np.argmin(np.abs(ogtpr-0.90))
+    
+    plt.hlines(y = tpr[hlineBDT], xmin = 0, xmax = np.max((fpr[hlineBDT], ogfpr[hlineOG]))  , linewidth = 2, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
+    plt.vlines(x = fpr[hlineBDT], ymin = 0, ymax = tpr[hlineBDT], linewidth = 2, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
+    plt.vlines(x = ogfpr[hlineOG]  , ymin = 0, ymax = ogtpr[hlineOG]  , linewidth = 2, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
+    
+    ogauc_MCI  = MC_integration(ogtpr)
     bdtauc_MCI = MC_integration(tpr)
 
-    plt.plot([0],[0],color="white",                                              label = " Classifier     AUC    ")
-    plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"   A/E         {np.round(ogauc, 3)}")
-    plt.plot(fpr, tpr, color = "#EF426F" , linestyle = "-", linewidth = 1,       label = f"   BDT        {np.round(bdtauc, 3)}, {np.round(bdtauc_MCI, 3)}")
+    plt.plot([0],[0],color="white",                                              label = "Classifier     DEP      SEP      AUC     MCI   ")
+    plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"   A/E        90.0%   {np.round(100*ogfpr[hlineOG],1)}%    {np.round(ogauc, 2)}    {np.round(ogauc_MCI, 2)}")
+    plt.plot(fpr, tpr, color = "#EF426F" , linestyle = "-", linewidth = 1,       label = f"   BDT       90.0%   {np.round(100*fpr[hlineBDT],1)}%    {np.round(bdtauc, 2)}    {np.round(bdtauc_MCI, 2)}")
     plt.fill_between(fpr, tpr+tpr_unc, tpr-tpr_unc, color = "#EF426F" , alpha = 0.3, linestyle = "-", linewidth = 4)
-    plt.hlines(y = 1, xmin = 0, xmax = 1, linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
+    plt.hlines(y = 1, xmin = 0, xmax = 1, linewidth = 1, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.5)
     plt.xlim((0,1))
     plt.ylim((0,1.1))
     plt.legend(loc="lower right")
     plt.xlabel("False Positivity Rate", fontsize = 40)
     plt.ylabel("True Positivity Rate", fontsize = 40)
     plt.title("BDT vs traditional A/E ROC performance", fontsize = 40) #, fontsize = 24, pad = 15, fontstyle='italic')
-    plt.savefig(f"{plotPath}/ROC_sideband.png",dpi=300, transparent=True)
+    plt.savefig(f"{plotPath}/ROC_sideband.png",dpi=300, transparent=False)
     plt.cla()
     plt.clf()
     plt.close()
@@ -365,51 +370,10 @@ def MC_integration(BDT_ROC):
         return xr, float(Rsuc)/float(Rtot)
 
     #===============================================================
-    # function check(xr,fDTAR,fDPRO,bdst,scal)
-    # Calculates histogram of random variables xr and compares
-    # distribution to target and proposal distribution function.
-    # input: xr   : array of random variables
-    #        fTAR : function pointer to target density
-    #        fPRO : function pointer to proposal density
-    #        bdst : 2-element array: boundaries for distribution function
-    #        scal : real number: constant c as in c*Q(x) to get proposal PDF > target PDF for all x
-    #---------------------------------------------------------------
-    def check(xr,fDTAR, yArray, fDPRO,bdst,scal):
-
-        R = xr.size
-        hist,edges = np.histogram(xr,int(np.sqrt(float(R))),range=(bdst[0],bdst[1]),density=False)
-        x          = np.arange(len(yArray))/len(yArray)# 0.5*(edges[0:edges.size-1]+edges[1:edges.size])
-        xhist      = 0.5*(edges[0:edges.size-1]+edges[1:edges.size])
-        Px         = yArray #fDTAR(yArray, x)
-        Qx         = scal*fDPRO(x)
-        # The histogram is in counts. Dividing by total counts gives area of 1.
-        # Which is ok for initially normalized functions. 
-        tothist    = np.sum(hist.astype(float))*(xhist[1]-xhist[0])
-        hist       = scal*hist.astype(float)/tothist 
-        Ex         = np.sum(xr)/float(R)
-        Varx       = np.sum((xr-Ex)**2)/float(R)
-        print("[check]: E[P(x)] = %13.5e Var[P(x)] = %13.5e" % (Ex,Varx))
-
-        ftsz = 10
-        plt.figure(num=1,figsize=(5,5),dpi=100,facecolor='white')
-        plt.subplot(111)
-        plt.bar(xhist,hist,width=(xhist[1]-xhist[0]),facecolor='green',align='center')
-        plt.plot(x,Px,linestyle='-',color='red',linewidth=1.0,label='P(x)')
-        plt.plot(x,Qx,linestyle='-',color='black',linewidth=1.0,label='c Q(x)')
-        plt.xlabel('x',fontsize=ftsz)
-        plt.ylabel('pdf(x)',fontsize=ftsz)
-        plt.legend()
-        plt.tick_params(labelsize=ftsz)
-        plt.tight_layout()
-
-        plt.show()
-
-    #===============================================================
     
-
     s_target   = BDT_ROC
     s_proposal = "uniform"
-    R          = 1000
+    R          = 10000
 
     fDTAR,yArray,fDPRO,fRPRO,bdst,scal = init(s_target,s_proposal) 
     xr, AUC                            = reject(fDTAR, yArray, fDPRO,fRPRO,R,bdst,scal)
