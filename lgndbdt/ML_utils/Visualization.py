@@ -231,10 +231,11 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     bdtauc = auc(boundary_line, tpr)
     ogauc  = roc_auc_score(avseOgLabels, avseOriginal)
 
+    bdtauc_MCI = MC_integration(tpr)
 
     plt.plot([0],[0],color="white",                                              label = " Classifier     AUC    ")
     plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"   A/E         {np.round(ogauc, 3)}")
-    plt.plot(fpr, tpr, color = "#EF426F" , linestyle = "-", linewidth = 4,       label = f"   BDT        {np.round(bdtauc, 3)}")
+    plt.plot(fpr, tpr, color = "#EF426F" , linestyle = "-", linewidth = 1,       label = f"   BDT        {np.round(bdtauc, 3)}, {np.round(bdtauc_MCI, 3)}")
     plt.fill_between(fpr, tpr+tpr_unc, tpr-tpr_unc, color = "#EF426F" , alpha = 0.3, linestyle = "-", linewidth = 4)
     plt.hlines(y = 1, xmin = 0, xmax = 1, linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
     plt.xlim((0,1))
@@ -248,6 +249,174 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     plt.clf()
     plt.close()
     return tpr, fpr
+
+
+def MC_integration(BDT_ROC):
+    #===============================================================
+    # Probabilty density functions and probability distributions.
+    # Name convention follows that of R: d???? is the density function, 
+    # r???? is the distribution. 
+    # dnorm will give you the normal distribution function (a Gaussian),
+    # and rnorm will give you R random variables, normally distributed.
+    # The distributions (r????) contain an additional argument bounds to 
+    # account for cases where compact support is not provided by the 
+    # function itself but needs to be enforced (e.g. runif). 
+    #---------------------------------------------------------------
+    def dunif(x):
+        return (np.zeros(x.size)+1.0) 
+
+    def runif(R,bounds):
+        return (bounds[1]-bounds[0])*np.random.rand(R)+bounds[0]
+
+    def dcauc(x):
+        return 1.0/(np.pi*(1.0+x*x))
+        
+    def rcauc(R,bounds):
+        return np.tan(np.pi*(np.random.rand(R)-0.5))
+
+    def linFuncArr(yArray, x):
+        return yArray[int(x*len(yArray))]
+
+    def rnorm(R,bounds):
+        ind1   = np.arange(R/2)*2
+        ind2   = np.arange(R/2)*2+1
+        u1     = np.random.rand(R/2)
+        u2     = np.random.rand(R/2)
+        x      = np.zeros(R)
+        x[ind1]= np.sqrt(-2.0*np.log(u1))*np.cos(2.0*np.pi*u2)
+        x[ind2]= np.sqrt(-2.0*np.log(u1))*np.sin(2.0*np.pi*u2)
+        return x
+
+    #===============================================================
+    # initialization
+
+    def init(s_target,s_proposal):
+        yArray     = s_target/len(s_target)
+        fDTAR      = linFuncArr # array of y values
+        bounds_dst = np.array([0.0,1.0])
+
+        if (s_proposal == 'uniform'):
+            fDPRO   = dunif
+            fRPRO   = runif
+        elif (s_proposal == 'cauchy'):
+            fDPRO   = dcauc
+            fRPRO   = rcauc
+        else: 
+            raise Exception("[init]: invalid s_proposal=%s\n" % (s_proposal))
+
+        # This is rather crude: we search for the maximum value of fDTAR on the
+        # bounds_dst specified, and make sure fDPRO on this interval is larger.
+        # This would not work very well for multi-dimensional problems...
+        x          = np.arange(len(yArray))/len(yArray)
+        # x          = (bounds_dst[1]-bounds_dst[0])*np.arange(1000)/999.0+bounds_dst[0]
+        R          = x.size
+        Qx         = fDPRO(x)
+        Px         = yArray #[x]
+        maxloc     = np.argmax(Px/Qx) # if > 1, need adaption.
+        cval       = Px[maxloc]/Qx[maxloc] # in case our sampling was not sufficient
+        print("[init]: cval = %13.5e" % (cval)) 
+
+        return fDTAR, yArray, fDPRO,fRPRO,bounds_dst,cval
+
+    #===============================================================
+    # function xr = reject(fDTAR,fDPRO,fRPRO,R)
+    # Returns an array of random variables sampled according to a
+    # target distribution fDTAR. A proposal distribution fDPRO can
+    # be provided.
+    #
+    # input: fDTAR     : function pointer to the target distribution density function.
+    #                    The function must take arguments fTAR(x,bounds),
+    #                    and must return the value of fTAR at x.
+    #        fDPRO     : function pointer to the proposal distribution density function.
+    #        fRPRO     : function pointer to the proposal distribution function. 
+    #                    Note that this will return a set of random numbers sampled
+    #                    according to fDPRO. Check dnorm and rnorm, for example.
+    #        R         : number of samples to be generated
+    #        bounds_dst: array of shape (2,N), where N is the number of
+    #                    dimensions (elements) in a single x, and the two
+    #                    fields per dimension give the lower and upper bound
+    #                    in that dimension.
+    # output: x_r      : random variables sampled according to P(x)
+    #--------------------------------------------------------------
+    def reject(fDTAR, yArray, fDPRO,fRPRO,R,bounds_dst,scale):
+
+        mode  = 0
+        s     = bounds_dst.shape
+        if (len(s) > 1):
+            N     = (bounds_dst.shape)[1]
+            xr    = np.zeros((R,N))
+        else:
+            N     = 1
+            xr    = np.zeros(R)
+        Rsuc = 0
+        Rtot = 0
+        if (mode == 0): # slow version for demonstration
+            while (Rsuc < R):
+                # x                  = np.arange(len(fDTAR))#
+                x                  = fRPRO(1,bounds_dst)
+                u                  = np.random.rand(1)
+                Qx                 = scale*fDPRO(x)
+                Px                 = fDTAR(yArray, x)#[x]
+                if (u <= Px/Qx):
+                    xr[Rsuc]       = x
+                    Rsuc           = Rsuc+1
+                Rtot               = Rtot+1 
+            print("[reject]: Rtot = %6i Rsuc = %6i Rsuc/Rtot = %13.5e" % (Rtot,Rsuc,float(Rsuc)/float(Rtot)))
+        return xr, float(Rsuc)/float(Rtot)
+
+    #===============================================================
+    # function check(xr,fDTAR,fDPRO,bdst,scal)
+    # Calculates histogram of random variables xr and compares
+    # distribution to target and proposal distribution function.
+    # input: xr   : array of random variables
+    #        fTAR : function pointer to target density
+    #        fPRO : function pointer to proposal density
+    #        bdst : 2-element array: boundaries for distribution function
+    #        scal : real number: constant c as in c*Q(x) to get proposal PDF > target PDF for all x
+    #---------------------------------------------------------------
+    def check(xr,fDTAR, yArray, fDPRO,bdst,scal):
+
+        R = xr.size
+        hist,edges = np.histogram(xr,int(np.sqrt(float(R))),range=(bdst[0],bdst[1]),density=False)
+        x          = np.arange(len(yArray))/len(yArray)# 0.5*(edges[0:edges.size-1]+edges[1:edges.size])
+        xhist      = 0.5*(edges[0:edges.size-1]+edges[1:edges.size])
+        Px         = yArray #fDTAR(yArray, x)
+        Qx         = scal*fDPRO(x)
+        # The histogram is in counts. Dividing by total counts gives area of 1.
+        # Which is ok for initially normalized functions. 
+        tothist    = np.sum(hist.astype(float))*(xhist[1]-xhist[0])
+        hist       = scal*hist.astype(float)/tothist 
+        Ex         = np.sum(xr)/float(R)
+        Varx       = np.sum((xr-Ex)**2)/float(R)
+        print("[check]: E[P(x)] = %13.5e Var[P(x)] = %13.5e" % (Ex,Varx))
+
+        ftsz = 10
+        plt.figure(num=1,figsize=(5,5),dpi=100,facecolor='white')
+        plt.subplot(111)
+        plt.bar(xhist,hist,width=(xhist[1]-xhist[0]),facecolor='green',align='center')
+        plt.plot(x,Px,linestyle='-',color='red',linewidth=1.0,label='P(x)')
+        plt.plot(x,Qx,linestyle='-',color='black',linewidth=1.0,label='c Q(x)')
+        plt.xlabel('x',fontsize=ftsz)
+        plt.ylabel('pdf(x)',fontsize=ftsz)
+        plt.legend()
+        plt.tick_params(labelsize=ftsz)
+        plt.tight_layout()
+
+        plt.show()
+
+    #===============================================================
+    
+
+    s_target   = BDT_ROC
+    s_proposal = "uniform"
+    R          = 1000
+
+    fDTAR,yArray,fDPRO,fRPRO,bdst,scal = init(s_target,s_proposal) 
+    xr, AUC                            = reject(fDTAR, yArray, fDPRO,fRPRO,R,bdst,scal)
+    print(f"AUC {AUC}")
+    # check(xr,fDTAR, yArray, fDPRO,bdst,scal)
+    return AUC
+    #===============================================================
 
 def printMVC(pcaMat):
     plt.imshow(pcaMat, cmap=cmapDiv)
@@ -288,34 +457,6 @@ def printBVC(pcaVect, pcaNames):
     plt.cla()
     plt.clf()
     plt.close()
-
-    # plt.pie(np.abs(np.min(np.log10(pcaVect)))-np.abs(np.log10(pcaVect)), labels=pcaNames, autopct='%1.1f%%')
-    # plt.suptitle("Bivariate PCA - Log Scale", fontsize = 30, fontweight = 15)
-    # # plt.title("Log Scale", fontsize = 24, pad = 15, fontstyle='italic')
-    # plt.savefig(f"{plotPath}/bvcPIElog.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
-    # plt.cla()
-    # plt.clf()
-    # plt.close()
-
-    # cut = np.where(np.char.find(np.array(pcaNames, dtype=str), "AvsE")>0)[0]
-    # pcaVect = np.delete(pcaVect, cut)
-    # pcaNames = np.delete(pcaNames, cut)
-    
-    # plt.pie(np.abs(np.min(np.log10(pcaVect)))-np.abs(np.log10(pcaVect)), labels=pcaNames, autopct='%1.1f%%')
-    # plt.suptitle("Bivariate PCA - AvsE cut - Log", fontsize = 30, fontweight = 15)
-    # # plt.title("Log Scale", fontsize = 24, pad = 15, fontstyle='italic')
-    # plt.savefig(f"{plotPath}/bvcPIElogCut.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
-    # plt.cla()
-    # plt.clf()
-    # plt.close()
-
-    # plt.pie(pcaVect, labels=pcaNames, autopct='%1.1f%%')
-    # plt.suptitle("Bivariate PCA - AvsE cut - Raw", fontsize = 30, fontweight = 15)
-    # # plt.title("Raw Scale", fontsize = 24, pad = 15, fontstyle='italic')
-    # plt.savefig(f"{plotPath}/bvcPIErawCut.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
-    # plt.cla()
-    # plt.clf()
-    # plt.close()
 
 
 def printPCAResults(pcaResults, pcaNames):    
