@@ -47,7 +47,7 @@ max_bin              = 542 #args.max_bin
 randSeed = 27
 np.random.seed(randSeed)
 
-def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
+def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "top", plots=False):
     ###################################################################
     # Data Type Preparation
     ###################################################################
@@ -83,8 +83,18 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", plots=False):
         file.close()
         return dataArr, selectDictionary
 
-    sigRaw, selectDict = getRaw(f"{filename}DEP.lh5", f"{fpath}")
-    bkgRaw, selectDict = getRaw(f"{filename}{SEPorFEP}.lh5", f"{fpath}")
+    if sourceLoc == "mix":
+        sigRawTop, selectDict = getRaw(f"{filename}topDEP.lh5", f"{fpath}")
+        bkgRawTop, selectDict = getRaw(f"{filename}top{SEPorFEP}.lh5", f"{fpath}")
+        sigRawSide, selectDict = getRaw(f"{filename}sideDEP.lh5", f"{fpath}")
+        bkgRawSide, selectDict = getRaw(f"{filename}side{SEPorFEP}.lh5", f"{fpath}")
+        print(f"Runs include a mix of data from source location on the top, and on the side\nTop Data Size (sig, bkg) {sigRawTop.shape}, {bkgRawTop.shape}\nSide Data Size (sig, bkg) {sigRawSide.shape}, {bkgRawSide.shape}")
+        sigRaw = np.concatenate((sigRawTop, sigRawSide))
+        bkgRaw = np.concatenate((bkgRawTop, bkgRawSide))
+    else:
+        sigRaw, selectDict = getRaw(f"{filename}{sourceLoc}DEP.lh5", f"{fpath}")
+        bkgRaw, selectDict = getRaw(f"{filename}{sourceLoc}{SEPorFEP}.lh5", f"{fpath}")
+    
 
     ###################################################################
     # DATA MATCHING
