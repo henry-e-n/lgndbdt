@@ -266,11 +266,21 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 shap_values = explainer.shap_values(sample)
                 plot_SHAP_force(explainer, shap_values[1][0])
             elif i == 4:
-                sig_sideband_RAW, selectDict = getRaw(f"{filename}DEP_sideband.lh5", f"{fpath}")
-                bkg_sideband_RAW, selectDict = getRaw(f"{filename}{SEPorFEP}_sideband.lh5", f"{fpath}")
                 
-                sig_sideband_Save, sig_sideband_Ratio = dataSplit(sigRaw, 0.3)
-                bkg_sideband_Save, bkg_sideband_Ratio = dataSplit(bkgRaw, 0.3)
+                if sourceLoc == "mix":
+                    sig_sideband_RawTop, selectDict = getRaw(f"{filename}topDEP.lh5", f"{fpath}")
+                    bkg_sideband_RawTop, selectDict = getRaw(f"{filename}top{SEPorFEP}.lh5", f"{fpath}")
+                    sig_sideband_RawSide, selectDict = getRaw(f"{filename}sideDEP.lh5", f"{fpath}")
+                    bkg_sideband_RawSide, selectDict = getRaw(f"{filename}side{SEPorFEP}.lh5", f"{fpath}")
+                    print(f"Runs include a mix of data from source location on the top, and on the side\nTop Data Size (sig, bkg) {sigRawTop.shape}, {bkgRawTop.shape}\nSide Data Size (sig, bkg) {sigRawSide.shape}, {bkgRawSide.shape}")
+                    sig_sideband_Raw = np.concatenate((sig_sideband_RawTop, sig_sideband_RawSide))
+                    bkg_sideband_Raw = np.concatenate((bkg_sideband_RawTop, bkg_sideband_RawSide))
+                else:
+                    sig_sideband_RAW, selectDict = getRaw(f"{filename}{sourceLoc}DEP_sideband.lh5", f"{fpath}")
+                    bkg_sideband_RAW, selectDict = getRaw(f"{filename}{sourceLoc}{SEPorFEP}_sideband.lh5", f"{fpath}")
+                    
+                    sig_sideband_Save, sig_sideband_Ratio = dataSplit(sigRaw, 0.3)
+                    bkg_sideband_Save, bkg_sideband_Ratio = dataSplit(bkgRaw, 0.3)
                 
     
                 np.random.shuffle(sig_sideband_Ratio)
