@@ -279,8 +279,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                     sig_sideband_RAW, selectDict = getRaw(f"{filename}{sourceLoc}DEP_sideband.lh5", f"{fpath}")
                     bkg_sideband_RAW, selectDict = getRaw(f"{filename}{sourceLoc}{SEPorFEP}_sideband.lh5", f"{fpath}")
                     
-                    sig_sideband_Save, sig_sideband_Ratio = dataSplit(sigRaw, 0.3)
-                    bkg_sideband_Save, bkg_sideband_Ratio = dataSplit(bkgRaw, 0.3)
+                    sig_sideband_Save, sig_sideband_Ratio = dataSplit(sig_sideband_Raw, 0.3)
+                    bkg_sideband_Save, bkg_sideband_Ratio = dataSplit(bkg_sideband_Raw, 0.3)
                 
     
                 np.random.shuffle(sig_sideband_Ratio)
