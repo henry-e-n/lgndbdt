@@ -226,7 +226,7 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     ogfpr, ogtpr, ogthresholds    = roc_curve(avseOgLabels, avseOriginal)
     
     bdtauc = auc(boundary_line, tpr)
-    ogauc  = auc(np.arange(0,1,1/len(ogtpr)), ogtpr) # roc_auc_score(avseOgLabels, avseOriginal)
+    ogauc  = auc(np.linspace(0,1,len(ogtpr)), ogtpr) # roc_auc_score(avseOgLabels, avseOriginal)
     
     hlineBDT = np.argmin(np.abs(tpr-0.90))
     hlineOG  = np.argmin(np.abs(ogtpr-0.90))
