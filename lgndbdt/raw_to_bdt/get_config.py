@@ -16,11 +16,11 @@ def get_config():
     cmapNormal   = LinearSegmentedColormap.from_list("Custom", ["#151515", '#13294B', '#4B9CD3', "#F4E8DD"], N=50)#, '#C8A2C8'
     cmapNormal_r = cmapNormal.reversed("cmapNormal_r")
     cmapDiv      = LinearSegmentedColormap.from_list("Custom", ['#13294B', "#F4E8DD", '#4B9CD3'], N=50) #["#EF426F", '#F4E8DD', '#00A5AD'], N=50)
-    jsonIndex    = 0
+    # jsonIndex    = 0
 
     f            = open(f"{os.getcwd()}/paths.json")
-    data         = json.load(f)
-    data         = data["runs"][jsonIndex]
+    data         = np.load(f"{os.getcwd()}/paths.npy")
+    # data         = data["runs"][jsonIndex]
     detName      = data["detector_name"]#"V05612B"
     targetPeak   = data["target_peak"]
     source       = data["source"]
