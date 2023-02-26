@@ -1,8 +1,16 @@
 import numpy as np
 from tqdm import tqdm
 from matplotlib import cm
-from extraction_utils.config import cmapNormal, terminalCMAP, plotPath, savePath
+# from extraction_utils.config import cmapNormal, terminalCMAP, plotPath, savePath
 from extraction_utils.waveform import *
+
+from lgndbdt.raw_to_bdt.get_config import get_config as config
+filenames_config, BDT_config, path_config, visual_config = config()
+[raw_files, dsp_files]       = filenames_config
+[fname, distMatch, distStep] = BDT_config
+[detName, targetPeak, source, savePath, psdPath, plotPath, fname] = path_config
+[terminalCMAP, cmapNormal, cmapNormal_r, cmapDiv] = visual_config
+
 
 from scipy.optimize import minimize, curve_fit
 

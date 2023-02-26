@@ -6,7 +6,15 @@ from sklearn.metrics import roc_curve, roc_auc_score, auc
 from sklearn.decomposition import PCA
 import itertools
 
-from extraction_utils.config import plotPath, cmapNormal, fname, cmapDiv, cmapNormal_r
+# from extraction_utils.config import plotPath, cmapNormal, fname, cmapDiv, cmapNormal_r
+from lgndbdt.raw_to_bdt.get_config import get_config as config
+filenames_config, BDT_config, path_config, visual_config = config()
+[raw_files, dsp_files]       = filenames_config
+[fname, distMatch, distStep] = BDT_config
+[detName, targetPeak, source, savePath, psdPath, plotPath, fname] = path_config
+[terminalCMAP, cmapNormal, cmapNormal_r, cmapDiv] = visual_config
+    
+
 from ML_utils.plot_legacy import summary_legacy
 from matplotlib.colors import ListedColormap
 
@@ -281,17 +289,6 @@ def MC_integration(BDT_ROC):
 
     def linFuncArr(yArray, x):
         return yArray[int(x*len(yArray))]
-
-    def rnorm(R,bounds):
-        ind1   = np.arange(R/2)*2
-        ind2   = np.arange(R/2)*2+1
-        u1     = np.random.rand(R/2)
-        u2     = np.random.rand(R/2)
-        x      = np.zeros(R)
-        x[ind1]= np.sqrt(-2.0*np.log(u1))*np.cos(2.0*np.pi*u2)
-        x[ind2]= np.sqrt(-2.0*np.log(u1))*np.sin(2.0*np.pi*u2)
-        return x
-
     #===============================================================
     # initialization
 
@@ -357,7 +354,6 @@ def MC_integration(BDT_ROC):
         Rtot = 0
         if (mode == 0): # slow version for demonstration
             while (Rsuc < R):
-                # x                  = np.arange(len(fDTAR))#
                 x                  = fRPRO(1,bounds_dst)
                 u                  = np.random.rand(1)
                 Qx                 = scale*fDPRO(x)

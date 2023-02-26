@@ -2,7 +2,13 @@ import h5py
 import numpy as np
 import os
 
-from extraction_utils.config import savePath, detName, targetPeak
+# from extraction_utils.config import savePath, detName, targetPeak
+from lgndbdt.raw_to_bdt.get_config import get_config as config
+filenames_config, BDT_config, path_config, visual_config = config()
+[raw_files, dsp_files]       = filenames_config
+[fname, distMatch, distStep] = BDT_config
+[detName, targetPeak, source, savePath, psdPath, plotPath, fname] = path_config
+[terminalCMAP, cmapNormal, cmapNormal_r, cmapDiv] = visual_config
 
 def searchFile(name, path):
     try: 
