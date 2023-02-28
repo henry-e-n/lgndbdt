@@ -20,7 +20,6 @@ def get_config():
 
     f            = open(f"{os.getcwd()}/paths.json")
     data         = np.load(f"{os.getcwd()}/paths.npy", allow_pickle = True)
-    data         = dict(data)
     # data         = data["runs"][jsonIndex]
     detName      = data["detector_name"]#"V05612B"
     targetPeak   = data["target_peak"]
