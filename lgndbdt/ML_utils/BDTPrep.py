@@ -1,14 +1,6 @@
 import numpy as np
-import matplotlib.pyplot as plt
-# from extraction_utils.config import *
+from extraction_utils.config import *
 
-from lgndbdt.raw_to_bdt.get_config import get_config as config
-filenames_config, BDT_config, path_config, visual_config = config()
-[raw_files, dsp_files]       = filenames_config
-[fname, distMatch, distStep] = BDT_config
-[detName, targetPeak, source, savePath, psdPath, plotPath, fname] = path_config
-[terminalCMAP, cmapNormal, cmapNormal_r, cmapDiv] = visual_config
-    
 from imblearn.over_sampling import SMOTENC
 
 

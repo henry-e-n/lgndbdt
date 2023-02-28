@@ -8,16 +8,8 @@ import h5py
 import importlib
 import extraction_utils.config
 importlib.reload(extraction_utils.config)
-# from extraction_utils.config import *
+from extraction_utils.config import *
 from pygama import lh5
-
-from lgndbdt.raw_to_bdt.get_config import get_config as config
-filenames_config, BDT_config, path_config, visual_config = config()
-[raw_files, dsp_files]       = filenames_config
-[fname, distMatch, distStep] = BDT_config
-[detName, targetPeak, source, savePath, psdPath, plotPath, fname] = path_config
-[terminalCMAP, cmapNormal, cmapNormal_r, cmapDiv] = visual_config
-
 
 def getEnergies(verbose=False):
     # Fit Results [ [uncal energies, cal energies], [[1st peak fit param], 2nd peak fit...]] 
