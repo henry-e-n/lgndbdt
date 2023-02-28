@@ -47,7 +47,7 @@ max_bin              = 542 #args.max_bin
 randSeed = 27
 np.random.seed(randSeed)
 
-def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "top", plots=False):
+def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "top", validate="Full", plots=False):
     ###################################################################
     # Data Type Preparation
     ###################################################################
@@ -207,19 +207,19 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                         desc   ="Running Visualization................", 
                         colour = terminalCMAP[1]):
             if i == 0:
-                # Using split raw data
-                minSize = np.min([sigPDM.shape[0], bkgPDM.shape[0]])
-                np.random.shuffle(sigPDM)
-                np.random.shuffle(bkgPDM)
-                signalData   = sigPDM[:minSize, :]
-                bkgData      = bkgPDM[:minSize, :]
-
-                # Using all raw data
-                # minSize = np.min([sigRAW.shape[0], bkgRAW.shape[0]])
-                # np.random.shuffle(sigRAW)
-                # np.random.shuffle(bkgRAW)           
-                # signalData   = sigRAW[:minSize, :]
-                # bkgData      = bkgRAW[:minSize, :]
+                if validate=="Full":
+                    minSize = np.min([sigRAW.shape[0], bkgRAW.shape[0]])
+                    np.random.shuffle(sigRAW)
+                    np.random.shuffle(bkgRAW)           
+                    signalData   = sigRAW[:minSize, :]
+                    bkgData      = bkgRAW[:minSize, :]
+                else:
+                    # Using split raw data
+                    minSize = np.min([sigPDM.shape[0], bkgPDM.shape[0]])
+                    np.random.shuffle(sigPDM)
+                    np.random.shuffle(bkgPDM)
+                    signalData   = sigPDM[:minSize, :]
+                    bkgData      = bkgPDM[:minSize, :]
 
 
                 X_test = np.concatenate([signalData,bkgData], axis=0)
@@ -285,11 +285,14 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 else:
                     sig_sideband_RAW, selectDict = getRaw(f"{filename}{sourceLoc}DEP_sideband.lh5", f"{fpath}")
                     bkg_sideband_RAW, selectDict = getRaw(f"{filename}{sourceLoc}{SEPorFEP}_sideband.lh5", f"{fpath}")
-                    
-                sig_sideband_Save, sig_sideband_Ratio = dataSplit(sig_sideband_RAW, 0.3)
-                bkg_sideband_Save, bkg_sideband_Ratio = dataSplit(bkg_sideband_RAW, 0.3)
                 
-    
+                if validate=="Full":
+                    sig_sideband_Ratio = sig_sideband_RAW
+                    bkg_sideband_Ratio = bkg_sideband_RAW
+                else:
+                    sig_sideband_Save, sig_sideband_Ratio = dataSplit(sig_sideband_RAW, 0.3)
+                    bkg_sideband_Save, bkg_sideband_Ratio = dataSplit(bkg_sideband_RAW, 0.3)
+
                 np.random.shuffle(sig_sideband_Ratio)
                 np.random.shuffle(bkg_sideband_Ratio)
                 
@@ -303,12 +306,14 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 bkg_sideband_pred = gbm.predict(bkg_sideband_Ratio, num_iteration=gbm.best_iteration)
 
                 result = list(filter(lambda x: "A_" in x, selectDict))
-                # small set validation
-                sigavse = sigPDM[:,selectDict[result[0]]]
-                bkgavse = bkgPDM[:,selectDict[result[0]]]
                 
-                # sigavse = sigRAW[:,selectDict[result[0]]]
-                # bkgavse = bkgRAW[:,selectDict[result[0]]]
+                if validate=="Full":
+                    sigavse = sigRAW[:,selectDict[result[0]]]
+                    bkgavse = bkgRAW[:,selectDict[result[0]]]
+                else:
+                    # small set validation
+                    sigavse = sigPDM[:,selectDict[result[0]]]
+                    bkgavse = bkgPDM[:,selectDict[result[0]]]
                 
                 tpr, fpr = getROC_sideband(Y_test, y_pred, sig_sideband_pred, bkg_sideband_pred, sigavse, bkgavse)     
             # elif i == 5:
