@@ -208,18 +208,18 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                         colour = terminalCMAP[1]):
             if i == 0:
                 # Using split raw data
-                # minSize = np.min([sigPDM.shape[0], bkgPDM.shape[0]])
-                # np.random.shuffle(sigPDM)
-                # np.random.shuffle(bkgPDM)
-                # signalData   = sigPDM[:minSize, :]
-                # bkgData      = bkgPDM[:minSize, :]
+                minSize = np.min([sigPDM.shape[0], bkgPDM.shape[0]])
+                np.random.shuffle(sigPDM)
+                np.random.shuffle(bkgPDM)
+                signalData   = sigPDM[:minSize, :]
+                bkgData      = bkgPDM[:minSize, :]
 
                 # Using all raw data
-                minSize = np.min([sigRAW.shape[0], bkgRAW.shape[0]])
-                np.random.shuffle(sigRAW)
-                np.random.shuffle(bkgRAW)           
-                signalData   = sigRAW[:minSize, :]
-                bkgData      = bkgRAW[:minSize, :]
+                # minSize = np.min([sigRAW.shape[0], bkgRAW.shape[0]])
+                # np.random.shuffle(sigRAW)
+                # np.random.shuffle(bkgRAW)           
+                # signalData   = sigRAW[:minSize, :]
+                # bkgData      = bkgRAW[:minSize, :]
 
 
                 X_test = np.concatenate([signalData,bkgData], axis=0)
@@ -303,10 +303,12 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 bkg_sideband_pred = gbm.predict(bkg_sideband_Ratio, num_iteration=gbm.best_iteration)
 
                 result = list(filter(lambda x: "A_" in x, selectDict))
-                sigavse = sigRAW[:,selectDict[result[0]]]
-                bkgavse = bkgRAW[:,selectDict[result[0]]]
+                # small set validation
+                sigavse = sigPDM[:,selectDict[result[0]]]
+                bkgavse = bkgPDM[:,selectDict[result[0]]]
                 
-                # print(sigPDM.shape, sigSave.shape)
+                # sigavse = sigRAW[:,selectDict[result[0]]]
+                # bkgavse = bkgRAW[:,selectDict[result[0]]]
                 
                 tpr, fpr = getROC_sideband(Y_test, y_pred, sig_sideband_pred, bkg_sideband_pred, sigavse, bkgavse)     
             # elif i == 5:
