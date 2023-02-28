@@ -34,7 +34,7 @@ def TreeVis(gbm):
     # graph.render(filename=f"{plotPath}/PlotTreeDiGraph", format='png', view=True)
     return
 
-def BDTDistrib(y_pred, Y_test):
+def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
     # print("RUNNING BDTDISTRIB")
     plt.rcParams['font.size'] = 25
     plt.rcParams["figure.figsize"] = (15,16)
@@ -46,6 +46,11 @@ def BDTDistrib(y_pred, Y_test):
     plt.hist(y_pred[Y_test==1], label="Signal", bins=rg, histtype="step", linewidth = 3, color = "#13294B")# color=cmapNormal(0.2),linewidth=3)
     plt.hist(y_pred[Y_test==0], label="Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F") # , color=cmapNormal(0.8)
     plt.gca().ticklabel_format(axis="y",style="sci")
+    if len(side_pred) != 0:
+        plt.hist(side_pred[side_test==1], label="Sideband Signal", bins=rg, histtype="step", linewidth = 3, color = "#13294B")# color=cmapNormal(0.2),linewidth=3)
+        plt.hist(side_pred[side_test==0], label="Sideband Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F") # , color=cmapNormal(0.8)
+    
+
     plt.legend(loc="upper center",frameon=False)
     plt.xlabel("BDT output")
     plt.ylabel("# of events / 0.01 BDT Output(a.u.)")
