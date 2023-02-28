@@ -84,16 +84,16 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
         return dataArr, selectDictionary
 
     if sourceLoc == "mix":
-        sigRawTop, selectDict = getRaw(f"{filename}topDEP.lh5", f"{fpath}")
-        bkgRawTop, selectDict = getRaw(f"{filename}top{SEPorFEP}.lh5", f"{fpath}")
-        sigRawSide, selectDict = getRaw(f"{filename}sideDEP.lh5", f"{fpath}")
-        bkgRawSide, selectDict = getRaw(f"{filename}side{SEPorFEP}.lh5", f"{fpath}")
-        print(f"Runs include a mix of data from source location on the top, and on the side\nTop Data Size (sig, bkg) {sigRawTop.shape}, {bkgRawTop.shape}\nSide Data Size (sig, bkg) {sigRawSide.shape}, {bkgRawSide.shape}")
-        sigRaw = np.concatenate((sigRawTop, sigRawSide))
-        bkgRaw = np.concatenate((bkgRawTop, bkgRawSide))
+        sigRAWTop, selectDict = getRaw(f"{filename}topDEP.lh5", f"{fpath}")
+        bkgRAWTop, selectDict = getRaw(f"{filename}top{SEPorFEP}.lh5", f"{fpath}")
+        sigRAWSide, selectDict = getRaw(f"{filename}sideDEP.lh5", f"{fpath}")
+        bkgRAWSide, selectDict = getRaw(f"{filename}side{SEPorFEP}.lh5", f"{fpath}")
+        print(f"Runs include a mix of data from source location on the top, and on the side\nTop Data Size (sig, bkg) {sigRAWTop.shape}, {bkgRAWTop.shape}\nSide Data Size (sig, bkg) {sigRAWSide.shape}, {bkgRAWSide.shape}")
+        sigRAW = np.concatenate((sigRAWTop, sigRAWSide))
+        bkgRAW = np.concatenate((bkgRAWTop, bkgRAWSide))
     else:
-        sigRaw, selectDict = getRaw(f"{filename}{sourceLoc}DEP.lh5", f"{fpath}")
-        bkgRaw, selectDict = getRaw(f"{filename}{sourceLoc}{SEPorFEP}.lh5", f"{fpath}")
+        sigRAW, selectDict = getRaw(f"{filename}{sourceLoc}DEP.lh5", f"{fpath}")
+        bkgRAW, selectDict = getRaw(f"{filename}{sourceLoc}{SEPorFEP}.lh5", f"{fpath}")
     
 
     ###################################################################
@@ -102,8 +102,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
     print("--------------- Running Distribution Matching ---------------")
     print("-------------------------------------------------------------")
 
-    sigSave, sigPDM = dataSplit(sigRaw, 0.3)
-    bkgSave, bkgPDM = dataSplit(bkgRaw, 0.3)
+    sigSave, sigPDM = dataSplit(sigRAW, 0.3)
+    bkgSave, bkgPDM = dataSplit(bkgRAW, 0.3)
 
     print(f"Size before Distribution Matching Signal: {sigSave.shape}, Background: {bkgSave.shape}")
     for i in range(len(distMatch)):
@@ -207,13 +207,20 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                         desc   ="Running Visualization................", 
                         colour = terminalCMAP[1]):
             if i == 0:
-                minSize = np.min([sigPDM.shape[0], bkgPDM.shape[0]])
+                # Using split raw data
+                # minSize = np.min([sigPDM.shape[0], bkgPDM.shape[0]])
+                # np.random.shuffle(sigPDM)
+                # np.random.shuffle(bkgPDM)
+                # signalData   = sigPDM[:minSize, :]
+                # bkgData      = bkgPDM[:minSize, :]
 
-                np.random.shuffle(sigPDM)
-                np.random.shuffle(bkgPDM)
-                
-                signalData   = sigPDM[:minSize, :]
-                bkgData      = bkgPDM[:minSize, :]
+                # Using all raw data
+                minSize = np.min([sigRAW.shape[0], bkgRAW.shape[0]])
+                np.random.shuffle(sigRAW)
+                np.random.shuffle(bkgRAW)           
+                signalData   = sigRAW[:minSize, :]
+                bkgData      = bkgRAW[:minSize, :]
+
 
                 X_test = np.concatenate([signalData,bkgData], axis=0)
                 Y_test = np.array([1]*len(signalData) + [0] * len(bkgData))
@@ -272,7 +279,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                     bkg_sideband_RawTop, selectDict = getRaw(f"{filename}top{SEPorFEP}.lh5", f"{fpath}")
                     sig_sideband_RawSide, selectDict = getRaw(f"{filename}sideDEP.lh5", f"{fpath}")
                     bkg_sideband_RawSide, selectDict = getRaw(f"{filename}side{SEPorFEP}.lh5", f"{fpath}")
-                    print(f"Runs include a mix of data from source location on the top, and on the side\nTop Data Size (sig, bkg) {sigRawTop.shape}, {bkgRawTop.shape}\nSide Data Size (sig, bkg) {sigRawSide.shape}, {bkgRawSide.shape}")
+                    print(f"Runs include a mix of data from source location on the top, and on the side\nTop Data Size (sig, bkg) {sigRAWTop.shape}, {bkgRAWTop.shape}\nSide Data Size (sig, bkg) {sigRAWSide.shape}, {bkgRAWSide.shape}")
                     sig_sideband_RAW = np.concatenate((sig_sideband_RawTop, sig_sideband_RawSide))
                     bkg_sideband_RAW = np.concatenate((bkg_sideband_RawTop, bkg_sideband_RawSide))
                 else:
@@ -296,17 +303,17 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 bkg_sideband_pred = gbm.predict(bkg_sideband_Ratio, num_iteration=gbm.best_iteration)
 
                 result = list(filter(lambda x: "A_" in x, selectDict))
-                sigavse = sigRaw[:,selectDict[result[0]]]
-                bkgavse = bkgRaw[:,selectDict[result[0]]]
+                sigavse = sigRAW[:,selectDict[result[0]]]
+                bkgavse = bkgRAW[:,selectDict[result[0]]]
                 
                 # print(sigPDM.shape, sigSave.shape)
                 
                 tpr, fpr = getROC_sideband(Y_test, y_pred, sig_sideband_pred, bkg_sideband_pred, sigavse, bkgavse)     
-            elif i == 5:
-                result = list(filter(lambda x: "A_" in x, selectDict))
-                sigavse = sigRaw[:,selectDict[result[0]]]
-                bkgavse = bkgRaw[:,selectDict[result[0]]]
-                plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_ext=False) #np.any(np.isin("/AvsE_c", fname))
+            # elif i == 5:
+            #     result = list(filter(lambda x: "A_" in x, selectDict))
+            #     sigavse = sigRAW[:,selectDict[result[0]]]
+            #     bkgavse = bkgRAW[:,selectDict[result[0]]]
+            #     plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRAW, bkgRAW, selectDict, inc_ext=False) #np.any(np.isin("/AvsE_c", fname))
                 # New Files don't have a PYGAMA AvsE to use remove this redundancy in future versions
     return
 
@@ -405,8 +412,8 @@ if __name__ == "__main__":
             #     plot_covariance(covBKG, "Background Covariance", covName)
 
             elif i == 5:
-                # sigsave = sigRaw
-                # bkgsave = bkgRaw
+                # sigsave = sigRAW
+                # bkgsave = bkgRAW
 
                 # bdt_thresh = 0.55
                 # avse_thresh = 969 #-1 # How to set Cut
@@ -439,6 +446,6 @@ if __name__ == "__main__":
                 shap_values = explainer.shap_values(sample)
                 plot_SHAP_force(explainer, shap_values[1][0])
             elif i == 10:
-                plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict)
+                plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRAW, bkgRAW, selectDict)
 
 """
