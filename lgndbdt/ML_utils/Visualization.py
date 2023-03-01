@@ -36,6 +36,9 @@ def TreeVis(gbm):
 
 def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
     # print("RUNNING BDTDISTRIB")
+    plt.cla()
+    plt.clf()
+    plt.close()
     plt.rcParams['font.size'] = 25
     plt.rcParams["figure.figsize"] = (15,16)
     rg=np.arange(0.0,1.01,0.01) # 0.0075
@@ -62,10 +65,7 @@ def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
     plt.ylabel("# of events / 0.01 BDT Output(a.u.)")
     plt.title("BDT Result Distribution", fontsize = 40)
     plt.savefig(f"{plotPath}/BDT_distribution.png",dpi=300, transparent=True)
-    # plt.show()
-    plt.cla()
-    plt.clf()
-    plt.close()
+    
     return
 
 def BDTSummary(shap_values, sample):
@@ -229,8 +229,8 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
         unc_LHS_side = (N_sig + tau_sig **2 * B_sig)/ (N_sig - tau_sig * B_sig)**2 + (Nc_sig + tau_sig **2 * Bc_sig) / (Nc_sig - tau_sig * Bc_sig)**2 - 2*(Nc_sig + tau_sig **2 * Bc_sig)/((N_sig - tau_sig * B_sig) * (Nc_sig - tau_sig * Bc_sig))
         tpr_unc_side = np.append(tpr_unc_side, tprarrSide*(unc_LHS_side)**(0.5))
 
-        tprArr = (Nc_sig-tau_sig*Bc_sig)/(N_sig-tau_sig*B_sig)
-        fprArr = (Nc_bkg-tau_bkg*Bc_bkg)/(N_bkg-tau_bkg*B_bkg)
+        tprArr = (Nc_sig)/(N_sig)
+        fprArr = (Nc_bkg)/(N_bkg)
         tpr = np.append(tpr, tprArr)
         fpr = np.append(fpr, fprArr)
         unc_LHS = (N_sig)/ (N_sig)**2 + (Nc_sig) / (Nc_sig)**2 - 2*(Nc_sig)/((N_sig) * (Nc_sig))
