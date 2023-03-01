@@ -196,7 +196,10 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     boundary_line = np.arange(0, 1+dx, dx)
     tpr = []
     fpr = []
+    tpr_side = []
+    fpr_side = []
     tpr_unc = []
+    tpr_unc_side = []
     pred_1 = peaks_pred[peaks_known==1] # predicted values that are known to be SS
     pred_0 = peaks_pred[peaks_known==0] # predicted values that are known to be MS
     
@@ -212,14 +215,21 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
 
         Nc_bkg = np.sum(pred_0>boundary_line[i])
         Bc_bkg = np.sum(side_bkg>boundary_line[i])
-        tprarr = (Nc_sig-tau_sig*Bc_sig)/(N_sig-tau_sig*B_sig)
-        fprarr = (Nc_bkg-tau_bkg*Bc_bkg)/(N_bkg-tau_bkg*B_bkg)
-        
-        tpr = np.append(tpr, tprarr)
-        fpr = np.append(fpr, fprarr)
 
-        unc_LHS = (N_sig + tau_sig **2 * B_sig)/ (N_sig - tau_sig * B_sig)**2 + (Nc_sig + tau_sig **2 * Bc_sig) / (Nc_sig - tau_sig * Bc_sig)**2 - 2*(Nc_sig + tau_sig **2 * Bc_sig)/((N_sig - tau_sig * B_sig) * (Nc_sig - tau_sig * Bc_sig))
-        tpr_unc = np.append(tpr_unc, tprarr*(unc_LHS)**(0.5))
+        tprarrSide = (Nc_sig-tau_sig*Bc_sig)/(N_sig-tau_sig*B_sig)
+        fprarrSide = (Nc_bkg-tau_bkg*Bc_bkg)/(N_bkg-tau_bkg*B_bkg)
+        tpr_side = np.append(tpr_side, tprarrSide)
+        fpr_side = np.append(fpr_side, fprarrSide)
+        unc_LHS_side = (N_sig + tau_sig **2 * B_sig)/ (N_sig - tau_sig * B_sig)**2 + (Nc_sig + tau_sig **2 * Bc_sig) / (Nc_sig - tau_sig * Bc_sig)**2 - 2*(Nc_sig + tau_sig **2 * Bc_sig)/((N_sig - tau_sig * B_sig) * (Nc_sig - tau_sig * Bc_sig))
+        tpr_unc_side = np.append(tpr_unc_side, tprarrSide*(unc_LHS_side)**(0.5))
+
+        tprArr = (Nc_sig-tau_sig*Bc_sig)/(N_sig-tau_sig*B_sig)
+        fprArr = (Nc_bkg-tau_bkg*Bc_bkg)/(N_bkg-tau_bkg*B_bkg)
+        tpr = np.append(tpr, tprArr)
+        fpr = np.append(fpr, fprArr)
+        unc_LHS = (N_sig)/ (N_sig)**2 + (Nc_sig) / (Nc_sig)**2 - 2*(Nc_sig)/((N_sig) * (Nc_sig))
+        tpr_unc = np.append(tpr_unc, tprArr*(unc_LHS)**(0.5))
+
 
 
 
@@ -247,6 +257,10 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"   A/E        90.0%   {np.round(100*ogfpr[hlineOG],1)}%    {np.round(ogauc, 2)}    {np.round(ogauc_MCI, 2)}")
     plt.plot(fpr, tpr, color = "#EF426F" , linestyle = "-", linewidth = 1,       label = f"   BDT       90.0%   {np.round(100*fpr[hlineBDT],1)}%    {np.round(bdtauc, 2)}    {np.round(bdtauc_MCI, 2)}")
     plt.fill_between(fpr, tpr+tpr_unc, tpr-tpr_unc, color = "#EF426F" , alpha = 0.3, linestyle = "-", linewidth = 4)
+    
+    plt.plot(fpr_side, tpr_side, color = "#EF426F" , linestyle = "-.", linewidth = 1,       label = f"With Sideband Subtraction")
+    plt.fill_between(fpr_side, tpr_side+tpr_unc_side, tpr_side-tpr_unc_side, color = "#EF426F" , alpha = 0.3, linestyle = "-", linewidth = 4)
+    
     plt.hlines(y = 1, xmin = 0, xmax = 1, linewidth = 1, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.5)
     plt.xlim((0,1))
     plt.ylim((0,1.1))
