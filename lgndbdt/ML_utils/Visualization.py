@@ -47,8 +47,14 @@ def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
     plt.hist(y_pred[Y_test==0], label="Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F") # , color=cmapNormal(0.8)
     plt.gca().ticklabel_format(axis="y",style="sci")
     if len(side_pred) != 0:
-        plt.hist(side_pred[side_test==1], label="Sideband Signal", bins=rg, histtype="step", linewidth = 3, color = "#13294B", alpha = 0.6)# color=cmapNormal(0.2),linewidth=3)
-        plt.hist(side_pred[side_test==0], label="Sideband Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F", alpha = 0.6) # , color=cmapNormal(0.8)
+        sideband_signal = side_pred[side_test==1]
+        sideband_bkg = side_pred[side_test==0]
+        np.shuffle(sideband_signal)
+        np.shuffle(sideband_bkg)
+        tau_sig = 1/4
+        tau_bkg = 1/4
+        plt.hist(sideband_signal[:int(tau_sig*len(sideband_signal))], label="Sideband Signal", bins=rg, histtype="step", linewidth = 3, color = "#13294B", alpha = 0.6)# color=cmapNormal(0.2),linewidth=3)
+        plt.hist(sideband_bkg[:int(tau_bkg*len(sideband_bkg))], label="Sideband Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F", alpha = 0.6) # , color=cmapNormal(0.8)
     
 
     plt.legend(loc="upper center",frameon=False)
