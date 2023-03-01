@@ -47,8 +47,8 @@ def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
     plt.hist(y_pred[Y_test==0], label="Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F") # , color=cmapNormal(0.8)
     plt.gca().ticklabel_format(axis="y",style="sci")
     if len(side_pred) != 0:
-        plt.hist(side_pred[side_test==1], label="Sideband Signal", bins=rg, histtype="step", linewidth = 3, color = "#13294B")# color=cmapNormal(0.2),linewidth=3)
-        plt.hist(side_pred[side_test==0], label="Sideband Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F") # , color=cmapNormal(0.8)
+        plt.hist(side_pred[side_test==1], label="Sideband Signal", bins=rg, histtype="step", linewidth = 3, color = "#13294B", alpha = 0.6)# color=cmapNormal(0.2),linewidth=3)
+        plt.hist(side_pred[side_test==0], label="Sideband Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F", alpha = 0.6) # , color=cmapNormal(0.8)
     
 
     plt.legend(loc="upper center",frameon=False)
@@ -241,13 +241,16 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     ogfpr, ogtpr, ogthresholds    = roc_curve(avseOgLabels, avseOriginal)
     
     bdtauc = auc(boundary_line, tpr)
+    bdtauc_side = auc(boundary_line, tpr_side)
     ogauc  = auc(np.linspace(0,1,len(ogtpr)), ogtpr) # roc_auc_score(avseOgLabels, avseOriginal)
     
     hlineBDT = np.argmin(np.abs(tpr-0.90))
+    hlineBDT_side = np.argmin(np.abs(tpr_side-0.9))
     hlineOG  = np.argmin(np.abs(ogtpr-0.90))
     
     plt.hlines(y = tpr[hlineBDT], xmin = 0, xmax = np.max((fpr[hlineBDT], ogfpr[hlineOG]))  , linewidth = 2, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
     plt.vlines(x = fpr[hlineBDT], ymin = 0, ymax = tpr[hlineBDT], linewidth = 2, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
+    plt.vlines(x = fpr_side[hlineBDT_side], ymin = 0, ymax = tpr_side[hlineBDT_side], linewidth = 2, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
     plt.vlines(x = ogfpr[hlineOG]  , ymin = 0, ymax = ogtpr[hlineOG]  , linewidth = 2, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
     
     ogauc_MCI  = MC_integration(ogtpr)
@@ -258,7 +261,7 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     plt.plot(fpr, tpr, color = "#EF426F" , linestyle = "-", linewidth = 1,       label = f"   BDT       90.0%   {np.round(100*fpr[hlineBDT],1)}%    {np.round(bdtauc, 2)}    {np.round(bdtauc_MCI, 2)}")
     plt.fill_between(fpr, tpr+tpr_unc, tpr-tpr_unc, color = "#EF426F" , alpha = 0.3, linestyle = "-", linewidth = 4)
     
-    plt.plot(fpr_side, tpr_side, color = "#EF426F" , linestyle = "-.", linewidth = 1,       label = f"With Sideband Subtraction")
+    plt.plot(fpr_side, tpr_side, color = "#EF426F" , linestyle = "-.", linewidth = 1,       label = f" BDT Sideband  90.0%   {np.round(100*fpr_side[hlineBDT_side],1)}%    {np.round(bdtauc_side, 2)}")
     plt.fill_between(fpr_side, tpr_side+tpr_unc_side, tpr_side-tpr_unc_side, color = "#EF426F" , alpha = 0.3, linestyle = "-", linewidth = 4)
     
     plt.hlines(y = 1, xmin = 0, xmax = 1, linewidth = 1, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.5)
