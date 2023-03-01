@@ -49,8 +49,8 @@ def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
     if len(side_pred) != 0:
         sideband_signal = side_pred[side_test==1]
         sideband_bkg = side_pred[side_test==0]
-        np.shuffle(sideband_signal)
-        np.shuffle(sideband_bkg)
+        np.random.shuffle(sideband_signal)
+        np.random.shuffle(sideband_bkg)
         tau_sig = 1/4
         tau_bkg = 1/4
         plt.hist(sideband_signal[:int(tau_sig*len(sideband_signal))], label="Sideband Signal", bins=rg, histtype="step", linewidth = 3, color = "#13294B", alpha = 0.6)# color=cmapNormal(0.2),linewidth=3)
