@@ -341,13 +341,25 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 if validate=="Full":
                     sig_sideband_Ratio = sig_sideband_RAW
                     bkg_sideband_Ratio = bkg_sideband_RAW
+                    print(f"Ratio loss of signal data {len(signalData)/len(sigRAW)}")
+                    print(f"Ratio loss of bkg data {len(bkgData)/len(bkgRAW)}")
+                    lossRatio_SIG = len(signalData)/len(sigRAW)
+                    lossRatio_BKG = len(bkgData)/len(bkgRAW)
+
                 else:
                     sig_sideband_Save, sig_sideband_Ratio = dataSplit(sig_sideband_RAW, 0.3)
                     bkg_sideband_Save, bkg_sideband_Ratio = dataSplit(bkg_sideband_RAW, 0.3)
+                    print(f"Ratio loss of signal data {len(signalData)/len(sigPDM)}")
+                    print(f"Ratio loss of bkg data {len(bkgData)/len(bkgPDM)}")
+                    lossRatio_SIG = len(signalData)/len(sigPDM)
+                    lossRatio_BKG = len(bkgData)/len(bkgPDM)
+
 
                 np.random.shuffle(sig_sideband_Ratio)
                 np.random.shuffle(bkg_sideband_Ratio)
-                
+                sig_sideband_Ratio = sig_sideband_Ratio[:int(lossRatio_SIG*len(sig_sideband_Ratio))]
+                bkg_sideband_Ratio = bkg_sideband_Ratio[:int(lossRatio_BKG*len(bkg_sideband_Ratio))]
+
                 MSBDT     = lgb.Booster(model_file='BDT_unblind.txt')
                 gbm = lgb.train(params, 
                                 lgb_train) 
@@ -357,9 +369,10 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 sig_sideband_pred = gbm.predict(sig_sideband_Ratio, num_iteration=gbm.best_iteration)
                 bkg_sideband_pred = gbm.predict(bkg_sideband_Ratio, num_iteration=gbm.best_iteration)
                 
-                if validate!="Full":
-                    sig_sp_frac, sig_sideband_pred = dataSplit(sig_sideband_pred, 0.3)
-                    bkg_sp_frac, bkg_sideband_pred = dataSplit(bkg_sideband_pred, 0.3)
+
+                # if validate!="Full":
+                #     sig_sp_frac, sig_sideband_pred = dataSplit(sig_sideband_pred, 0.3)
+                #     bkg_sp_frac, bkg_sideband_pred = dataSplit(bkg_sideband_pred, 0.3)
                     
 
                 result = list(filter(lambda x: "A_" in x, selectDict))
