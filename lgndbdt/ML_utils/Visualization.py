@@ -98,10 +98,10 @@ def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
         # print(selection, data[selection,index1], data[selection,index2])
         plt.scatter(data[selection,index1],data[selection,index2],c="r",cmap=cmapNormal, marker="d", linewidths=5)
         plt.scatter(data[:,index1],data[:,index2],c=shap[:,shapindex]+shap[:,index1],cmap=cmapNormal, zorder=10, alpha = 0.3)
-        plt.plot(x,y, color="red",zorder=0,label="Linear Fit", alpha = 0.5)
+        # plt.plot(x,y, color="red",zorder=0,label="Linear Fit", alpha = 0.5)
     else:
         plt.scatter(data[:,index1],data[:,index2],c=shap[:,shapindex]+shap[:,index1],cmap=cmapNormal, zorder=10)
-        plt.plot(x,y, color="red",zorder=0,label="Linear Fit")
+        # plt.plot(x,y, color="red",zorder=0,label="Linear Fit")
 
     plt.ylim(ymin,ymax)
     plt.xlim(xlow,xhi)
