@@ -6,7 +6,7 @@ from sklearn.metrics import roc_curve, roc_auc_score, auc
 from sklearn.decomposition import PCA
 import itertools
 
-from extraction_utils.config import plotPath, cmapNormal, fname, cmapDiv, cmapNormal_r
+from extraction_utils.config import plotPath, cmapNormal, fname, cmapDiv, cmapNormal_r, terminalCMAP
 from ML_utils.plot_legacy import summary_legacy
 from matplotlib.colors import ListedColormap
 
@@ -467,8 +467,8 @@ def printPCAResults(pcaResults, pcaNames):
 
 
 def sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict, parameter_name):
-    plt.hist(sigRAWTop[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = cmapNormal[0])
-    plt.hist(bkgRAWTop[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = cmapNormal[1])
-    plt.hist(sigRAWSide[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = cmapNormal[2])
-    plt.hist(bkgRAWSide[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = cmapNormal[3])
+    plt.hist(sigRAWTop[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = terminalCMAP[0])
+    plt.hist(bkgRAWTop[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = terminalCMAP[1])
+    plt.hist(sigRAWSide[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = terminalCMAP[2])
+    plt.hist(bkgRAWSide[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = terminalCMAP[3])
     plt.savefig(f"{plotPath}/{parameter_name}DistributionHistogram.png",dpi=300, transparent=True)
