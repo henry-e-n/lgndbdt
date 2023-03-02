@@ -96,7 +96,9 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
         else:
             sigAUG = sigRAW
             bkgAUG = bkgRAW
-        sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict, "/TDRIFT")
+        for dictKey in selectDict.keys():
+            sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict, dictKey)
+        
     elif sourceLoc == "side":
         if augment:
             sigTopAug, sigSideAug = augment_ICPC(sigRAWTop, sigRAWSide)
