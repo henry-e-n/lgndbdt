@@ -85,8 +85,8 @@ def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
     x = np.linspace(xlow, xhi, 10000)
     y = x * z[0] + z[1]
     # Plot
-    ymin = np.min(data[:, index2]) - np.std(data[:, index2])
-    ymax = np.max(data[:, index2]) + np.std(data[:, index2])
+    ymin = np.mean(data[:, index2]) - 2*np.std(data[:, index2])
+    ymax = np.mean(data[:, index2]) + 2*np.std(data[:, index2])
 
     if point == True:
         selection = (data[:, index1] < 600)
