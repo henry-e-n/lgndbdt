@@ -341,7 +341,6 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 tpr, fpr = getROC_sideband(Y_test, y_pred, sig_sideband_pred, bkg_sideband_pred, sigavse, bkgavse)
                 plt.title(f"ROC performance - {sourceLoc} data", fontsize = 40) #, fontsize = 24, pad = 15, fontstyle='italic')
                 plt.savefig(f"{plotPath}/ROC_{sourceLoc}_sideband.png",dpi=300, transparent=False)
-                plt.show()
                 plt.cla()
                 plt.clf()
                 plt.close()

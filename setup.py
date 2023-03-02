@@ -7,7 +7,7 @@ from subprocess import check_call
 
 HERE         = pathlib.Path(__file__).parent
 PACKAGE_NAME = 'lgndbdt'
-VERSION      = '0.938'
+VERSION      = '0.939'
 AUTHOR       = 'Henry Nachman'
 AUTHOR_EMAIL = 'henachman@unc.edu'
 URL          = 'https://github.com/henry-e-n/lgndbdt.git'
