@@ -76,22 +76,21 @@ def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
     index2 = selectDict[var2]
     shapindex = index2
     plt.figure(figsize=(12,8))    
-    xlow = np.mean(data[:, index1]) - 3*np.std(data[:, index1])
-    xhi  = np.mean(data[:, index1]) + 3*np.std(data[:, index1])
+    xlow = np.mean(data[:, index1]) - 2*np.std(data[:, index1])
+    xhi  = np.mean(data[:, index1]) + 2*np.std(data[:, index1])
     xlowfit = np.mean(data[:, index1]) - 2*np.std(data[:, index1])
     xhighfit = np.mean(data[:, index1]) + 2*np.std(data[:, index1])
 
+    
+    ymin = np.mean(data[:, index2]) - 3*np.std(data[:, index2])
+    ymax = np.mean(data[:, index2]) + 3*np.std(data[:, index2])
+
     # selector = (data[:,index1] > xlowfit) & (data[:,index2]>-10) & (data[:,index2]<1000)
-    selector = (data[:,index1] > xlowfit) & (data[:, index1] < xhighfit)
-    print(xlow, xhi)
-    print(xlowfit, xhighfit)
+    selector = (data[:,index1] > xlowfit) & (data[:, index1] < xhighfit) & (data[:,index2] > ymin) & (data[:, index2] < ymax)
     z = np.polyfit(data[selector,index1], data[selector,index2],deg=1)
-    print(z)
     x = np.linspace(xlow, xhi, 10000)
     y = x * z[0] + z[1]
     # Plot
-    ymin = np.mean(data[:, index2]) - 4*np.std(data[:, index2])
-    ymax = np.mean(data[:, index2]) + 4*np.std(data[:, index2])
     if point == True:
         selection = (data[:, index1] < 600)
         selection = np.argwhere(selection)
