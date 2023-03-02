@@ -78,10 +78,13 @@ def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
     plt.figure(figsize=(12,8))    
     xlow = np.mean(data[:, index1]) - 3*np.std(data[:, index1])
     xhi  = np.mean(data[:, index1]) + 3*np.std(data[:, index1])
-    # xlowfit = np.mean(data[:, index1]) - 1*np.std(data[:, index1])
+    xlowfit = np.mean(data[:, index1]) - 1*np.std(data[:, index1])
 
     # selector = (data[:,index1] > xlowfit) & (data[:,index2]>-10) & (data[:,index2]<1000)
-    z = np.polyfit(data[:,index1], data[:,index2],deg=1)
+    selector = (data[:,index1] > xlowfit) 
+    print(xlow, xhi)
+    print(data[selector,index1], data[selector,index2])
+    z = np.polyfit(data[selector,index1], data[selector,index2],deg=1)
     print(z)
     x = np.linspace(xlow, xhi, 10000)
     y = x * z[0] + z[1]
