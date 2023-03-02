@@ -106,6 +106,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
             sigRAW = sigSideAug
             bkgRAW = bkgSideAug
         else:
+            sigRAW = sigRAWSide
+            bkgRAW = bkgRAWSide
             sigAUG = sigRAW
             bkgAUG = bkgRAW
         
