@@ -225,11 +225,10 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
 
     ######################################
     if plots:        
-        isExist = os.path.exists(f"{plotPath}/Plots/{sourceLoc}/")
+        isExist = os.path.exists(f"{plotPath}/{sourceLoc}/")
         if not isExist:
-            os.makedirs(f"{plotPath}/Plots/{sourceLoc}/")
-            os.makedirs(f"{plotPath}/Plots/{sourceLoc}/")
-            print(f"{plotPath}/Plots/{sourceLoc}/ directory was created!")
+            os.makedirs(f"{plotPath}/{sourceLoc}/")
+            print(f"{plotPath}/{sourceLoc}/ directory was created!")
 
         for i in tqdm(range(5), 
                         desc   ="Running Visualization................", 
