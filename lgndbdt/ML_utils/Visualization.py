@@ -217,6 +217,11 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
         fpr = np.append(fpr, fprArr)
         unc_LHS = (N_sig)/ (N_sig)**2 + (Nc_sig) / (Nc_sig)**2 - 2*(Nc_sig)/((N_sig) * (Nc_sig))
         tpr_unc = np.append(tpr_unc, tprArr*(unc_LHS)**(0.5))
+        if fprArr > 0.05 & fprArr < 0.07:
+            print(f" tprArr{tprArr}")
+            print("Nc_sig, Bc_sig, Nc_bkg, Bc_bkg, tau_sig, tau_bkg)")
+            print(Nc_sig, Bc_sig, Nc_bkg, Bc_bkg, tau_sig, tau_bkg)
+            assert 0
     
     ############################################################
     # Analysis of Traditional A/E Cut
