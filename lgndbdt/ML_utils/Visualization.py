@@ -60,8 +60,6 @@ def BDTSummary(shap_values, sample):
     plt.rcParams["figure.figsize"] = (15,8)
     summary_legacy(shap_values[1], sample, plot_type="dot", plot_size=(15,8), feature_names=fname,show=False, cmap=cmapNormal)
     plt.colorbar(fraction = 0.05)
-    plt.title("BDT SHAP Feature Importance Summary")
-    plt.savefig(f"{plotPath}/bdt_summary.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
     return
 
 def plot_covariance(covMat, saveName, covName = fname):

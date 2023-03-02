@@ -105,8 +105,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
             bkgTopAug, bkgSideAug = augment_ICPC(bkgRAWTop, bkgRAWSide)
             sigAUG = sigSideAug
             bkgAUG = bkgSideAug
-            sigRAW = sigSideAug
-            bkgRAW = bkgSideAug
+            sigRAW = sigRAWSide
+            bkgRAW = bkgRAWSide
         else:
             sigRAW = sigRAWSide
             bkgRAW = bkgRAWSide
@@ -224,7 +224,13 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
     print("-------------------------------------------------------------")
 
     ######################################
-    if plots:
+    if plots:        
+        isExist = os.path.exists(f"{plotPath}/Plots/{sourceLoc}/")
+        if not isExist:
+            os.makedirs(f"{plotPath}/Plots/{sourceLoc}/")
+            os.makedirs(f"{plotPath}/Plots/{sourceLoc}/")
+            print(f"{plotPath}/Plots/{sourceLoc}/ directory was created!")
+
         for i in tqdm(range(5), 
                         desc   ="Running Visualization................", 
                         colour = terminalCMAP[1]):
@@ -276,6 +282,9 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 shap_values = explainer.shap_values(sample)
                 # Returns a list of matrices (# outputs, # samples x, # features)
                 BDTSummary(shap_values, sample)
+                plt.title(f"BDT SHAP Feature Importance ({sourceLoc})")
+                plt.savefig(f"{plotPath}/{sourceLoc}/bdt_summary.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+    
             elif i == 2 and np.any(np.isin("/AvsE_c", fname)):
                 explainer  = shap.TreeExplainer(gbm)
                 sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
@@ -349,11 +358,11 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 side_test = np.array([1]*len(sig_sideband_pred) + [0]*len(bkg_sideband_pred))
                 BDTDistrib(y_pred, Y_test, side_pred, side_test)
                 plt.title(f"BDT Distribution - {sourceLoc} data", fontsize = 40)
-                plt.savefig(f"{plotPath}/BDT_{sourceLoc}_+Sideband_distribution.png",dpi=300, transparent=True)
+                plt.savefig(f"{plotPath}/{sourceLoc}/BDT_{sourceLoc}_+Sideband_distribution.png",dpi=300, transparent=True)
                 
                 tpr, fpr = getROC_sideband(Y_test, y_pred, sig_sideband_pred, bkg_sideband_pred, sigavse, bkgavse)
                 plt.title(f"ROC performance - {sourceLoc} data", fontsize = 40) #, fontsize = 24, pad = 15, fontstyle='italic')
-                plt.savefig(f"{plotPath}/ROC_{sourceLoc}_sideband.png",dpi=300, transparent=False)
+                plt.savefig(f"{plotPath}/{sourceLoc}/ROC_{sourceLoc}_sideband.png",dpi=300, transparent=False)
                 plt.cla()
                 plt.clf()
                 plt.close()
