@@ -58,7 +58,7 @@ def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
 def BDTSummary(shap_values, sample):
     clearAll()
     plt.rcParams["figure.figsize"] = (15,8)
-    summary_legacy(shap_values[1], sample, plot_type="dot", plot_size=(15,8), feature_names=fname,show=False, c=cmapNormal)
+    summary_legacy(shap_values[1], sample, plot_type="dot", plot_size=(15,8), feature_names=fname,show=False, cmap=cmapNormal)
     plt.colorbar(fraction = 0.05)
     plt.title("BDT SHAP Feature Importance Summary")
     plt.savefig(f"{plotPath}/bdt_summary.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
@@ -467,8 +467,8 @@ def printPCAResults(pcaResults, pcaNames):
 
 
 def sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict, parameter_name):
-    plt.hist(sigRAWTop[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = terminalCMAP[0])
-    plt.hist(bkgRAWTop[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = terminalCMAP[1])
-    plt.hist(sigRAWSide[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = terminalCMAP[2])
-    plt.hist(bkgRAWSide[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = terminalCMAP[3])
+    plt.hist(sigRAWTop[:, selectDict[f"{parameter_name}"]], bins=20, histtype="step", linewidth = 3, color = terminalCMAP[0], label=f"SS Top")
+    plt.hist(bkgRAWTop[:, selectDict[f"{parameter_name}"]], bins=20, histtype="step", linewidth = 3, color = terminalCMAP[1], label=f"MS Top")
+    plt.hist(sigRAWSide[:, selectDict[f"{parameter_name}"]], bins=20, histtype="step", linewidth = 3, color = terminalCMAP[2], label=f"SS Side")
+    plt.hist(bkgRAWSide[:, selectDict[f"{parameter_name}"]], bins=20, histtype="step", linewidth = 3, color = terminalCMAP[3], label=f"MS Side")
     plt.savefig(f"{plotPath}/{parameter_name}DistributionHistogram.png",dpi=300, transparent=True)
