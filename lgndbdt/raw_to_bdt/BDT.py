@@ -110,8 +110,10 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
             bkgTopAug, bkgSideAug = augment_ICPC(bkgRAWTop, bkgRAWSide)
             sigAUG = sigSideAug
             bkgAUG = bkgSideAug
+
             sigRAW = sigRAWSide
             bkgRAW = bkgRAWSide
+            print(f"{sigRAW.shape}")
         else:
             sigRAW = sigRAWSide
             bkgRAW = bkgRAWSide
@@ -244,6 +246,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 else:
                     # Using split raw data
                     minSize = np.min([sigPDM.shape[0], bkgPDM.shape[0]])
+                    print(minSize)
                     np.random.shuffle(sigPDM)
                     np.random.shuffle(bkgPDM)
                     signalData   = sigPDM[:minSize, :]
