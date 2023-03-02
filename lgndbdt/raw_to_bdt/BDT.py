@@ -276,6 +276,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
 
                 print(f"{y_pred.shape}, {Y_test.shape}")
                 BDTDistrib(y_pred, Y_test)
+                plt.title("BDT Result Distribution", fontsize = 40)
+                plt.savefig(f"{plotPath}/{sourceLoc}/BDT_distribution.png",dpi=300, transparent=True)
                 plt.cla()
                 plt.clf()
                 plt.close()

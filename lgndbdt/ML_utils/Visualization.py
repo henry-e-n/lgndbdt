@@ -38,6 +38,7 @@ def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
     plt.hist(y_pred[Y_test==1], label="Signal", bins=rg, histtype="step", linewidth = 3, color = "#13294B")# color=cmapNormal(0.2),linewidth=3)
     plt.hist(y_pred[Y_test==0], label="Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F") # , color=cmapNormal(0.8)
     plt.gca().ticklabel_format(axis="y",style="sci")
+    print(len(side_pred))
     if len(side_pred) != 0:
         sideband_signal = side_pred[side_test==1]
         sideband_bkg = side_pred[side_test==0]
