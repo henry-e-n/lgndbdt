@@ -295,6 +295,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
     
             elif i == 2:
                 selectDictKeys = selectDict.keys()
+                print(selectDictKeys)
+                print(np.any(np.isin("/A_", selectDictKeys)))
                 if np.any(np.isin("/A_", selectDictKeys)):
                     print("ITS HERE !!!")
                     print(np.isin("/A_", selectDictKeys))
