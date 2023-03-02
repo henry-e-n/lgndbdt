@@ -140,8 +140,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
     bkgSave, bkgPDM = dataSplit(bkgRAW, 0.3)
 
     print(f"Incoming dataset size \n \
-            SS shape {sigRAW} - Split to {len(sigSave), len(sigPDM)} \n \
-            MS shape {bkgRAW} - Split to {len(bkgSave), len(bkgPDM)}")
+            SS shape {len(sigRAW)} - Split to {len(sigSave), len(sigPDM)} \n \
+            MS shape {len(bkgRAW)} - Split to {len(bkgSave), len(bkgPDM)}")
 
     sigSave, sigAUGPDM = dataSplit(sigAUG, 0.3)
     bkgSave, bkgAUGPDM = dataSplit(bkgAUG, 0.3)
@@ -342,8 +342,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                     bkg_sideband_RAW, selectDict = getRaw(f"{filename}{sourceLoc}{SEPorFEP}_sideband.lh5", f"{fpath}")
                 
                 print(f"Sideband Comparison (RAW)\n \
-                        SS Peak Size {sigRAW} - SS Sideband size {sig_sideband_RAW}\n \
-                        MS Peak Size {bkgRAW} - MS Sideband size {bkg_sideband_RAW}")
+                        SS Peak Size {len(sigRAW)} - SS Sideband size {len(sig_sideband_RAW)}\n \
+                        MS Peak Size {len(bkgRAW)} - MS Sideband size {len(bkg_sideband_RAW)}")
 
                 if validate=="Full":
                     sig_sideband_Ratio = sig_sideband_RAW
