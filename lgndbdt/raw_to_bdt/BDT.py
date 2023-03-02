@@ -300,7 +300,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                     bkg_sideband_RawTop, selectDict = getRaw(f"{filename}top{SEPorFEP}.lh5", f"{fpath}")
                     sig_sideband_RawSide, selectDict = getRaw(f"{filename}sideDEP.lh5", f"{fpath}")
                     bkg_sideband_RawSide, selectDict = getRaw(f"{filename}side{SEPorFEP}.lh5", f"{fpath}")
-                    print(f"Runs include a mix of data from source location on the top, and on the side\nTop Data Size (sig, bkg) {sigRAWTop.shape}, {bkgRAWTop.shape}\nSide Data Size (sig, bkg) {sigRAWSide.shape}, {bkgRAWSide.shape}")
+                    print(f"SIDEBAND DATA: Runs include a mix of data from source location on the top, and on the side\nTop Data Size (sig, bkg) {sig_sideband_RawTop.shape}, {bkg_sideband_RawTop.shape}\nSide Data Size (sig, bkg) {sig_sideband_RawSide.shape}, {bkg_sideband_RawSide.shape}")
                     sig_sideband_RAW = np.concatenate((sig_sideband_RawTop, sig_sideband_RawSide))
                     bkg_sideband_RAW = np.concatenate((bkg_sideband_RawTop, bkg_sideband_RawSide))
                 else:

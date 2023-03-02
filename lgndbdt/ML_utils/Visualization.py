@@ -58,7 +58,7 @@ def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
 def BDTSummary(shap_values, sample):
     clearAll()
     plt.rcParams["figure.figsize"] = (15,8)
-    summary_legacy(shap_values[1], sample, plot_type="dot", plot_size=(15,8), feature_names=fname,show=False, cmap=cmapNormal)
+    summary_legacy(shap_values[1], sample, plot_type="dot", plot_size=(15,8), feature_names=fname,show=False, c=cmapNormal)
     plt.colorbar(fraction = 0.05)
     plt.title("BDT SHAP Feature Importance Summary")
     plt.savefig(f"{plotPath}/bdt_summary.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
@@ -327,7 +327,7 @@ def MC_integration(BDT_ROC):
         Px         = yArray #[x]
         maxloc     = np.argmax(Px/Qx) # if > 1, need adaption.
         cval       = Px[maxloc]/Qx[maxloc] # in case our sampling was not sufficient
-        print("[init]: cval = %13.5e" % (cval)) 
+        # print("[init]: cval = %13.5e" % (cval)) 
 
         return fDTAR, yArray, fDPRO,fRPRO,bounds_dst,cval
 
@@ -374,7 +374,7 @@ def MC_integration(BDT_ROC):
                     xr[Rsuc]       = x
                     Rsuc           = Rsuc+1
                 Rtot               = Rtot+1 
-            print("[reject]: Rtot = %6i Rsuc = %6i Rsuc/Rtot = %13.5e" % (Rtot,Rsuc,float(Rsuc)/float(Rtot)))
+            # print("[reject]: Rtot = %6i Rsuc = %6i Rsuc/Rtot = %13.5e" % (Rtot,Rsuc,float(Rsuc)/float(Rtot)))
         return xr, float(Rsuc)/float(Rtot)
 
     #===============================================================
@@ -385,7 +385,7 @@ def MC_integration(BDT_ROC):
 
     fDTAR,yArray,fDPRO,fRPRO,bdst,scal = init(s_target,s_proposal) 
     xr, AUC                            = reject(fDTAR, yArray, fDPRO,fRPRO,R,bdst,scal)
-    print(f"AUC {AUC}")
+    # print(f"AUC {AUC}")
     # check(xr,fDTAR, yArray, fDPRO,bdst,scal)
     return AUC
     #===============================================================
