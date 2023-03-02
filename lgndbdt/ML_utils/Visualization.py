@@ -200,11 +200,11 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
         Nc_sig = np.sum(pred_1>boundary_line[i])   # SS beyond boundary
         Bc_sig = np.sum(side_sig>boundary_line[i]) # SS beyond boundary in sideband
 
-        Nc_bkg = np.sum(pred_0>boundary_line[i])   # MS beyond boundary
-        Bc_bkg = np.sum(side_bkg>boundary_line[i]) # MS beyond boundary in sideband
+        Nc_bkg = np.sum(pred_0<boundary_line[i])   # MS below boundary
+        Bc_bkg = np.sum(side_bkg<boundary_line[i]) # MS below boundary in sideband
 
         tprarrSide = (Nc_sig-tau_sig*Bc_sig)/(N_sig-tau_sig*B_sig)
-        fprarrSide = (Nc_bkg-tau_bkg*Bc_bkg)/(N_bkg-tau_bkg*B_bkg)
+        fprarrSide = 1-((Nc_bkg-tau_bkg*Bc_bkg)/(N_bkg-tau_bkg*B_bkg))
         tpr_side = np.append(tpr_side, tprarrSide)
         fpr_side = np.append(fpr_side, fprarrSide)
         unc_LHS_side = (N_sig + tau_sig **2 * B_sig)/ (N_sig - tau_sig * B_sig)**2 + (Nc_sig + tau_sig **2 * Bc_sig) / (Nc_sig - tau_sig * Bc_sig)**2 - 2*(Nc_sig + tau_sig **2 * Bc_sig)/((N_sig - tau_sig * B_sig) * (Nc_sig - tau_sig * Bc_sig))
@@ -218,7 +218,7 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
         unc_LHS = (N_sig)/ (N_sig)**2 + (Nc_sig) / (Nc_sig)**2 - 2*(Nc_sig)/((N_sig) * (Nc_sig))
         tpr_unc = np.append(tpr_unc, tprArr*(unc_LHS)**(0.5))
         if (fprArr > 0.05) and (fprArr < 0.07):
-            print(f" tprArr{tprArr}")
+            print(f" tprArr{tprarrSide}")
             print("Nc_sig, Bc_sig, Nc_bkg, Bc_bkg, tau_sig, tau_bkg)")
             print(Nc_sig, Bc_sig, Nc_bkg, Bc_bkg, tau_sig, tau_bkg)
             assert 0
