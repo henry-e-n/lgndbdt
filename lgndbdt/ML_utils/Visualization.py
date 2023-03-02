@@ -11,41 +11,30 @@ from ML_utils.plot_legacy import summary_legacy
 from matplotlib.colors import ListedColormap
 
 forceCMAP = ListedColormap(["#13294B", "#EF426F"])
-
-def TrainingMetric(evals_result):
-    shap.initjs()
-    # print('Plotting metrics recorded during training...')
-    ax = lgb.plot_metric(evals_result, metric='binary_logloss') # plot of log loss, should be smooth indicating the BDT was appropriately learning over iterations
-    plt.savefig(f"{plotPath}/TrainingMetric.png", dpi=100, transparent=True)
+def clearAll():
     plt.cla()
     plt.clf()
     plt.close()
+    return
+
+def TrainingMetric(evals_result):
+    clearAll()
+    shap.initjs()
+    ax = lgb.plot_metric(evals_result, metric='binary_logloss') # plot of log loss, should be smooth indicating the BDT was appropriately learning over iterations
+    plt.savefig(f"{plotPath}/TrainingMetric.png", dpi=100, transparent=True)
     return
 
 def TreeVis(gbm):
-    print("SKIP TREE VIS")
+    clearAll()
     lgb.plot_tree(gbm, dpi=1000, show_info="data_percentage", figsize=(12,8))
     plt.savefig(f"{plotPath}/PlotTree.png", dpi=1000, transparent=True)
-    plt.cla()
-    plt.clf()
-    plt.close()
-
-    # graph = lgb.create_tree_digraph(gbm)#, dpi=700, show_info="data_percentage", figsize=(4,4))
-    # graph.render(filename=f"{plotPath}/PlotTreeDiGraph", format='png', view=True)
     return
 
 def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
-    # print("RUNNING BDTDISTRIB")
-    plt.cla()
-    plt.clf()
-    plt.close()
+    clearAll()
     plt.rcParams['font.size'] = 25
     plt.rcParams["figure.figsize"] = (15,16)
     rg=np.arange(0.0,1.01,0.01) # 0.0075
-    
-    # print(f"41 Vis: {len(y_pred[Y_test==1])}, {len(y_pred[Y_test==0])}")
-    # print(f"41 Vis: {len(y_pred[y_pred<=0.5])}, {len(y_pred[y_pred>0.5])}")
-
     plt.hist(y_pred[Y_test==1], label="Signal", bins=rg, histtype="step", linewidth = 3, color = "#13294B")# color=cmapNormal(0.2),linewidth=3)
     plt.hist(y_pred[Y_test==0], label="Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F") # , color=cmapNormal(0.8)
     plt.gca().ticklabel_format(axis="y",style="sci")
@@ -59,40 +48,34 @@ def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
         plt.hist(sideband_signal[:int(tau_sig*len(sideband_signal))], label="Sideband Signal", bins=rg, histtype="step", linewidth = 3, color = "#13294B", alpha = 0.6)# color=cmapNormal(0.2),linewidth=3)
         plt.hist(sideband_bkg[:int(tau_bkg*len(sideband_bkg))], label="Sideband Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F", alpha = 0.6) # , color=cmapNormal(0.8)
     
-
     plt.legend(loc="upper center",frameon=False)
     plt.xlabel("BDT output")
     plt.ylabel("# of events / 0.01 BDT Output(a.u.)")
     plt.title("BDT Result Distribution", fontsize = 40)
     plt.savefig(f"{plotPath}/BDT_distribution.png",dpi=300, transparent=True)
-    
     return
 
 def BDTSummary(shap_values, sample):
+    clearAll()
     plt.rcParams["figure.figsize"] = (15,8)
     summary_legacy(shap_values[1], sample, plot_type="dot", plot_size=(15,8), feature_names=fname,show=False, cmap=cmapNormal)
     plt.colorbar(fraction = 0.05)
     plt.title("BDT SHAP Feature Importance Summary")
     plt.savefig(f"{plotPath}/bdt_summary.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
-    plt.cla()
-    plt.clf()
-    plt.close()
     return
 
 def plot_covariance(covMat, saveName, covName = fname):
+    clearAll()
     plt.imshow(covMat, cmap=cmapDiv, vmin=-1, vmax=1)
     plt.xticks(np.arange(len(covName)), covName, rotation=60)
     plt.yticks(np.arange(len(covName)), covName)
     plt.title(f"{saveName}")
     plt.colorbar()
     plt.savefig(f"{plotPath}/{saveName.replace(' ', '')}.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
-    plt.cla()
-    plt.clf()
-    plt.close()
     return
 
 def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
-    # print(shap.shape)
+    clearAll()    
     index1 = selectDict[var1]
     index2 = selectDict[var2]
     shapindex = index2
@@ -103,10 +86,8 @@ def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
 
     selector = (data[:,index1] > xlowfit) & (data[:,index2]>-10) & (data[:,index2]<1000)
     z = np.polyfit(data[selector,index1], data[selector,index2],deg=1)
-    # print(f"FIT {z}")
     x = np.linspace(xlow, xhi, 10000)
     y = x * z[0] + z[1]
-    
     # Plot
     ymin = np.min(data[:, index2]) - np.std(data[:, index2])
     ymax = np.max(data[:, index2]) + np.std(data[:, index2])
@@ -134,24 +115,17 @@ def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
     plt.legend()
     plt.tight_layout()
     plt.savefig(f"{plotPath}/AvsE{var1[1:]}.png",dpi=200, transparent=True)
-    plt.cla()
-    plt.clf()
-    plt.close()
-
     return
 
 def plot_SHAP_force(explainer, shap_values):
-    # print("force_plot")
-    # shap.force_plot(explainer.expected_value[1], shap_values, fname, matplotlib = False, show=True, plot_cmap = "PkYg", text_rotation=60)
+    clearAll()
     shapFP = shap.force_plot(explainer.expected_value[1], shap_values, fname, matplotlib = True, show=False, plot_cmap = "PkYg", text_rotation=45)
     plt.savefig(f"{plotPath}/ForcePlot.png",dpi=200, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
-    plt.cla()
-    plt.clf()
-    plt.close()
     return
 
 
 def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_ext = True):
+    clearAll()
     cleanSig = np.delete(sigavse, np.argwhere(np.isnan(sigavse)))
     cleanBkg = np.delete(bkgavse, np.argwhere(np.isnan(bkgavse)))
 
@@ -193,12 +167,10 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
     plt.ylabel("True Positivity Rate", fontsize = 40)
     plt.title("BDT vs traditional A/E ROC performance", fontsize = 40) #, fontsize = 24, pad = 15, fontstyle='italic')
     plt.savefig(f"{plotPath}/ROC3.png",dpi=300, transparent=True)
-    plt.cla()
-    plt.clf()
-    plt.close()
+    return
 
 def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavse):
-    
+    clearAll()
     print(f"SS peak: {len(peaks_known==1)}, SS sideband {len(side_sig)}")
     print(f"MS peak: {len(peaks_known==0)}, MS sideband {len(side_bkg)}")
 
@@ -212,7 +184,6 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     fpr_side = []
     tpr_unc = []
     tpr_unc_side = []
-    
     
     pred_1 = peaks_pred[peaks_known==1] # predicted values that are known to be SS
     pred_0 = peaks_pred[peaks_known==0] # predicted values that are known to be MS

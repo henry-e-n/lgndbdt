@@ -23,26 +23,9 @@ from lgndbdt.ML_utils.MultiVarCorr import *
 
 print("Finished Import")
 
-# import argparse                  # allows us to deal with arguments to main()
-# from argparse import RawTextHelpFormatter
-# PARSER ARGUMENTS
-# parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter, 
-#                                      description = "If the data is already clean, set clean to false and fname to the clean data name")
-# parser.add_argument("learning_rate", type=float,
-#                     help="Learning Rate of BDT",
-#                     default = 0.07442318529884213, nargs='?')
-# parser.add_argument("num_leaves", type=int,
-#                     help="Number of Leaves of BDT",
-#                     default = 73, nargs='?')
-# parser.add_argument("max_bin", type=int,
-#                     help="Max Bins of BDT",
-#                     default = 542, nargs='?')                
-
-# args                 = parser.parse_args()
 learning_rate        = 0.07442318529884213 #args.learning_rate
 num_leaves           = 73 #args.num_leaves
 max_bin              = 542 #args.max_bin
-
 
 randSeed = 27
 np.random.seed(randSeed)
@@ -65,12 +48,11 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
         select = []
         counter = 0
         wfd = np.zeros(2, dtype = object)
-        # print(f"Extracting {fname} from {names}")
         for i in range(len(paramArr)):
-            if np.any(np.isin(fname, paramArr[i].name)): #np.any(np.isin(map(str.upper, fname), paramArr[i].name.upper())):
+            if np.any(np.isin(fname, paramArr[i].name)):
                 dataDict.append([paramArr[i].name, paramArr[i][:]])
                 dataArr[counter, :] = paramArr[i]
-                select.append([paramArr[i].name, counter]) #.upper()
+                select.append([paramArr[i].name, counter])
                 counter += 1
             if np.any(np.isin("/times", paramArr[i].name)):
                 wfd[0] = paramArr[i]
@@ -79,7 +61,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
         dataDictionary = dict(dataDict)
         selectDictionary = dict(select)
         dataArr = np.stack(dataArr, 1)
-        print(f"Returned {fpath}{filename}")#, shape {dataArr.shape}")
+        print(f"Returned {fpath}{filename}")
         file.close()
         return dataArr, selectDictionary
 
@@ -124,7 +106,6 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
         sigAUG = sigRAW
         bkgAUG = bkgRAW
 
-    
     ###################################################################
     # DATA MATCHING
     ###################################################################
@@ -222,11 +203,6 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
     gbm = lgb.Booster(model_file='BDT_unblind.txt')  # init model
     if plots:
         TrainingMetric(evals_result) #####################
-
-    ###################################################################
-    # TREE VISUALIZATION
-    ###################################################################
-    # TreeVis(gbm)#################
 
     ###################################################################
     # EVALUATION AND VISUALIZATION
@@ -361,21 +337,13 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 BDTDistrib(y_pred, Y_test, side_pred, side_test)
                 plt.title(f"BDT Distribution - {sourceLoc} data", fontsize = 40)
                 plt.savefig(f"{plotPath}/BDT_{sourceLoc}_+Sideband_distribution.png",dpi=300, transparent=True)
-                plt.cla()
-                plt.clf()
-                plt.close()
                 
-                tpr, fpr = getROC_sideband2(Y_test, y_pred, sig_sideband_pred, bkg_sideband_pred, sigavse, bkgavse)
+                tpr, fpr = getROC_sideband(Y_test, y_pred, sig_sideband_pred, bkg_sideband_pred, sigavse, bkgavse)
                 plt.title(f"ROC performance - {sourceLoc} data", fontsize = 40) #, fontsize = 24, pad = 15, fontstyle='italic')
                 plt.savefig(f"{plotPath}/ROC_{sourceLoc}_sideband.png",dpi=300, transparent=False)
                 plt.show()
                 plt.cla()
                 plt.clf()
                 plt.close()
-            # elif i == 5:
-            #     result = list(filter(lambda x: "A_" in x, selectDict))
-            #     sigavse = sigRAW[:,selectDict[result[0]]]
-            #     bkgavse = bkgRAW[:,selectDict[result[0]]]
-            #     plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRAW, bkgRAW, selectDict, inc_ext=False) #np.any(np.isin("/AvsE_c", fname))
-                # New Files don't have a PYGAMA AvsE to use remove this redundancy in future versions
+
     return
