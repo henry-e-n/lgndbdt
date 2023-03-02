@@ -476,10 +476,14 @@ def sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict
     plt.savefig(f"{plotPath}/{parameter_name}DistributionHistogram.png",dpi=300, transparent=True)
     clearAll()
     
-    print(np.shape(sigRAWTop[:, selectDict[f"{parameter_name}"]]))
-    plt.boxplot(sigRAWTop[:, selectDict[f"{parameter_name}"]]) #, labels=f"SS Top")
-    # plt.boxplot(bkgRAWTop[:, selectDict[f"{parameter_name}"]], labels=f"MS Top")
-    # plt.boxplot(sigRAWSide[:, selectDict[f"{parameter_name}"]], labels=f"SS Side")
-    # plt.boxplot(bkgRAWSide[:, selectDict[f"{parameter_name}"]], labels=f"MS Side")
+    boxPlotList = [sigRAWTop[:, selectDict[f"{parameter_name}"]],
+        bkgRAWTop[:, selectDict[f"{parameter_name}"]],
+        sigRAWSide[:, selectDict[f"{parameter_name}"]],
+        bkgRAWSide[:, selectDict[f"{parameter_name}"]]]
+
+    bplot = plt.boxplot(boxPlotList, labels=["SS Top", "MS Top", "SS Side", "MS Side"])
+    for patch, color in zip(bplot['boxes'], ['#4B9CD3', '#13294B', '#EF426F', '#00A5AD']):
+        patch.set_facecolor(color)
+
     plt.legend()
     plt.savefig(f"{plotPath}/{parameter_name}DistributionBoxPlot.png",dpi=300, transparent=True)
