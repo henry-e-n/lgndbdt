@@ -88,25 +88,27 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
         sigRAW = np.concatenate((sigRAWTop, sigRAWSide))
         bkgRAW = np.concatenate((bkgRAWTop, bkgRAWSide))
 
-        sigTopAug, sigSideAug = augment_ICPC(sigRAWTop, sigRAWSide)
-        bkgTopAug, bkgSideAug = augment_ICPC(bkgRAWTop, bkgRAWSide)
-        sigAUG = np.concatenate((sigTopAug, sigSideAug))
-        bkgAUG = np.concatenate((bkgTopAug, bkgSideAug))
-        print(sigRAWTop[:, selectDict["/TDRIFT"]])
-        plt.hist(sigRAWTop[:, selectDict["/TDRIFT"]])
-        plt.hist(bkgRAWTop[:, selectDict["/TDRIFT"]])
-        plt.hist(sigRAWSide[:, selectDict["/TDRIFT"]])
-        plt.hist(bkgRAWSide[:, selectDict["/TDRIFT"]])
-        plt.savefig(f"{plotPath}/TdriftDistributionHistogram.png",dpi=300, transparent=True)
-
+        if augment:
+            sigTopAug, sigSideAug = augment_ICPC(sigRAWTop, sigRAWSide)
+            bkgTopAug, bkgSideAug = augment_ICPC(bkgRAWTop, bkgRAWSide)
+            sigAUG = np.concatenate((sigTopAug, sigSideAug))
+            bkgAUG = np.concatenate((bkgTopAug, bkgSideAug))
+        else:
+            sigAUG = sigRAW
+            bkgAUG = bkgRAW
+        sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict, "/TDRIFT")
     elif sourceLoc == "side":
-        sigTopAug, sigSideAug = augment_ICPC(sigRAWTop, sigRAWSide)
-        bkgTopAug, bkgSideAug = augment_ICPC(bkgRAWTop, bkgRAWSide)
-        sigAUG = sigSideAug
-        bkgAUG = bkgSideAug
+        if augment:
+            sigTopAug, sigSideAug = augment_ICPC(sigRAWTop, sigRAWSide)
+            bkgTopAug, bkgSideAug = augment_ICPC(bkgRAWTop, bkgRAWSide)
+            sigAUG = sigSideAug
+            bkgAUG = bkgSideAug
+            sigRAW = sigSideAug
+            bkgRAW = bkgSideAug
+        else:
+            sigAUG = sigRAW
+            bkgAUG = bkgRAW
         
-        sigRAW = sigSideAug
-        bkgRAW = bkgSideAug
     elif sourceLoc == "top":
         sigRAW = sigRAWTop
         bkgRAW = bkgRAWTop

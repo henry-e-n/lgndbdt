@@ -465,3 +465,10 @@ def printPCAResults(pcaResults, pcaNames):
     plt.legend(ncol=2, bbox_to_anchor = (1.05, 0.99))
     plt.savefig(f"bvc.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=False)
 
+
+def sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict, parameter_name):
+    plt.hist(sigRAWTop[:, selectDict["parameter_name"]], histtype="step", linewidth = 3, color = cmapNormal[0])
+    plt.hist(bkgRAWTop[:, selectDict["parameter_name"]], histtype="step", linewidth = 3, color = cmapNormal[1])
+    plt.hist(sigRAWSide[:, selectDict["parameter_name"]], histtype="step", linewidth = 3, color = cmapNormal[2])
+    plt.hist(bkgRAWSide[:, selectDict["parameter_name"]], histtype="step", linewidth = 3, color = cmapNormal[3])
+    plt.savefig(f"{plotPath}/{parameter_name}DistributionHistogram.png",dpi=300, transparent=True)
