@@ -487,4 +487,5 @@ def sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict
                         showfliers=False)
     for patch, color in zip(bplot['boxes'], ['#4B9CD3', '#13294B', '#EF426F', '#00A5AD']):
         patch.set_facecolor(color)
+    plt.title(f"{parameter_name} Distribution")
     plt.savefig(f"{plotPath}/{parameter_name}DistributionBoxPlot.png",dpi=300, transparent=True)
