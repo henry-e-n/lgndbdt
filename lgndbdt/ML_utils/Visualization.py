@@ -481,7 +481,9 @@ def sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict
         sigRAWSide[:, selectDict[f"{parameter_name}"]],
         bkgRAWSide[:, selectDict[f"{parameter_name}"]]]
 
-    bplot = plt.boxplot(boxPlotList, labels=["SS Top", "MS Top", "SS Side", "MS Side"])
+    bplot = plt.boxplot(boxPlotList, 
+                        labels=["SS Top", "MS Top", "SS Side", "MS Side"],
+                        patch_artist=True)
     for patch, color in zip(bplot['boxes'], ['#4B9CD3', '#13294B', '#EF426F', '#00A5AD']):
         patch.set_facecolor(color)
 
