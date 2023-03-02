@@ -468,12 +468,12 @@ def printPCAResults(pcaResults, pcaNames):
 
 def sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict, parameter_name):
     clearAll()
-    plt.hist(sigRAWTop[:, selectDict[f"{parameter_name}"]], bins=20, histtype="step", linewidth = 3, color = terminalCMAP[0], label=f"SS Top")
-    plt.hist(bkgRAWTop[:, selectDict[f"{parameter_name}"]], bins=20, histtype="step", linewidth = 3, color = terminalCMAP[1], label=f"MS Top")
-    plt.hist(sigRAWSide[:, selectDict[f"{parameter_name}"]], bins=20, histtype="step", linewidth = 3, color = terminalCMAP[2], label=f"SS Side")
-    plt.hist(bkgRAWSide[:, selectDict[f"{parameter_name}"]], bins=20, histtype="step", linewidth = 3, color = terminalCMAP[3], label=f"MS Side")
-    plt.legend()
-    plt.savefig(f"{plotPath}/{parameter_name}DistributionHistogram.png",dpi=300, transparent=True)
+    # plt.hist(sigRAWTop[:, selectDict[f"{parameter_name}"]], bins=20, histtype="step", linewidth = 3, color = terminalCMAP[0], label=f"SS Top")
+    # plt.hist(bkgRAWTop[:, selectDict[f"{parameter_name}"]], bins=20, histtype="step", linewidth = 3, color = terminalCMAP[1], label=f"MS Top")
+    # plt.hist(sigRAWSide[:, selectDict[f"{parameter_name}"]], bins=20, histtype="step", linewidth = 3, color = terminalCMAP[2], label=f"SS Side")
+    # plt.hist(bkgRAWSide[:, selectDict[f"{parameter_name}"]], bins=20, histtype="step", linewidth = 3, color = terminalCMAP[3], label=f"MS Side")
+    # plt.legend()
+    # plt.savefig(f"{plotPath}/{parameter_name}DistributionHistogram.png",dpi=300, transparent=True)
     clearAll()
     
     boxPlotList = [sigRAWTop[:, selectDict[f"{parameter_name}"]],
@@ -483,9 +483,8 @@ def sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict
 
     bplot = plt.boxplot(boxPlotList, 
                         labels=["SS Top", "MS Top", "SS Side", "MS Side"],
-                        patch_artist=True)
+                        patch_artist=True,
+                        showfliers=False)
     for patch, color in zip(bplot['boxes'], ['#4B9CD3', '#13294B', '#EF426F', '#00A5AD']):
         patch.set_facecolor(color)
-
-    plt.legend()
     plt.savefig(f"{plotPath}/{parameter_name}DistributionBoxPlot.png",dpi=300, transparent=True)
