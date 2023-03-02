@@ -79,7 +79,7 @@ def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
     xlow = np.mean(data[:, index1]) - 3*np.std(data[:, index1])
     xhi  = np.mean(data[:, index1]) + 3*np.std(data[:, index1])
     xlowfit = np.mean(data[:, index1]) - 2*np.std(data[:, index1])
-    xhighfit = np.mean(data[:, index1]) - 2*np.std(data[:, index1])
+    xhighfit = np.mean(data[:, index1]) + 2*np.std(data[:, index1])
 
     # selector = (data[:,index1] > xlowfit) & (data[:,index2]>-10) & (data[:,index2]<1000)
     selector = (data[:,index1] > xlowfit) & (data[:, index1] < xhighfit)
