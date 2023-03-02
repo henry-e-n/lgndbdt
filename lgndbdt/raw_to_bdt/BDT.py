@@ -98,6 +98,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
             bkgTopAug, bkgSideAug = augment_ICPC(bkgRAWTop, bkgRAWSide)
             sigAUG = np.concatenate((sigTopAug, sigSideAug))
             bkgAUG = np.concatenate((bkgTopAug, bkgSideAug))
+            print(f"Augmenting Side dataset - original sig shape: {sigRAWSide.shape}, augmented sig shape: {sigSideAug.shape}")
+
         else:
             sigAUG = sigRAW
             bkgAUG = bkgRAW
@@ -113,7 +115,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
 
             sigRAW = sigRAWSide
             bkgRAW = bkgRAWSide
-            print(f"{sigRAW.shape}")
+            print(f"Augmenting Side dataset - original sig shape: {sigRAWSide.shape}, augmented sig shape: {sigSideAug.shape}")
         else:
             sigRAW = sigRAWSide
             bkgRAW = bkgRAWSide
@@ -243,14 +245,15 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                     np.random.shuffle(bkgRAW)           
                     signalData   = sigRAW[:minSize, :]
                     bkgData      = bkgRAW[:minSize, :]
+                    print(f"Validating on full dataset {signalData.shape}")
                 else:
                     # Using split raw data
                     minSize = np.min([sigPDM.shape[0], bkgPDM.shape[0]])
-                    print(minSize)
                     np.random.shuffle(sigPDM)
                     np.random.shuffle(bkgPDM)
                     signalData   = sigPDM[:minSize, :]
                     bkgData      = bkgPDM[:minSize, :]
+                    print(f"Validating on Split dataset {signalData.shape}")
 
 
                 X_test = np.concatenate([signalData,bkgData], axis=0)
@@ -271,6 +274,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 np.save("Y_test.npy", Y_test)
                 np.save("Y_pred.npy", y_pred)
 
+                print(f"{y_pred.shape}, {Y_test.shape}")
                 BDTDistrib(y_pred, Y_test)
                 plt.cla()
                 plt.clf()
