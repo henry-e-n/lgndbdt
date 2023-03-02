@@ -87,7 +87,7 @@ def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
     # Plot
     ymin = np.mean(data[:, index2]) - 2*np.std(data[:, index2])
     ymax = np.mean(data[:, index2]) + 2*np.std(data[:, index2])
-
+    print(ymin, ymax)
     if point == True:
         selection = (data[:, index1] < 600)
         selection = np.argwhere(selection)
@@ -110,7 +110,7 @@ def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
     cbar.ax.set_ylabel('SHAP Value of %s'%(var1))
     plt.legend()
     plt.tight_layout()
-    plt.savefig(f"{plotPath}/AvsE{var1[1:]}.png",dpi=200, transparent=True)
+    plt.savefig(f"{plotPath}/{var2[1:]}{var1[1:]}.png",dpi=200, transparent=True)
     return
 
 def plot_SHAP_force(explainer, shap_values):
@@ -483,5 +483,4 @@ def sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict
                         showfliers=False)
     for patch, color in zip(bplot['boxes'], ['#4B9CD3', '#13294B', '#EF426F', '#00A5AD']):
         patch.set_facecolor(color)
-    plt.title(f"{parameter_name} Distribution")
-    plt.savefig(f"{plotPath}/{parameter_name}DistributionBoxPlot.png",dpi=300, transparent=True)
+    return

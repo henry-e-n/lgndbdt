@@ -105,7 +105,9 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
             bkgAUG = bkgRAW
         for dictKey in selectDict.keys():
             sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict, dictKey)
-        
+            plt.title(f"{dictKey} Distribution")
+            plt.savefig(f"{plotPath}/{sourceLoc}/{dictKey}DistributionBoxPlot.png",dpi=300, transparent=True)
+    
     elif sourceLoc == "side":
         if augment:
             sigTopAug, sigSideAug = augment_ICPC(sigRAWTop, sigRAWSide)
