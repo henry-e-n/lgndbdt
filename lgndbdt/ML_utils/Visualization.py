@@ -87,7 +87,6 @@ def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
     # Plot
     ymin = np.mean(data[:, index2]) - 2*np.std(data[:, index2])
     ymax = np.mean(data[:, index2]) + 2*np.std(data[:, index2])
-    print(ymin, ymax)
     if point == True:
         selection = (data[:, index1] < 600)
         selection = np.argwhere(selection)
@@ -167,9 +166,7 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
 
 def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavse):
     clearAll()
-    print(f"SS peak: {np.sum(peaks_known==1)}, SS sideband {len(side_sig)}")
-    print(f"MS peak: {np.sum(peaks_known==0)}, MS sideband {len(side_bkg)}")
-
+    
     dx=0.005                               # Defines resolution of ROC curve
     boundary_line = np.arange(0, 1+dx, dx) # Defines x points at which to calculate TPR and FPR
     
@@ -190,6 +187,11 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     B_bkg = len(side_bkg) # Number of MS in sideband
     tau_sig = 1/4         # energy width ratio between the signal and background windows
     tau_bkg = 1/4
+
+    print(f"SS peak: {np.sum(peaks_known==1)}, SS sideband {tau_sig*len(side_sig)}")
+    print(f"MS peak: {np.sum(peaks_known==0)}, MS sideband {tau_bkg*len(side_bkg)}")
+
+
     for i in range(len(boundary_line)):
         Nc_sig = np.sum(pred_1>boundary_line[i])   # SS beyond boundary
         Bc_sig = np.sum(side_sig>boundary_line[i]) # SS beyond boundary in sideband

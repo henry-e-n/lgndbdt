@@ -299,13 +299,13 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 plt.savefig(f"{plotPath}/{sourceLoc}/bdt_summary.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
     
             elif i == 2:
-                selectDictKeys = selectDict.keys()
-                print(selectDictKeys)
-                print(np.any(np.isin("/A_", selectDictKeys)))
-                if np.any(np.isin("/A_", selectDictKeys)):
-                    print("ITS HERE !!!")
-                    print(np.isin("/A_", selectDictKeys))
-                    print(selectDictKeys[np.isin("/A_", selectDictKeys)])
+                # selectDictKeys = selectDict.keys()
+                # print(selectDictKeys)
+                # print(np.any(np.isin("/A_", selectDictKeys)))
+                # if np.any(np.isin("/A_", selectDictKeys)):
+                #     print("ITS HERE !!!")
+                #     print(np.isin("/A_", selectDictKeys))
+                #     print(selectDictKeys[np.isin("/A_", selectDictKeys)])
 
                 explainer  = shap.TreeExplainer(gbm)
                 sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/A_DAQE"]]<avse_thresh)# & cselector
@@ -318,8 +318,10 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 shap_valuesDist = explainer.shap_values(evnew)
                 make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT10", "/A_DAQE")
                 make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT", "/A_DAQE")
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT50", "/A_DAQE"),
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT", "/A_DAQE", point=True),
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT50", "/A_DAQE")
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/LQ80", "/A_DAQE"),
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/DCR", "/A_DAQE"),
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT", "/A_DAQE", point=True)
             elif i == 3 and np.any(np.isin("/AvsE_c", fname)):
                 index = 0
                 ROIdata = evnew
@@ -342,8 +344,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                     bkg_sideband_RAW, selectDict = getRaw(f"{filename}{sourceLoc}{SEPorFEP}_sideband.lh5", f"{fpath}")
                 
                 print(f"Sideband Comparison (RAW)\n \
-                        SS Peak Size {len(sigRAW)} - SS Sideband size {len(sig_sideband_RAW)}\n \
-                        MS Peak Size {len(bkgRAW)} - MS Sideband size {len(bkg_sideband_RAW)}")
+                        SS Peak Size {len(sigRAW)} - SS Sideband size {len(sig_sideband_RAW)} - \u03C4 = 4 {1/4*len(sig_sideband_RAW)}\n \
+                        MS Peak Size {len(bkgRAW)} - MS Sideband size {1/4*len(bkg_sideband_RAW)} - \u03C4 = 4 {1/4*len(bkg_sideband_RAW)}")
 
                 if validate=="Full":
                     sig_sideband_Ratio = sig_sideband_RAW
@@ -375,12 +377,6 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 
                 sig_sideband_pred = gbm.predict(sig_sideband_Ratio, num_iteration=gbm.best_iteration)
                 bkg_sideband_pred = gbm.predict(bkg_sideband_Ratio, num_iteration=gbm.best_iteration)
-                
-
-                # if validate!="Full":
-                #     sig_sp_frac, sig_sideband_pred = dataSplit(sig_sideband_pred, 0.3)
-                #     bkg_sp_frac, bkg_sideband_pred = dataSplit(bkg_sideband_pred, 0.3)
-                    
 
                 result = list(filter(lambda x: "A_" in x, selectDict))
                 
