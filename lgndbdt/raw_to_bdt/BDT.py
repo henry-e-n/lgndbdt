@@ -92,12 +92,11 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
         bkgTopAug, bkgSideAug = augment_ICPC(bkgRAWTop, bkgRAWSide)
         sigAUG = np.concatenate((sigTopAug, sigSideAug))
         bkgAUG = np.concatenate((bkgTopAug, bkgSideAug))
-        print(selectDict)
-        print(sigRAWTop[selectDict["/tdrift"]])
-        plt.hist(sigRAWTop[selectDict["/tdrift"]])
-        plt.hist(bkgRAWTop[selectDict["/tdrift"]])
-        plt.hist(sigRAWSide[selectDict["/tdrift"]])
-        plt.hist(bkgRAWSide[selectDict["/tdrift"]])
+        print(sigRAWTop[:, selectDict["/TDRIFT"]])
+        plt.hist(sigRAWTop[:, selectDict["/TDRIFT"]])
+        plt.hist(bkgRAWTop[:, selectDict["/TDRIFT"]])
+        plt.hist(sigRAWSide[:, selectDict["/TDRIFT"]])
+        plt.hist(bkgRAWSide[:, selectDict["/TDRIFT"]])
         plt.savefig(f"{plotPath}/TdriftDistributionHistogram.png",dpi=300, transparent=True)
 
     elif sourceLoc == "side":
