@@ -47,7 +47,7 @@ max_bin              = 542 #args.max_bin
 randSeed = 27
 np.random.seed(randSeed)
 
-def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "top", validate="split", plots=False):
+def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "top", validate="Full", plots=False):
     ###################################################################
     # Data Type Preparation
     ###################################################################
@@ -65,7 +65,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
         select = []
         counter = 0
         wfd = np.zeros(2, dtype = object)
-        print(f"Extracting {fname} from {names}")
+        # print(f"Extracting {fname} from {names}")
         for i in range(len(paramArr)):
             if np.any(np.isin(fname, paramArr[i].name)): #np.any(np.isin(map(str.upper, fname), paramArr[i].name.upper())):
                 dataDict.append([paramArr[i].name, paramArr[i][:]])
@@ -93,12 +93,14 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
         side_augmented = xRes[yRes==0]
         return top_augmented, side_augmented
 
-
+    
+    
+    sigRAWTop, selectDict = getRaw(f"{filename}topDEP.lh5", f"{fpath}")
+    bkgRAWTop, selectDict = getRaw(f"{filename}top{SEPorFEP}.lh5", f"{fpath}")
+    sigRAWSide, selectDict = getRaw(f"{filename}sideDEP.lh5", f"{fpath}")
+    bkgRAWSide, selectDict = getRaw(f"{filename}side{SEPorFEP}.lh5", f"{fpath}")
+        
     if sourceLoc == "mix":
-        sigRAWTop, selectDict = getRaw(f"{filename}topDEP.lh5", f"{fpath}")
-        bkgRAWTop, selectDict = getRaw(f"{filename}top{SEPorFEP}.lh5", f"{fpath}")
-        sigRAWSide, selectDict = getRaw(f"{filename}sideDEP.lh5", f"{fpath}")
-        bkgRAWSide, selectDict = getRaw(f"{filename}side{SEPorFEP}.lh5", f"{fpath}")
         print(f"Runs include a mix of data from source location on the top, and on the side\nTop Data Size (sig, bkg) {sigRAWTop.shape}, {bkgRAWTop.shape}\nSide Data Size (sig, bkg) {sigRAWSide.shape}, {bkgRAWSide.shape}")
         sigRAW = np.concatenate((sigRAWTop, sigRAWSide))
         bkgRAW = np.concatenate((bkgRAWTop, bkgRAWSide))
@@ -107,10 +109,20 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
         bkgTopAug, bkgSideAug = augment_ICPC(bkgRAWTop, bkgRAWSide)
         sigAUG = np.concatenate((sigTopAug, sigSideAug))
         bkgAUG = np.concatenate((bkgTopAug, bkgSideAug))
-    else:
-        sigRAW, selectDict = getRaw(f"{filename}{sourceLoc}DEP.lh5", f"{fpath}")
-        bkgRAW, selectDict = getRaw(f"{filename}{sourceLoc}{SEPorFEP}.lh5", f"{fpath}")
-    
+        
+    elif sourceLoc == "side":
+        sigTopAug, sigSideAug = augment_ICPC(sigRAWTop, sigRAWSide)
+        bkgTopAug, bkgSideAug = augment_ICPC(bkgRAWTop, bkgRAWSide)
+        sigAUG = sigSideAug
+        bkgAUG = bkgSideAug
+        
+        sigRAW = sigSideAug
+        bkgRAW = bkgSideAug
+    elif sourceLoc == "top":
+        sigRAW = sigRAWTop
+        bkgRAW = bkgRAWTop
+        sigAUG = sigRAW
+        bkgAUG = bkgRAW
 
     
     ###################################################################
@@ -262,6 +274,9 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 np.save("Y_pred.npy", y_pred)
 
                 BDTDistrib(y_pred, Y_test)
+                plt.cla()
+                plt.clf()
+                plt.close()
             elif i == 1:
                 Pos_sample = X_test[Y_test == 1,:len(fname)]
                 Neg_sample = X_test[Y_test == 0,:len(fname)]
@@ -325,6 +340,11 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 
                 sig_sideband_pred = gbm.predict(sig_sideband_Ratio, num_iteration=gbm.best_iteration)
                 bkg_sideband_pred = gbm.predict(bkg_sideband_Ratio, num_iteration=gbm.best_iteration)
+                
+                if validate!="Full":
+                    sig_sp_frac, sig_sideband_pred = dataSplit(sig_sideband_pred, 0.3)
+                    bkg_sp_frac, bkg_sideband_pred = dataSplit(bkg_sideband_pred, 0.3)
+                    
 
                 result = list(filter(lambda x: "A_" in x, selectDict))
                 
@@ -339,8 +359,19 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 side_pred = np.concatenate((sig_sideband_pred, bkg_sideband_pred))
                 side_test = np.array([1]*len(sig_sideband_pred) + [0]*len(bkg_sideband_pred))
                 BDTDistrib(y_pred, Y_test, side_pred, side_test)
-
-                tpr, fpr = getROC_sideband(Y_test, y_pred, sig_sideband_pred, bkg_sideband_pred, sigavse, bkgavse)     
+                plt.title(f"BDT Distribution - {sourceLoc} data", fontsize = 40)
+                plt.savefig(f"{plotPath}/BDT_{sourceLoc}_+Sideband_distribution.png",dpi=300, transparent=True)
+                plt.cla()
+                plt.clf()
+                plt.close()
+                
+                tpr, fpr = getROC_sideband2(Y_test, y_pred, sig_sideband_pred, bkg_sideband_pred, sigavse, bkgavse)
+                plt.title(f"ROC performance - {sourceLoc} data", fontsize = 40) #, fontsize = 24, pad = 15, fontstyle='italic')
+                plt.savefig(f"{plotPath}/ROC_{sourceLoc}_sideband.png",dpi=300, transparent=False)
+                plt.show()
+                plt.cla()
+                plt.clf()
+                plt.close()
             # elif i == 5:
             #     result = list(filter(lambda x: "A_" in x, selectDict))
             #     sigavse = sigRAW[:,selectDict[result[0]]]
@@ -348,7 +379,3 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
             #     plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRAW, bkgRAW, selectDict, inc_ext=False) #np.any(np.isin("/AvsE_c", fname))
                 # New Files don't have a PYGAMA AvsE to use remove this redundancy in future versions
     return
-
-if __name__ == "__main__":
-    run_BDT()
-
