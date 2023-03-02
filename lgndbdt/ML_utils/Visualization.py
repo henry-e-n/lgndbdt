@@ -38,7 +38,6 @@ def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
     plt.hist(y_pred[Y_test==1], label="Signal", bins=rg, histtype="step", linewidth = 3, color = "#13294B")# color=cmapNormal(0.2),linewidth=3)
     plt.hist(y_pred[Y_test==0], label="Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F") # , color=cmapNormal(0.8)
     plt.gca().ticklabel_format(axis="y",style="sci")
-    print(len(side_pred))
     if len(side_pred) != 0:
         sideband_signal = side_pred[side_test==1]
         sideband_bkg = side_pred[side_test==0]
@@ -52,8 +51,6 @@ def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
     plt.legend(loc="upper center",frameon=False)
     plt.xlabel("BDT output")
     plt.ylabel("# of events / 0.01 BDT Output(a.u.)")
-    plt.title("BDT Result Distribution", fontsize = 40)
-    plt.savefig(f"{plotPath}/BDT_distribution.png",dpi=300, transparent=True)
     return
 
 def BDTSummary(shap_values, sample):
@@ -170,8 +167,8 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
 
 def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavse):
     clearAll()
-    print(f"SS peak: {len(peaks_known==1)}, SS sideband {len(side_sig)}")
-    print(f"MS peak: {len(peaks_known==0)}, MS sideband {len(side_bkg)}")
+    print(f"SS peak: {np.sum(peaks_known==1)}, SS sideband {len(side_sig)}")
+    print(f"MS peak: {np.sum(peaks_known==0)}, MS sideband {len(side_bkg)}")
 
     dx=0.005                               # Defines resolution of ROC curve
     boundary_line = np.arange(0, 1+dx, dx) # Defines x points at which to calculate TPR and FPR

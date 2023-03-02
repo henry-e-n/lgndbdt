@@ -274,7 +274,6 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 np.save("Y_test.npy", Y_test)
                 np.save("Y_pred.npy", y_pred)
 
-                print(f"{y_pred.shape}, {Y_test.shape}")
                 BDTDistrib(y_pred, Y_test)
                 plt.title("BDT Result Distribution", fontsize = 40)
                 plt.savefig(f"{plotPath}/{sourceLoc}/BDT_distribution.png",dpi=300, transparent=True)
@@ -294,20 +293,26 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                 plt.title(f"BDT SHAP Feature Importance ({sourceLoc})")
                 plt.savefig(f"{plotPath}/{sourceLoc}/bdt_summary.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
     
-            elif i == 2 and np.any(np.isin("/AvsE_c", fname)):
+            elif i == 2:
+                selectDictKeys = selectDict.keys()
+                if np.any(np.isin("/A_", selectDictKeys)):
+                    print("ITS HERE !!!")
+                    print(np.isin("/A_", selectDictKeys))
+                    print(selectDictKeys[np.isin("/A_", selectDictKeys)])
+
                 explainer  = shap.TreeExplainer(gbm)
-                sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/AvsE_c"]]<avse_thresh)# & cselector
-                sample_bkg  = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/AvsE_c"]]>avse_thresh)# & cselector
+                sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/A_DAQE"]]<avse_thresh)# & cselector
+                sample_bkg  = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/A_DAQE"]]>avse_thresh)# & cselector
 
                 sample_selector = sample_sig|sample_bkg
                 evnew = X_test[sample_selector,:len(fname)]
                 np.random.shuffle(evnew)
                 evnew = evnew[:10000]
                 shap_valuesDist = explainer.shap_values(evnew)
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift10", "/AvsE_c")
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift", "/AvsE_c")
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift50", "/AvsE_c"),
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/tdrift", "/AvsE_c", point=True),
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT10", "/A_DAQE")
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT", "/A_DAQE")
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT50", "/A_DAQE"),
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT", "/A_DAQE", point=True),
             elif i == 3 and np.any(np.isin("/AvsE_c", fname)):
                 index = 0
                 ROIdata = evnew
