@@ -467,8 +467,8 @@ def printPCAResults(pcaResults, pcaNames):
 
 
 def sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict, parameter_name):
-    plt.hist(sigRAWTop[:, selectDict["parameter_name"]], histtype="step", linewidth = 3, color = cmapNormal[0])
-    plt.hist(bkgRAWTop[:, selectDict["parameter_name"]], histtype="step", linewidth = 3, color = cmapNormal[1])
-    plt.hist(sigRAWSide[:, selectDict["parameter_name"]], histtype="step", linewidth = 3, color = cmapNormal[2])
-    plt.hist(bkgRAWSide[:, selectDict["parameter_name"]], histtype="step", linewidth = 3, color = cmapNormal[3])
+    plt.hist(sigRAWTop[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = cmapNormal[0])
+    plt.hist(bkgRAWTop[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = cmapNormal[1])
+    plt.hist(sigRAWSide[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = cmapNormal[2])
+    plt.hist(bkgRAWSide[:, selectDict[f"{parameter_name}"]], histtype="step", linewidth = 3, color = cmapNormal[3])
     plt.savefig(f"{plotPath}/{parameter_name}DistributionHistogram.png",dpi=300, transparent=True)
