@@ -30,7 +30,8 @@ max_bin              = 542 #args.max_bin
 randSeed = 27
 np.random.seed(randSeed)
 
-def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "top", validate="Full", plots=False):
+def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "top", validate="split", plots=True):
+    # Validate = "Full" for validation on all data
     ###################################################################
     # Data Type Preparation
     ###################################################################
@@ -91,7 +92,14 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
         bkgTopAug, bkgSideAug = augment_ICPC(bkgRAWTop, bkgRAWSide)
         sigAUG = np.concatenate((sigTopAug, sigSideAug))
         bkgAUG = np.concatenate((bkgTopAug, bkgSideAug))
-        
+        print(selectDict["/tdrift"])
+        print(sigRAWTop[selectDict["/tdrift"]])
+        plt.hist(sigRAWTop[selectDict["/tdrift"]])
+        plt.hist(bkgRAWTop[selectDict["/tdrift"]])
+        plt.hist(sigRAWSide[selectDict["/tdrift"]])
+        plt.hist(bkgRAWSide[selectDict["/tdrift"]])
+        plt.savefig(f"{plotPath}/TdriftDistributionHistogram.png",dpi=300, transparent=True)
+
     elif sourceLoc == "side":
         sigTopAug, sigSideAug = augment_ICPC(sigRAWTop, sigRAWSide)
         bkgTopAug, bkgSideAug = augment_ICPC(bkgRAWTop, bkgRAWSide)
