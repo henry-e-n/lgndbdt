@@ -221,7 +221,6 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
             print(f" tprArr{tprarrSide}")
             print("Nc_sig, Bc_sig, Nc_bkg, Bc_bkg, tau_sig, tau_bkg)")
             print(Nc_sig, Bc_sig, Nc_bkg, Bc_bkg, tau_sig, tau_bkg)
-            assert 0
     
     ############################################################
     # Analysis of Traditional A/E Cut
