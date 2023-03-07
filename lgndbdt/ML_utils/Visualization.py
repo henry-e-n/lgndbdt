@@ -43,8 +43,8 @@ def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
         sideband_bkg = side_pred[side_test==0]
         np.random.shuffle(sideband_signal)
         np.random.shuffle(sideband_bkg)
-        tau_sig = 1/2
-        tau_bkg = 1/2
+        tau_sig = 1/4
+        tau_bkg = 1/4_
         plt.hist(sideband_signal[:int(tau_sig*len(sideband_signal))], label="Sideband Signal", bins=rg, histtype="step", linewidth = 3, color = "#13294B", alpha = 0.6)# color=cmapNormal(0.2),linewidth=3)
         plt.hist(sideband_bkg[:int(tau_bkg*len(sideband_bkg))], label="Sideband Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F", alpha = 0.6) # , color=cmapNormal(0.8)
     
@@ -189,8 +189,8 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     B_sig = len(side_sig) # Number of SS in sideband
     N_bkg = len(pred_0)   # Number of MS in peak
     B_bkg = len(side_bkg) # Number of MS in sideband
-    tau_sig = 1/2         # energy width ratio between the signal and background windows
-    tau_bkg = 1/2
+    tau_sig = 1/4         # energy width ratio between the signal and background windows
+    tau_bkg = 1/4
 
     print(f"SS peak: {np.sum(peaks_known==1)}, SS sideband {tau_sig*len(side_sig)}")
     print(f"MS peak: {np.sum(peaks_known==0)}, MS sideband {tau_bkg*len(side_bkg)}")
