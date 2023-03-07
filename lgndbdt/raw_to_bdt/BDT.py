@@ -344,8 +344,8 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
                     bkg_sideband_RAW, selectDict = getRaw(f"{filename}{sourceLoc}{SEPorFEP}_sideband.lh5", f"{fpath}")
                 
                 print(f"Sideband Comparison (RAW)\n \
-                        SS Peak Size {len(sigRAW)} - SS Sideband size {len(sig_sideband_RAW)} - \u03C4 = 4 {1/4*len(sig_sideband_RAW)}\n \
-                        MS Peak Size {len(bkgRAW)} - MS Sideband size {1/4*len(bkg_sideband_RAW)} - \u03C4 = 4 {1/4*len(bkg_sideband_RAW)}")
+                        SS Peak Size {len(sigRAW)} - SS Sideband size {len(sig_sideband_RAW)} - \u03C4 = 4, {1/4*len(sig_sideband_RAW)}\n \
+                        MS Peak Size {len(bkgRAW)} - MS Sideband size {len(bkg_sideband_RAW)} - \u03C4 = 4, {1/4*len(bkg_sideband_RAW)}")
 
                 if validate=="Full":
                     sig_sideband_Ratio = sig_sideband_RAW

@@ -232,17 +232,18 @@ def energy_calibration(verbose=False, plotBool=False):
 
     if plotBool:
         for i in range(2, 4):
-            sideband_LE_left = peaks[i]-(2.5*sigmas[i]+4*sigmas[i])
-            sideband_LE_right = peaks[i]-(2.5*sigmas[i])
-            sideband_HE_left = peaks[i]+(2.5*sigmas[i]+4*sigmas[i])
-            sideband_HE_right = peaks[i]+(2.5*sigmas[i])
+            sideband_width_ratio = 2
+            sideband_LE_left = peaks[i]-(2.5+sideband_width_ratio)*sigmas[i] - sideband_width_ratio*sigmas[i]
+            sideband_LE_right = peaks[i]-(2.5+sideband_width_ratio)*sigmas[i] + sideband_width_ratio*sigmas[i]
+            sideband_HE_left = peaks[i]+(2.5+sideband_width_ratio)*sigmas[i] - sideband_width_ratio*sigmas[i]
+            sideband_HE_right = peaks[i]+(2.5+sideband_width_ratio)*sigmas[i] + sideband_width_ratio*sigmas[i]
 
             plt.hist(cal_energies_first[(cal_energies_first>peaks[i]-200)*(cal_energies_first<peaks[i]+200)], bins=1000, color='k', ec='k')
             plt.axvline(peaks[i], 0, 5e5, color='r', lw=1, alpha=0.75)
             plt.axvline(peaks[i] + sigmas[i], 0, 5e5, color='r', lw=2, alpha=0.75)
             plt.axvline(peaks[i] - sigmas[i], 0, 5e5, color='r', lw=2, alpha=0.75)
-            plt.axvline(sideband_LE_left, 0, 5e5, color='b', lw=2, alpha=1)
-            plt.axvline(sideband_LE_right, 0, 5e5, color='b', lw=2, alpha=1)
+            # plt.axvline(sideband_LE_left, 0, 5e5, color='b', lw=2, alpha=1)
+            # plt.axvline(sideband_LE_right, 0, 5e5, color='b', lw=2, alpha=1)
             plt.axvline(sideband_HE_left, 0, 5e5, color='b', lw=2, alpha=1)
             plt.axvline(sideband_HE_right, 0, 5e5, color='b', lw=2, alpha=1)
             

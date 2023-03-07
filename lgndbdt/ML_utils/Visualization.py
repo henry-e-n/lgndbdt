@@ -43,8 +43,8 @@ def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
         sideband_bkg = side_pred[side_test==0]
         np.random.shuffle(sideband_signal)
         np.random.shuffle(sideband_bkg)
-        tau_sig = 1/4
-        tau_bkg = 1/4
+        tau_sig = 1/2
+        tau_bkg = 1/2
         plt.hist(sideband_signal[:int(tau_sig*len(sideband_signal))], label="Sideband Signal", bins=rg, histtype="step", linewidth = 3, color = "#13294B", alpha = 0.6)# color=cmapNormal(0.2),linewidth=3)
         plt.hist(sideband_bkg[:int(tau_bkg*len(sideband_bkg))], label="Sideband Background",bins=rg, histtype="step", linewidth=3, color = "#EF426F", alpha = 0.6) # , color=cmapNormal(0.8)
     
@@ -189,8 +189,8 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     B_sig = len(side_sig) # Number of SS in sideband
     N_bkg = len(pred_0)   # Number of MS in peak
     B_bkg = len(side_bkg) # Number of MS in sideband
-    tau_sig = 1/4         # energy width ratio between the signal and background windows
-    tau_bkg = 1/4
+    tau_sig = 1/2         # energy width ratio between the signal and background windows
+    tau_bkg = 1/2
 
     print(f"SS peak: {np.sum(peaks_known==1)}, SS sideband {tau_sig*len(side_sig)}")
     print(f"MS peak: {np.sum(peaks_known==0)}, MS sideband {tau_bkg*len(side_bkg)}")
@@ -200,11 +200,11 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
         Nc_sig = np.sum(pred_1>boundary_line[i])   # SS beyond boundary
         Bc_sig = np.sum(side_sig>boundary_line[i]) # SS beyond boundary in sideband
 
-        Nc_bkg = np.sum(pred_0<boundary_line[i])   # MS below boundary
-        Bc_bkg = np.sum(side_bkg<boundary_line[i]) # MS below boundary in sideband
+        Nc_bkg = np.sum(pred_0>boundary_line[i])   # MS beyond boundary
+        Bc_bkg = np.sum(side_bkg>boundary_line[i]) # MS beyond boundary in sideband
 
         tprarrSide = (Nc_sig-tau_sig*Bc_sig)/(N_sig-tau_sig*B_sig)
-        fprarrSide = 1-((Nc_bkg-tau_bkg*Bc_bkg)/(N_bkg-tau_bkg*B_bkg))
+        fprarrSide = (Nc_bkg-tau_bkg*Bc_bkg)/(N_bkg-tau_bkg*B_bkg)
         tpr_side = np.append(tpr_side, tprarrSide)
         fpr_side = np.append(fpr_side, fprarrSide)
         unc_LHS_side = (N_sig + tau_sig **2 * B_sig)/ (N_sig - tau_sig * B_sig)**2 + (Nc_sig + tau_sig **2 * Bc_sig) / (Nc_sig - tau_sig * Bc_sig)**2 - 2*(Nc_sig + tau_sig **2 * Bc_sig)/((N_sig - tau_sig * B_sig) * (Nc_sig - tau_sig * Bc_sig))
