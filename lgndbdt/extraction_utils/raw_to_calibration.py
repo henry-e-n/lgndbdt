@@ -208,8 +208,9 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
         #Compute components of fit function
         fit = func(bin_centers, *fit_pars[i], components=False)
         gaussian, step = func(bin_centers, *fit_pars[i], components=True)
-
+        print(np.count_nonzero(gaussian))
         if np.count_nonzero(gaussian) <= 10:
+            print(gaussian)
             print("NOT ENOUGH GAUSSIAN PARAMETERS")
             cal_pars, [fitData, fit_pars], peakIndex = energy_calibration(FilesForCalibration+4, verbose, plotBool)
             return cal_pars, [fitData, fit_pars], peakIndex
