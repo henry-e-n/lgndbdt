@@ -208,6 +208,7 @@ def energy_calibration(verbose=False, plotBool=False):
         #Compute components of fit function
         fit = func(bin_centers, *fit_pars[i], components=False)
         gaussian, step = func(bin_centers, *fit_pars[i], components=True)
+        print(f"Gaussian Fit Parameters {gaussian}")
         sigmas.append(fit_pars[i][2])
 
         #Plot data and fit components
