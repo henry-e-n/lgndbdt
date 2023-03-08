@@ -39,16 +39,16 @@ def clean_dsp(dsp_files):
 
     return dsp_files, dsp_files_icpcs
 ##############################
-def energy_calibration(verbose=False, plotBool=False):
+def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
     dsp_files_clean, dsp_files_icpcs = clean_dsp(dsp_files)
 
     try:
-        calibration_files = dsp_files_clean[:6]
+        calibration_files = dsp_files_clean[:FilesForCalibration]
         energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "ORGretina4MWaveformDecoder/dsp")
         energies = energy_stack["trapEmax"]
     except TypeError:
         print("rtc 52: ICPCS")
-        calibration_files = dsp_files_icpcs[:6]
+        calibration_files = dsp_files_icpcs[:FilesForCalibration]
         energy_stack = lh5.load_nda(calibration_files, ["trapEmax"], "icpcs/icpc1/dsp")
         energies = energy_stack["trapEmax"]
     
@@ -209,10 +209,10 @@ def energy_calibration(verbose=False, plotBool=False):
         fit = func(bin_centers, *fit_pars[i], components=False)
         gaussian, step = func(bin_centers, *fit_pars[i], components=True)
 
-
-        print(f"Gaussian Fit Parameters {gaussian}")
         if np.count_nonzero(gaussian) <= 10:
             print("NOT ENOUGH GAUSSIAN PARAMETERS")
+            cal_pars, [fitData, fit_pars], peakIndex = energy_calibration(FilesForCalibration+4, verbose, plotBool)
+            return cal_pars, [fitData, fit_pars], peakIndex
         
         sigmas.append(fit_pars[i][2])
 
