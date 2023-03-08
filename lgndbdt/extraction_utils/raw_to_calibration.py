@@ -178,9 +178,12 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
     fit_pars, fit_errs = [], []
     func = pgp.gauss_step_pdf #define function for fitting
 
-    for i in range (n_peaks):
-
+    def get_parameters(i, modified = False):
         hi, lo = modes[i] + widths[i], modes[i] - widths[i]
+        if modified:
+            print("Modified Fit")
+            widths[i] = 1.5*widths[i]
+            hi, lo = modes[i] + widths[i], modes[i] - widths[i]
         hist, bins, var = pgh.get_hist(energies, bins=100, range=(lo, hi))
         par_guesses = pgc.get_hpge_E_peak_par_guess(hist, bins, var, func)
         bounds = pgc.get_hpge_E_bounds(func)
@@ -191,8 +194,13 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
         pars_i = np.array(pars_i)[mask]
         errs_i = np.array(errs_i)[mask]
 
+        return pars_i, errs_i
+    
+    for i in range (n_peaks):
+        pars_i, errs_i = get_parameters(i)
         fit_pars.append(pars_i)
         fit_errs.append(errs_i)
+
 
     sigmas = []
     fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24))
@@ -214,7 +222,10 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
             print(gaussian)
             print("NOT ENOUGH GAUSSIAN PARAMETERS")
             print(fit_pars[i])
-            gaussian, step = func(bin_centers, *fit_pars[i-1], components=True)
+            pars_i, errs_i = get_parameters(i)
+            gaussian, step = func(bin_centers, *pars_i, components=True)
+            fit_pars[i] = pars_i
+            fit_errs[i] = errs_i
             # cal_pars, [fitData, fit_pars], peakIndex = energy_calibration(FilesForCalibration+2, verbose, plotBool)
             # return cal_pars, [fitData, fit_pars], peakIndex
         
