@@ -77,7 +77,7 @@ def match_data(signalData, bkgData, selectDict, varname, increment, plots=False,
         plt.hist(signalData[sigIndex,index], bins = rg, color=cmapNormal(0.4), alpha=0.5, label="Distribution After Matching")
         plt.ylabel("Counts")
         plt.xlabel(f"New # Waves {len(sigIndex)}")
-        plt.xlim(np.mean(signalData[:, index])-5*increment, np.mean(signalData[:, index])+5*increment)
+        plt.xlim(np.mean(signalData[:, index])-3*np.std(signalData[:, index]), np.mean(signalData[:, index])+3*np.std(signalData[:, index]))
         plt.title(f"{varname}")
         lgd = plt.legend(bbox_to_anchor=(0.5, -0.40), loc = "lower center")
         plt.savefig(f"{plotPath}/{varname}DataMatching.jpg", dpi=100, bbox_extra_artists=(lgd,), bbox_inches='tight')
