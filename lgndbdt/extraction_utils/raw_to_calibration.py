@@ -222,7 +222,7 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
             print(gaussian)
             print("NOT ENOUGH GAUSSIAN PARAMETERS")
             print(fit_pars[i])
-            pars_i, errs_i = get_parameters(i)
+            pars_i, errs_i = get_parameters(i, modified=True)
             gaussian, step = func(bin_centers, *pars_i, components=True)
             fit_pars[i] = pars_i
             fit_errs[i] = errs_i
