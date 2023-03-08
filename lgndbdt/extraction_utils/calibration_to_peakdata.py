@@ -68,7 +68,7 @@ def extract_waveforms(cal_pars, fitResults, peakIndex, verbose=False):
 
                     sigma = sideband_width_ratio*sigma
                     print("SIDEBAND TIME!!")
-                    selection_crit =  ((energies>(peakEnergy_right-sigma))*(energies<(peakEnergy_right+sigma)))# ((energies>(peakEnergy_left-sigma))*(energies<(peakEnergy_left+sigma)))|((energies>(peakEnergy_right-sigma))*(energies<(peakEnergy_right+sigma)))
+                    selection_crit = ((energies>(peakEnergy_left-sigma))*(energies<(peakEnergy_left+sigma)))|((energies>(peakEnergy_right-sigma))*(energies<(peakEnergy_right+sigma)))
                     print(f"Selection Window : {(peakEnergy_left-sigma)} - {(peakEnergy_left+sigma)}, {(peakEnergy_left-sigma)} - {(peakEnergy_left+sigma)}, mean ADC: {peakEnergy}, sigma {sigma}")
 
                 else:

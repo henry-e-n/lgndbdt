@@ -109,7 +109,9 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
             plt.savefig(f"{plotPath}/{sourceLoc}/{dictKey}DistributionBoxPlot.png",dpi=300, transparent=True)
     
     elif sourceLoc == "side":
+        print("Source Loc Side")
         if augment:
+            print("AUGMENT")
             sigTopAug, sigSideAug = augment_ICPC(sigRAWTop, sigRAWSide)
             bkgTopAug, bkgSideAug = augment_ICPC(bkgRAWTop, bkgRAWSide)
             sigAUG = sigSideAug
@@ -125,6 +127,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
             bkgAUG = bkgRAW
         
     elif sourceLoc == "top":
+        print("Source Loc Top")
         sigRAW = sigRAWTop
         bkgRAW = bkgRAWTop
         sigAUG = sigRAW
