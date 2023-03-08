@@ -219,7 +219,7 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
         fit = func(bin_centers, *fit_pars[i], components=False)
         gaussian, step = func(bin_centers, *fit_pars[i], components=True)
         print(np.count_nonzero(gaussian))
-        while np.count_nonzero(gaussian) <= 10:
+        while np.count_nonzero(gaussian) <= 50:
             print(gaussian)
             print("NOT ENOUGH GAUSSIAN PARAMETERS")
             print(fit_pars[i])
