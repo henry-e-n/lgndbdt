@@ -7,6 +7,7 @@ import pandas as pd
 import shap
 import matplotlib.pyplot as plt
 from matplotlib import cm
+from sklearn.preprocessing import StandardScaler, RobustScaler
 
 from tqdm import tqdm
 from time import time
@@ -30,7 +31,8 @@ max_bin              = 542 #args.max_bin
 randSeed = 27
 np.random.seed(randSeed)
 
-def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "top", validate="split", augment = True, plots=True):
+def run_BDT2(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "top", validate="split", augment = True, plots=True):
+    print("THIS ONE")
     # Validate = "Full" for validation on all data
     isExist = os.path.exists(f"{plotPath}/{sourceLoc}/")
     if not isExist:
@@ -87,12 +89,26 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
     bkgRAWTop, selectDict = getRaw(f"{filename}top{SEPorFEP}.lh5", f"{fpath}")
     sigRAWSide, selectDict = getRaw(f"{filename}sideDEP.lh5", f"{fpath}")
     bkgRAWSide, selectDict = getRaw(f"{filename}side{SEPorFEP}.lh5", f"{fpath}")
-        
+    
+    def scaleData(signalRAW, backgroundRAW):
+        scaler = RobustScaler()
+        sigbkgRAW = scaler.fit_transform(np.concatenate((signalRAW, backgroundRAW)))
+        signalRAW = sigbkgRAW[:len(signalRAW)]
+        backgroundRAW = sigbkgRAW[len(signalRAW):]
+        return signalRAW, backgroundRAW
+    
+    print(sigRAWTop.shape, bkgRAWTop.shape, sigRAWSide.shape, bkgRAWSide.shape)
+    
+#     sigRAWSS, bkgRAWSS = scaleData(np.concatenate((sigRAWTop, sigRAWSide)), np.concatenate((bkgRAWTop, bkgRAWSide)))
+#     sigRAWTop, sigRAWSide = [sigRAWSS[:len(sigRAWTop), :], sigRAWSS[len(sigRAWTop):, :]]
+#     bkgRAWTop, bkgRAWSide = [bkgRAWSS[:len(bkgRAWTop), :], bkgRAWSS[len(bkgRAWTop):, :]]
+    
+    print(sigRAWTop.shape, bkgRAWTop.shape, sigRAWSide.shape, bkgRAWSide.shape)
+    
     if sourceLoc == "mix":
         print(f"Runs include a mix of data from source location on the top, and on the side\nTop Data Size (sig, bkg) {sigRAWTop.shape}, {bkgRAWTop.shape}\nSide Data Size (sig, bkg) {sigRAWSide.shape}, {bkgRAWSide.shape}")
         sigRAW = np.concatenate((sigRAWTop, sigRAWSide))
         bkgRAW = np.concatenate((bkgRAWTop, bkgRAWSide))
-
         if augment:
             sigTopAug, sigSideAug = augment_ICPC(sigRAWTop, sigRAWSide)
             bkgTopAug, bkgSideAug = augment_ICPC(bkgRAWTop, bkgRAWSide)
@@ -126,19 +142,19 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
             sigAUG = sigRAW
             bkgAUG = bkgRAW
         
-    elif sourceLoc == "top":
+    if sourceLoc == "top":
         print("Source Loc Top")
-        sigRAW = sigRAWTop
-        bkgRAW = bkgRAWTop
-        sigAUG = sigRAW
-        bkgAUG = bkgRAW
-
+        sigRAW = np.copy(sigRAWTop)
+        bkgRAW = np.copy(bkgRAWTop)
+        sigAUG = np.copy(sigRAW)
+        bkgAUG = np.copy(bkgRAW)
+        print(sigRAW-sigAUG)
     ###################################################################
     # DATA MATCHING
     ###################################################################
     print("--------------- Running Distribution Matching ---------------")
     print("-------------------------------------------------------------")
-
+    
     sigSave, sigPDM = dataSplit(sigRAW, 0.3)
     bkgSave, bkgPDM = dataSplit(bkgRAW, 0.3)
 
@@ -148,7 +164,7 @@ def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "t
 
     sigSave, sigAUGPDM = dataSplit(sigAUG, 0.3)
     bkgSave, bkgAUGPDM = dataSplit(bkgAUG, 0.3)
-
+    
     print(f"Size before Distribution Matching Signal: {sigSave.shape}, Background: {bkgSave.shape}")
     for i in range(len(distMatch)):
         print(f"Distribution Matching {distMatch[i]}")
