@@ -266,7 +266,7 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     plt.legend(loc="lower right")
     plt.xlabel("False Positivity Rate", fontsize = 40)
     plt.ylabel("True Positivity Rate", fontsize = 40)
-    return tpr, fpr, bdtauc, bdtauc_side
+    return tpr, fpr
 
 
 
