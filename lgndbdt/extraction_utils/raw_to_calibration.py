@@ -156,7 +156,7 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
 
     #Plot histograms and fit initial functions
     print(f"Check Sigmas {sigmas}")
-    if "228ThDEP" in targetPeak or "228ThSEP" in targetPeak:
+    if "DEP" in targetPeak or "SEP" in targetPeak:
         widths = np.array([sigmas[0]*4, # 515 peak sigma*3
                    sigmas[1]*8, #  
                    sigmas[2]*4,
