@@ -85,7 +85,7 @@ def psd_extraction(paramArr, paramKeys):
     noise                = np.zeros(numWave)
     noiseTail            = np.zeros(numWave)
 
-    if np.any(np.isin(fname, "/noise")) or np.any(np.isin(fname, "/noiseTail")): 
+    if np.any(np.isin(fname, "/NOISE")) or np.any(np.isin(fname, "/NOISETAIL")): 
 
         for i in tqdm(range(0,numWave), 
                     desc   = "Calculating Noise.............", 
