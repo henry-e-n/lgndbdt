@@ -183,9 +183,7 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
         if modified:
             print("Modified Fit")
             widths[i] = 1.5*widths[i]
-            print(hi, lo)
             hi, lo = modes[i] + widths[i], modes[i] - widths[i]
-            print(f"Post {hi, lo}")
         hist, bins, var = pgh.get_hist(energies, bins=100, range=(lo, hi))
         par_guesses = pgc.get_hpge_E_peak_par_guess(hist, bins, var, func)
         bounds = pgc.get_hpge_E_bounds(func)
@@ -218,14 +216,10 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
         #Compute components of fit function
         fit = func(bin_centers, *fit_pars[i], components=False)
         gaussian, step = func(bin_centers, *fit_pars[i], components=True)
-        print(np.count_nonzero(gaussian))
         while np.count_nonzero(gaussian) <= 50:
-            print(gaussian)
             print("NOT ENOUGH GAUSSIAN PARAMETERS")
-            print(fit_pars[i])
             pars_i, errs_i = get_parameters(i, modified=True)
             gaussian, step = func(bin_centers, *pars_i, components=True)
-            print(np.count_nonzero(gaussian))
             fit_pars[i] = pars_i
             fit_errs[i] = errs_i
             # cal_pars, [fitData, fit_pars], peakIndex = energy_calibration(FilesForCalibration+2, verbose, plotBool)
