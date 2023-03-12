@@ -97,7 +97,7 @@ def blLinFit(indexWindow, times, values):
     
     """
     try:
-        print(indexWindow[1])
+        pass #print(indexWindow[1])
     except TypeError:
         print(f"TYPE ERROR {indexWindow, values[0:100]}")
         indexWindow = [0, int(300)]
