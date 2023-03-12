@@ -68,8 +68,8 @@ def psd_extraction(paramArr, paramKeys):
     #####################################################################
     ### Energy - Redundent from Eest Line 131
     #####################################################################
-    TRAP_RES            = trapENS(ts[:,:], wfCorr[:,:], pa["dt"][:])
-    TRAP_E              = np.amax(TRAP_RES, 1) 
+    # TRAP_RES            = trapENS(ts[:,:], wfCorr[:,:], pa["dt"][:])
+    # TRAP_E              = np.amax(TRAP_RES, 1) 
     DAQ_E               = pa["trapEmax"] # Currently uncalibrated
     
     Norm_Vals           = Normalize_Waveforms(pa["values"]) # Currently Using non-PZ corrected
@@ -117,11 +117,11 @@ def psd_extraction(paramArr, paramKeys):
     tdrift, tdrift50, tdrift10 = getTDriftInterpolate(ts[0, :], pa["values"][:numWave, :], pa["tp_0"][:numWave], pa["dt"][:numWave])
     
     ### Save Parameters to LH5
-    standardAnalysisArray = np.array([pa["dt"], pa["t0"], pa["tp_0"], maxA, deltasCorr, lqVal, noise, noiseTail, tdrift, tdrift50, tdrift10, TRAP_E, DAQ_E, Norm_A, maxA/TRAP_E, maxA/DAQ_E]) # replace energy Arr with Eest
+    standardAnalysisArray = np.array([pa["dt"], pa["t0"], pa["tp_0"], maxA, deltasCorr, lqVal, noise, noiseTail, tdrift, tdrift50, tdrift10, DAQ_E, Norm_A, maxA/DAQ_E]) # replace energy Arr with Eest
     standardAnalysisArray = np.delete(standardAnalysisArray, trash, axis=1)
     wfCorr = np.delete(wfCorr, trash, axis=0)
     print(f"Trash {len(trash)}, Shape {wfCorr.shape}")
-    standardAnalysisNames = np.array(["dt", "t0", "tp_0", "MAXA", "DCR", "LQ80", "NOISE", "NOISETAIL", "TDRIFT", "TDRIFT50", "TDRIFT10", "TRAP_E", "DAQ_E", "A_NORM", "A_TRAPE", "A_DAQE"])
+    standardAnalysisNames = np.array(["dt", "t0", "tp_0", "MAXA", "DCR", "LQ80", "NOISE", "NOISETAIL", "TDRIFT", "TDRIFT50", "TDRIFT10", "DAQ_E", "A_NORM", "A_DAQE"])
     appNewh5(standardAnalysisArray, standardAnalysisNames, ts, wfCorr)
     print(f"Final Shape of PSD array, after removing late rise waveforms: {standardAnalysisArray.shape}")
     return
