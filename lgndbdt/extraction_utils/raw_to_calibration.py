@@ -233,13 +233,14 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
 
         #Plot data and fit components
         if plotBool:
+            if i == 0:
+                plt.title("Compound Fit to Peaks", fontsize=16)
             axs[i].semilogy(bin_centers, hist, ds="steps-mid", color="k", label=labels[i])
             axs[i].semilogy(bin_centers, fit, color="r", label='fit')
             axs[i].semilogy(bin_centers, gaussian, color="orange", label="gaussian")
             axs[i].semilogy(bin_centers, step, color="cyan", label="step")
             axs[i].set_ylim(hist[-1:]+1, np.amax(hist)+100)
             axs[i].legend(fontsize=18, loc='best')
-    plt.suptitle("Compound Fit to Peaks")
     plt.savefig(f"{savePath}/fitPeaks.png")
     plt.cla()
     plt.clf()
