@@ -133,12 +133,12 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
 
     # Plots Energy Histogram
     if plotBool:
-        plt.hist(cal_energies_first, bins=1000, color='k', ec='k')
+        plt.hist(cal_energies_first, bins=1000, color='13294B', histtype='step')
         for peak in peaks:
-            plt.axvline(peak, 0, 5e5, color='r', lw=1, alpha=0.75)
+            plt.axvline(peak, 0, 5e5, color='#EF426F', lw=1, alpha=0.5)
 
-        plt.xlabel('Energy (keV)', fontsize=24)
-        plt.ylabel('Counts', fontsize=24)
+        plt.xlabel('Energy (keV)', fontsize=18)
+        plt.ylabel('Counts', fontsize=18)
         plt.yscale('log')
         plt.xlim(0,3000)
         plt.savefig(f"{savePath}/EnergyHist.png")
@@ -235,7 +235,7 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
             axs[i].semilogy(bin_centers, step, color="cyan", label="step")
             axs[i].set_ylim(hist[-1:]+1, np.amax(hist)+100)
             axs[i].legend(fontsize=18, loc='best')
-    
+    plt.title("Compound Fit to Peaks")
     plt.savefig(f"{savePath}/fitPeaks.png")
     plt.cla()
     plt.clf()
@@ -255,6 +255,7 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
             sideband_HE_left = peaks[i]+(2.5+sideband_width_ratio)*sigmas[i] - sideband_width_ratio*sigmas[i]
             sideband_HE_right = peaks[i]+(2.5+sideband_width_ratio)*sigmas[i] + sideband_width_ratio*sigmas[i]
 
+            plt.figure(figsize=(3,5))
             plt.hist(cal_energies_first[(cal_energies_first>peaks[i]-200)*(cal_energies_first<peaks[i]+200)], bins=1000, color='k', ec='k')
             plt.axvline(peaks[i], 0, 5e5, color='r', lw=1, alpha=0.75)
             plt.axvline(peaks[i] + sigmas[i], 0, 5e5, color='r', lw=2, alpha=0.75)
@@ -264,16 +265,16 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
             plt.axvline(sideband_HE_left, 0, 5e5, color='b', lw=2, alpha=1)
             plt.axvline(sideband_HE_right, 0, 5e5, color='b', lw=2, alpha=1)
             
-            plt.xlabel('Energy (keV)', fontsize=24)
-            plt.ylabel('Counts', fontsize=24)
+            plt.xlabel('Energy (keV)', fontsize=18)
+            plt.ylabel('Counts', fontsize=18)
             plt.yscale('log')
             plt.xlim(peaks[i] - 10*sigmas[i], peaks[i] + 10*sigmas[i])
             if i == 2:
-                plt.title("DEP Peak")
-                plt.savefig(f"{savePath}/EnergyHist_DEP.png")
+                plt.title("DEP Peak", fontsize=18)
+                plt.savefig(f"{savePath}/EnergyHist_DEP.png", dpi=300)
             if i == 3:
-                plt.title("SEP Peak")
-                plt.savefig(f"{savePath}/EnergyHist_SEP.png")
+                plt.title("SEP Peak", fontsize=18)
+                plt.savefig(f"{savePath}/EnergyHist_SEP.png", dpi=300)
             plt.clf()
             plt.cla()
 
