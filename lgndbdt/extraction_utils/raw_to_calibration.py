@@ -115,10 +115,10 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
             xs = np.linspace(data[0], data[-1], 10)
             plt.plot(xs, best_m * xs + best_b , c="r",
                     label="y = {:.2f} x + {:.2f}".format(best_m,best_b) )
-            plt.xlabel("Energy (ADC)", fontsize=18)
-            plt.ylabel("Energy (keV)", fontsize=18)
-            plt.title("Calibration Fit")
-            plt.legend(loc='best', fontsize=16)
+            plt.xlabel("Energy (ADC)", fontsize=16)
+            plt.ylabel("Energy (keV)", fontsize=16)
+            plt.title("Calibration Fit", fontsize=16)
+            plt.legend(loc='best', fontsize=14)
             plt.savefig(f"{savePath}/CalibrationFit.png", dpi=300)
             plt.clf()
             plt.cla()
@@ -259,7 +259,7 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
             sideband_HE_left = peaks[i]+(2.5+sideband_width_ratio)*sigmas[i] - sideband_width_ratio*sigmas[i]
             sideband_HE_right = peaks[i]+(2.5+sideband_width_ratio)*sigmas[i] + sideband_width_ratio*sigmas[i]
 
-            plt.figure(figsize=(5,8))
+            plt.figure(figsize=(6,8))
             plt.hist(cal_energies_first[(cal_energies_first>peaks[i]-200)*(cal_energies_first<peaks[i]+200)], bins=1000, color='k', ec='k')
             plt.axvline(peaks[i], 0, 5e5, color='r', lw=1, alpha=0.75)
             plt.axvline(peaks[i] + sigmas[i], 0, 5e5, color='r', lw=2, alpha=0.75)
