@@ -259,8 +259,8 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
             plt.axvline(peaks[i], 0, 5e5, color='r', lw=1, alpha=0.75)
             plt.axvline(peaks[i] + sigmas[i], 0, 5e5, color='r', lw=2, alpha=0.75)
             plt.axvline(peaks[i] - sigmas[i], 0, 5e5, color='r', lw=2, alpha=0.75)
-            # plt.axvline(sideband_LE_left, 0, 5e5, color='b', lw=2, alpha=1)
-            # plt.axvline(sideband_LE_right, 0, 5e5, color='b', lw=2, alpha=1)
+            plt.axvline(sideband_LE_left, 0, 5e5, color='b', lw=2, alpha=1)
+            plt.axvline(sideband_LE_right, 0, 5e5, color='b', lw=2, alpha=1)
             plt.axvline(sideband_HE_left, 0, 5e5, color='b', lw=2, alpha=1)
             plt.axvline(sideband_HE_right, 0, 5e5, color='b', lw=2, alpha=1)
             
