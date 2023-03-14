@@ -111,7 +111,7 @@ def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
     # locs, labels = plt.yticks()
     # plt.yticks(np.arange(0, 2000, step=500))
     cbar.ax.set_ylabel('SHAP Value of %s'%(var1))
-    plt.legend()
+    # plt.legend()
     plt.tight_layout()
     plt.savefig(f"{plotPath}/{var2[1:]}{var1[1:]}.png",dpi=200, transparent=True)
     return
