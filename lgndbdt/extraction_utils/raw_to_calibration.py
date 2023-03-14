@@ -110,14 +110,16 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
 
         if plotBool:
         # Plots Scatter of Calibration Pass
+            plt.figure(figsize=(8,5))
             plt.scatter(data, cal, label='min.err:{:.2e}'.format(err))
             xs = np.linspace(data[0], data[-1], 10)
             plt.plot(xs, best_m * xs + best_b , c="r",
                     label="y = {:.2f} x + {:.2f}".format(best_m,best_b) )
-            plt.xlabel("Energy (ADC)", fontsize=24)
-            plt.ylabel("Energy (keV)", fontsize=24)
-            plt.legend(loc='best', fontsize=20)
-            plt.savefig(f"{savePath}/CalibrationFit.png")
+            plt.xlabel("Energy (ADC)", fontsize=18)
+            plt.ylabel("Energy (keV)", fontsize=18)
+            plt.title("Calibration Fit")
+            plt.legend(loc='best', fontsize=16)
+            plt.savefig(f"{savePath}/CalibrationFit.png", dpi=300)
             plt.clf()
             plt.cla()
         # plt.show()
@@ -133,7 +135,7 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
 
     # Plots Energy Histogram
     if plotBool:
-        plt.hist(cal_energies_first, bins=1000, color='13294B', histtype='step')
+        plt.hist(cal_energies_first, bins=1000, color='#13294B', histtype='step')
         for peak in peaks:
             plt.axvline(peak, 0, 5e5, color='#EF426F', lw=1, alpha=0.5)
 
