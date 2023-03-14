@@ -234,7 +234,7 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
         #Plot data and fit components
         if plotBool:
             if i == 0:
-                plt.title("Compound Fit to Peaks", fontsize=16)
+                plt.title("Compound Fit to Peaks", fontsize=22)
             axs[i].semilogy(bin_centers, hist, ds="steps-mid", color="k", label=labels[i])
             axs[i].semilogy(bin_centers, fit, color="r", label='fit')
             axs[i].semilogy(bin_centers, gaussian, color="orange", label="gaussian")
