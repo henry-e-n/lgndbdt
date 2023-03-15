@@ -83,7 +83,7 @@ def match_data(signalData, bkgData, selectDict, varname, increment, plots=False,
             plt.xlim(np.mean(signalData[:, index])-2*np.std(signalData[:, index]), np.mean(signalData[:, index])+2*np.std(signalData[:, index]))
             # plt.xlim(-2, 2) # With standard scaler on
         plt.title(f"{varname}")
-        lgd = plt.legend(bbox_to_anchor=(0.5, -0.40), loc = "lower center")
+        lgd = plt.legend(bbox_to_anchor=(0.85, 0.80), loc = "lower center")
         plt.savefig(f"{plotPath}/{varname}DataMatching.jpg", dpi=100, bbox_extra_artists=(lgd,), bbox_inches='tight')
         if show == True:
             plt.show(block=False)
