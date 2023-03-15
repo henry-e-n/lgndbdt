@@ -115,7 +115,7 @@ def run_BDT2(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "
             sigAUG = np.concatenate((sigTopAug, sigSideAug))
             bkgAUG = np.concatenate((bkgTopAug, bkgSideAug))
             print(f"Augmenting Side dataset - original sig shape: {sigRAWSide.shape}, augmented sig shape: {sigSideAug.shape}")
-
+            print(f"Augmenting Side dataset - original bkg shape: {bkgRAWSide.shape}, augmented bkg shape: {bkgSideAug.shape}")
         else:
             sigAUG = sigRAW
             bkgAUG = bkgRAW
@@ -136,6 +136,7 @@ def run_BDT2(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "
             sigRAW = sigRAWSide
             bkgRAW = bkgRAWSide
             print(f"Augmenting Side dataset - original sig shape: {sigRAWSide.shape}, augmented sig shape: {sigSideAug.shape}")
+            print(f"Augmenting Side dataset - original bkg shape: {bkgRAWSide.shape}, augmented bkg shape: {bkgSideAug.shape}")
         else:
             sigRAW = sigRAWSide
             bkgRAW = bkgRAWSide
@@ -340,6 +341,8 @@ def run_BDT2(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "
                 make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT50", "/A_DAQE")
                 make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/LQ80", "/A_DAQE"),
                 make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/DCR", "/A_DAQE"),
+                # make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/NOISE", "/A_DAQE"),
+                # make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/NOISETAIL", "/A_DAQE"),
                 make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT", "/A_DAQE", point=True)
             elif i == 3 and np.any(np.isin("/AvsE_c", fname)):
                 index = 0
@@ -406,6 +409,9 @@ def run_BDT2(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "
                     # small set validation
                     sigavse = sigPDM[:,selectDict[result[0]]]
                     bkgavse = bkgPDM[:,selectDict[result[0]]]
+                    
+                # sigavse = sigPDM[:,selectDict[result[0]]]
+                # bkgavse = bkgPDM[:,selectDict[result[0]]]
                 
                 side_pred = np.concatenate((sig_sideband_pred, bkg_sideband_pred))
                 side_test = np.array([1]*len(sig_sideband_pred) + [0]*len(bkg_sideband_pred))
@@ -413,7 +419,7 @@ def run_BDT2(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "
                 plt.title(f"BDT Distribution - {sourceLoc} data", fontsize = 40)
                 plt.savefig(f"{plotPath}/{sourceLoc}/BDT_{sourceLoc}_+Sideband_distribution.png",dpi=300, transparent=True)
                 
-                tpr, fpr = getROC_sideband(Y_test, y_pred, sig_sideband_pred, bkg_sideband_pred, sigavse, bkgavse)
+                tpr, fpr = getROC_sideband(Y_test, y_pred, sig_sideband_pred, bkg_sideband_pred, sigavse, bkgavse)#, sideSigAvsE, sideBkgAvsE)
                 plt.title(f"ROC performance - {sourceLoc} data", fontsize = 40) #, fontsize = 24, pad = 15, fontstyle='italic')
                 plt.savefig(f"{plotPath}/{sourceLoc}/ROC_{sourceLoc}_sideband.png",dpi=300, transparent=False)
                 plt.cla()
