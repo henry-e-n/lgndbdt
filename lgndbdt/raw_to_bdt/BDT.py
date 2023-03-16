@@ -31,7 +31,7 @@ max_bin              = 542 #args.max_bin
 randSeed = 27
 np.random.seed(randSeed)
 
-def run_BDT2(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "top", validate="split", augment = True, plots=True):
+def run_BDT(bdt_thresh = 0.55, avse_thresh = 969, SEPorFEP="SEP", sourceLoc = "top", validate="split", augment = True, plots=True):
     print("THIS ONE")
     # Validate = "Full" for validation on all data
     isExist = os.path.exists(f"{plotPath}/{sourceLoc}/")
