@@ -33,7 +33,7 @@ def TreeVis(gbm):
 def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
     clearAll()
     plt.rcParams['font.size'] = 25
-    plt.rcParams["figure.figsize"] = (15,16)
+    plt.rcParams["figure.figsize"] = (20,15)
     rg=np.arange(0.0,1.01,0.01) # 0.0075
     plt.hist(y_pred[Y_test==1], label="DEP (SS)", bins=rg, histtype="step", linewidth = 3, color = "#13294B")# color=cmapNormal(0.2),linewidth=3)
     plt.hist(y_pred[Y_test==0], label="SEP (MS)",bins=rg, histtype="step", linewidth=3, color = "#EF426F") # , color=cmapNormal(0.8)
@@ -241,6 +241,7 @@ def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavs
     hlineBDT = np.argmin(np.abs(tpr-0.90))
     hlineBDT_side = np.argmin(np.abs(tpr_side-0.9))
     hlineOG  = np.argmin(np.abs(ogtpr-0.90))
+    plt.figure(figsize=(20,16))
     plt.hlines(y = tpr[hlineBDT], xmin = 0, xmax = np.max((fpr[hlineBDT], ogfpr[hlineOG])), linewidth = 2, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
     plt.vlines(x = fpr[hlineBDT], ymin = 0, ymax = tpr[hlineBDT], linewidth = 2, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
     plt.vlines(x = fpr_side[hlineBDT_side], ymin = 0, ymax = tpr_side[hlineBDT_side], linewidth = 2, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
