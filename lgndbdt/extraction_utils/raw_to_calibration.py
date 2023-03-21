@@ -208,7 +208,7 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
 
     sigmas = []
     fig, axs = plt.subplots(n_peaks, 1, figsize=(12,24))
-    labels = [r'$^{60}$Co', r'$^{60}$Co', r'$^{228}$Th DEP', r'$^{228}$Th SEP', r'$^{228}$Th -> Tl']
+    labels = [r'$^{60}$Co (1173.2 keV)', r'$^{60}$Co (1332.5 keV)', r'$^{228}$Th DEP (1592.5 keV)', r'$^{228}$Th SEP (2103.5 keV)', r'$^{228}$Th FEP (2614.5 keV)']
 
     for i in range(n_peaks):
 
@@ -238,6 +238,8 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
             axs[i].semilogy(bin_centers, gaussian, color="orange", label="gaussian")
             axs[i].semilogy(bin_centers, step, color="cyan", label="step")
             axs[i].set_ylim(hist[-1:]+1, np.amax(hist)+100)
+            axs[i].set_ylabel("Counts")
+            axs[i].set_xlabel("Energy ADC")
             axs[i].legend(fontsize=18, loc='best')
     plt.suptitle("Compound Fit to Peaks", fontsize=22)
     plt.savefig(f"{savePath}/fitPeaks.png")
