@@ -241,7 +241,7 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
             axs[i].set_ylabel("Counts")
             axs[i].set_xlabel("Uncalibrated Energy (ADC)")
             axs[i].legend(fontsize=18, loc='best')
-    axs[0].title("Compound Fit to Peaks", fontsize=22)
+    axs[0].set_title("Compound Fit to Peaks", fontsize=22)
     plt.savefig(f"{savePath}/fitPeaks.png")
     plt.cla()
     plt.clf()
