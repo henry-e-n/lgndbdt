@@ -72,8 +72,8 @@ def match_data(signalData, bkgData, selectDict, varname, increment, plots=False,
     # Plots 
     if plots == True:
         plt.figure()
-        plt.hist(signalData[:,index], bins = rg, color=cmapNormal(0.2), linestyle="-", histtype="step", label="Signal Before Matching")
-        plt.hist(bkgData[:,index], bins = rg, color=cmapNormal(0.8), linestyle="-", histtype="step", label="Background Before Matching")
+        plt.hist(signalData[:,index], bins = rg, color=cmapNormal(0.2), linestyle="-", histtype="step", label="DEP Before Matching")
+        plt.hist(bkgData[:,index], bins = rg, color=cmapNormal(0.8), linestyle="-", histtype="step", label="SEP Before Matching")
         plt.hist(signalData[sigIndex,index], bins = rg, color=cmapNormal(0.4), alpha=0.5, label="Distribution After Matching")
         plt.ylabel("Counts")
         # plt.xlabel(f"New # Waves {len(sigIndex)}")
