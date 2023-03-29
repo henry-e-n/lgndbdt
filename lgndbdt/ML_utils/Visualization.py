@@ -21,13 +21,13 @@ def TrainingMetric(evals_result):
     clearAll()
     shap.initjs()
     ax = lgb.plot_metric(evals_result, metric='binary_logloss') # plot of log loss, should be smooth indicating the BDT was appropriately learning over iterations
-    plt.savefig(f"{plotPath}/TrainingMetric.png", dpi=100, transparent=True)
+    plt.savefig(f"{plotPath}/TrainingMetric.pdf", dpi=100, transparent=True)
     return
 
 def TreeVis(gbm):
     clearAll()
-    lgb.plot_tree(gbm, dpi=1000, show_info="data_percentage", figsize=(12,8))
-    plt.savefig(f"{plotPath}/PlotTree.png", dpi=1000, transparent=True)
+    lgb.plot_tree(gbm, dpi=1000, show_info="data_percentage", figsize=(24,16))
+    plt.savefig(f"{plotPath}/PlotTree.pdf", dpi=1000, transparent=True)
     return
 
 def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
@@ -67,7 +67,7 @@ def plot_covariance(covMat, saveName, covName = fname):
     plt.yticks(np.arange(len(covName)), covName)
     plt.title(f"{saveName}")
     plt.colorbar()
-    plt.savefig(f"{plotPath}/{saveName.replace(' ', '')}.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+    plt.savefig(f"{plotPath}/{saveName.replace(' ', '')}.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
     return
 
 def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
@@ -113,13 +113,13 @@ def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
     cbar.ax.set_ylabel('SHAP Value of %s'%(var1))
     # plt.legend()
     plt.tight_layout()
-    plt.savefig(f"{plotPath}/{var2[1:]}{var1[1:]}.png",dpi=200, transparent=True)
+    plt.savefig(f"{plotPath}/{var2[1:]}{var1[1:]}.pdf",dpi=200, transparent=True)
     return
 
 def plot_SHAP_force(explainer, shap_values):
     clearAll()
     shapFP = shap.force_plot(explainer.expected_value[1], shap_values, fname, matplotlib = True, show=False, plot_cmap = "PkYg", text_rotation=45)
-    plt.savefig(f"{plotPath}/ForcePlot.png",dpi=200, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+    plt.savefig(f"{plotPath}/ForcePlot.pdf",dpi=200, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
     return
 
 
@@ -165,7 +165,7 @@ def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_e
     plt.xlabel("False Positivity Rate", fontsize = 40)
     plt.ylabel("True Positivity Rate", fontsize = 40)
     plt.title("BDT vs traditional A/E ROC performance", fontsize = 40) #, fontsize = 24, pad = 15, fontstyle='italic')
-    plt.savefig(f"{plotPath}/ROC3.png",dpi=300, transparent=True)
+    plt.savefig(f"{plotPath}/ROC3.pdf",dpi=300, transparent=True)
     return
 
 def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavse):
@@ -404,7 +404,7 @@ def printMVC(pcaMat):
     plt.xticks(np.arange(len(fname)), fname, rotation=60)
     plt.yticks(np.arange(len(fname)), fname)
     plt.colorbar()
-    plt.savefig(f"{plotPath}/mvc.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+    plt.savefig(f"{plotPath}/mvc.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
     plt.cla()
     plt.clf()
     plt.close()
@@ -417,7 +417,7 @@ def printBVC(pcaVect, pcaNames):
     # plt.title("Log Scale", fontsize = 24, pad = 15, fontstyle='italic')
     plt.yticks(np.arange(len(pcaNames)), pcaNames) #, rotation=90
     plt.semilogx()
-    plt.savefig(f"{plotPath}/bvc.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+    plt.savefig(f"{plotPath}/bvc.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
     plt.cla()
     plt.clf()
     plt.close()
@@ -432,7 +432,7 @@ def printBVC(pcaVect, pcaNames):
     plt.pie(pcaVectPie, labels=pcaNamesPie, autopct='%1.1f%%', colors=Piecolors)
     plt.suptitle("PCA", fontsize = 30, fontweight = 15)
     # plt.title("Raw Scale", fontsize = 24, pad = 15, fontstyle='italic')
-    plt.savefig(f"{plotPath}/bvcPIE.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+    plt.savefig(f"{plotPath}/bvcPIE.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
     plt.cla()
     plt.clf()
     plt.close()
@@ -451,7 +451,7 @@ def printPCAResults(pcaResults, pcaNames):
     plt.yticks(np.arange(len(pltNames)), pltNames) #, rotation=90
     plt.semilogx()
     plt.xlim(0.001, 1)
-    plt.savefig(f"bvcComp.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=False)
+    plt.savefig(f"bvcComp.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=False)
 
 
 
@@ -470,7 +470,7 @@ def printPCAResults(pcaResults, pcaNames):
     plt.semilogx()
     plt.xlim(0.001, 1)
     plt.legend(ncol=2, bbox_to_anchor = (1.05, 0.99))
-    plt.savefig(f"bvc.png",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=False)
+    plt.savefig(f"bvc.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=False)
 
 
 def sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict, parameter_name):
@@ -480,7 +480,7 @@ def sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict
     # plt.hist(sigRAWSide[:, selectDict[f"{parameter_name}"]], bins=20, histtype="step", linewidth = 3, color = terminalCMAP[2], label=f"SS Side")
     # plt.hist(bkgRAWSide[:, selectDict[f"{parameter_name}"]], bins=20, histtype="step", linewidth = 3, color = terminalCMAP[3], label=f"MS Side")
     # plt.legend()
-    # plt.savefig(f"{plotPath}/{parameter_name}DistributionHistogram.png",dpi=300, transparent=True)
+    # plt.savefig(f"{plotPath}/{parameter_name}DistributionHistogram.pdf",dpi=300, transparent=True)
     clearAll()
     
     boxPlotList = [sigRAWTop[:, selectDict[f"{parameter_name}"]],
