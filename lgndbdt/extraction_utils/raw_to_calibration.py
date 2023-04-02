@@ -119,7 +119,7 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
             plt.ylabel("Energy (keV)", fontsize=16)
             plt.title("Calibration Fit", fontsize=16)
             plt.legend(loc='best', fontsize=14)
-            plt.savefig(f"{savePath}/CalibrationFit.png", dpi=300)
+            plt.savefig(f"{savePath}/CalibrationFit.pdf", dpi=300)
             plt.clf()
             plt.cla()
         # plt.show()
@@ -145,7 +145,7 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
         plt.title("Calibrated Energy Spectrum", fontsize=18)
         plt.yscale('log')
         plt.xlim(0,3000)
-        plt.savefig(f"{savePath}/EnergyHist.png")
+        plt.savefig(f"{savePath}/EnergyHist.pdf", dpi=300)
         plt.clf()
         plt.cla()
 
@@ -242,7 +242,7 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
             axs[i].set_xlabel("Uncalibrated Energy (ADC)")
             axs[i].legend(fontsize=18, loc='best')
     axs[0].set_title("Compound Fit to Peaks", fontsize=22)
-    plt.savefig(f"{savePath}/fitPeaks.png")
+    plt.savefig(f"{savePath}/fitPeaks.pdf", dpi=300)
     plt.cla()
     plt.clf()
 
@@ -277,10 +277,10 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
             plt.xlim(peaks[i] - 10*sigmas[i], peaks[i] + 10*sigmas[i])
             if i == 2:
                 plt.title("DEP Peak", fontsize=18)
-                plt.savefig(f"{savePath}/EnergyHist_DEP.png", dpi=300)
+                plt.savefig(f"{savePath}/EnergyHist_DEP.pdf", dpi=300)
             if i == 3:
                 plt.title("SEP Peak", fontsize=18)
-                plt.savefig(f"{savePath}/EnergyHist_SEP.png", dpi=300)
+                plt.savefig(f"{savePath}/EnergyHist_SEP.pdf", dpi=300)
             plt.clf()
             plt.cla()
 
@@ -297,7 +297,7 @@ def energy_calibration(FilesForCalibration=6, verbose=False, plotBool=False):
         # plt.ylabel('Counts', fontsize=24)
         # plt.yscale('log')
         # plt.xlim(peaks[3] - 7*sigmas[3], peaks[3] + 7*sigmas[3])
-        # plt.savefig(f"{savePath}/EnergyHist_SEP.png")
+        # plt.savefig(f"{savePath}/EnergyHist_SEP.pdf", dpi=300)
         # plt.clf()
         # plt.cla()
 
