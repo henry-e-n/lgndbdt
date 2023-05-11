@@ -1,0 +1,32 @@
+## Reconstruction of LGNDBDT Pipeline
+## v2.0.1
+## Writer       : Henry Nachman
+## Affiliation  : UNC-ENAP & LEGEND Collaboration
+## Start Date   : 05-11-2023
+## Publish Date : 
+
+# Core Functions
+
+Calibration
+    Input  : Detector Name, Source Loc
+    Save   : Fit Parameters
+    Desc.  : Calibrates the spectrum of characterization runs defined by name and source location.
+
+Waveform Extraction
+    Input  : Detector Name, Source Loc, Fit Parameters, Peak
+    Save   : Peak_WFD_RAW
+    Desc.  : Stores the raw waveforms found in the specified peak of the calibrated spectrum.
+
+PSD Extraction
+    Input  : Detector Name, Peak_WFD_RAW, Extraction_List, Peak
+    Save   : Peak_PSD
+    Desc.  : Stores the extracted pulse shape parameters (defined by Extraction_List).
+
+BDT Train
+    Input  : 
+    Save   :
+
+BDT Test
+    Input  : 
+    Save   :
+
