@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import h5py
 
-from get_files import get_dsp_files
-from h5_utils import openGroup
+from utilities.get_files import get_dsp_files
+from utilities.h5_utils import openGroup
 
 from pygama import lh5
 import pygama.analysis.calibration as pgc

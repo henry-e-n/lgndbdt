@@ -1,6 +1,6 @@
 import numpy as np
 
-from get_files import get_dsp_files
+from utilities.get_files import get_dsp_files
 
 from pygama import lh5
 
