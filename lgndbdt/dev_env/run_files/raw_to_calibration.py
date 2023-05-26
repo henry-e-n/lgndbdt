@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import h5py
 
-from utilities.get_files import get_dsp_files
+from utilities.get_files import get_dsp_files, get_save_paths
 from utilities.h5_utils import openGroup
 
 from pygama import lh5
@@ -33,6 +33,7 @@ def clean_dsp(dsp_files):
 ##############################
 def calibrate_spectrum(detector_name, source_location, files_for_calibration=6, verbose=False, plots_bool=False):
     dsp_files, raw_files, file_save_path = get_dsp_files(detector_name, source_location)
+    file_save_path, plot_save_path = get_save_paths(detector_name, source_location)
     dsp_files_clean, dsp_files_icpcs = clean_dsp(dsp_files)
 
     try:
@@ -133,7 +134,7 @@ def calibrate_spectrum(detector_name, source_location, files_for_calibration=6, 
         plt.title("Calibrated Energy Spectrum", fontsize=18)
         plt.yscale('log')
         plt.xlim(0,3000)
-        plt.savefig(f"{file_save_path}/EnergyHist.pdf", dpi=300)
+        plt.savefig(f"{plot_save_path}/EnergyHist.pdf", dpi=300)
         plt.clf()
         plt.cla()
 
@@ -230,7 +231,7 @@ def calibrate_spectrum(detector_name, source_location, files_for_calibration=6, 
             axs[i].set_xlabel("Uncalibrated Energy (ADC)")
             axs[i].legend(fontsize=18, loc='best')
     axs[0].set_title("Compound Fit to Peaks", fontsize=22)
-    plt.savefig(f"{file_save_path}/fitPeaks.pdf", dpi=300)
+    plt.savefig(f"{plot_save_path}/fitPeaks.pdf", dpi=300)
     plt.cla()
     plt.clf()
 
@@ -265,10 +266,10 @@ def calibrate_spectrum(detector_name, source_location, files_for_calibration=6, 
             plt.xlim(peaks[i] - 10*sigmas[i], peaks[i] + 10*sigmas[i])
             if i == 2:
                 plt.title("DEP Peak", fontsize=18)
-                plt.savefig(f"{savePath}/EnergyHist_DEP.pdf", dpi=300)
+                plt.savefig(f"{plot_save_path}/EnergyHist_DEP.pdf", dpi=300)
             if i == 3:
                 plt.title("SEP Peak", fontsize=18)
-                plt.savefig(f"{savePath}/EnergyHist_SEP.pdf", dpi=300)
+                plt.savefig(f"{plot_save_path}/EnergyHist_SEP.pdf", dpi=300)
             plt.clf()
             plt.cla()
 
