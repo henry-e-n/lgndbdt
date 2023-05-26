@@ -18,7 +18,6 @@ def clean_dsp(dsp_files):
         try:
             checkFile = h5py.File(file)
             group  = openGroup(checkFile, [])
-            # print(group)
             if group == ["/icpcs/icpc1/dsp/trapEmax"]:
                 dsp_files_icpcs.append(dsp_files[i])
                 delList.append(i)
@@ -26,8 +25,10 @@ def clean_dsp(dsp_files):
         except FileNotFoundError:
             print(f"FNF: {i}, {file}")
             delList.append(i)
-
+            
     dsp_files = np.delete(dsp_files, delList)
+
+    return dsp_files, dsp_files_icpcs
 
 ##############################
 def calibrate_spectrum(detector_name, source_location, files_for_calibration=6, verbose=False, plots_bool=False):
