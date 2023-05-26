@@ -2,7 +2,7 @@ import numpy as np
 import os
 
 from raw_to_calibration      import calibrate_spectrum
-from calibration_to_peakdata import extract_WFD
+from calibration_to_peakdata import extract_waveforms
 
 from utilities.get_files import get_save_paths
 from utilities.h5_utils import searchFile
@@ -38,7 +38,7 @@ for detector in detector_list: # Loops over all specified detectors
         cal_params  = np.load(f"{file_save_path}/cal_param_{source}.npy", allow_pickle=True)
         
         for targ_peak in ["DEP", "SEP", "FEP"]:
-            wfd, param_keys  = extract_WFD(detector_name = detector, source_location = source, calibration_parameters = cal_params, fit_parameters = fit_params, target_peak = targ_peak)
+            wfd, param_keys  = extract_waveforms(detector_name = detector, source_location = source, calibration_parameters = cal_params, fit_parameters = fit_params, target_peak = targ_peak)
             np.save(f"{file_save_path}/paramArr_{targ_peak}.npy", wfd)
             np.save(f"{file_save_path}/paramKeys_{wfd}.npy", param_keys)
 

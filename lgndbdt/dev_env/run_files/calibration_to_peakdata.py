@@ -36,6 +36,7 @@ def extract_waveforms(detector_name, source_location, calibration_parameters, fi
         print(f"Number of files: {len(dsp_files)}")
         
     for file in range(len(dsp_files)):
+        
         dspFile = dsp_files[file]
         rawFile = raw_files[file]
         try: 

@@ -20,7 +20,7 @@ def get_dsp_files(detector_name, source_location):
         raw_files.append(raw_file)
     
     file_save_path = data["file_save_path"]
-    return dsp_files, raw_file, file_save_path
+    return dsp_files, raw_files, file_save_path
 
 def get_save_paths(detector_name, source_location):
     f = open(f"{os.getcwd()}/paths.json")
