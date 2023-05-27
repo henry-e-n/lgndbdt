@@ -80,10 +80,10 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
 
     
     
-    sigRAWTop, selectDict = getRaw(f"{filename}topDEP.lh5", f"{fpath}")
-    bkgRAWTop, selectDict = getRaw(f"{filename}top{target_peak}.lh5", f"{fpath}")
-    sigRAWSide, selectDict = getRaw(f"{filename}sideDEP.lh5", f"{fpath}")
-    bkgRAWSide, selectDict = getRaw(f"{filename}side{target_peak}.lh5", f"{fpath}")
+    sigRAWTop, selectDict = getRaw(f"{filename}top_DEP.lh5", f"{fpath}")
+    bkgRAWTop, selectDict = getRaw(f"{filename}top_{target_peak}.lh5", f"{fpath}")
+    sigRAWSide, selectDict = getRaw(f"{filename}side_DEP.lh5", f"{fpath}")
+    bkgRAWSide, selectDict = getRaw(f"{filename}side_{target_peak}.lh5", f"{fpath}")
     
     def scaleData(signalRAW, backgroundRAW):
         scaler = RobustScaler()
