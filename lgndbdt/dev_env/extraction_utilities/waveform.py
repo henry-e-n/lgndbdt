@@ -1,5 +1,7 @@
 
 import numpy as np
+import tqdm
+from utilities.global_config import terminalCMAP
 
 def cTimes(wfParams, detName, savePath, number, save=True):
     [dt, t0, val] = wfParams
