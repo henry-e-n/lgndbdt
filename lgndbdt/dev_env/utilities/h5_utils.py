@@ -21,7 +21,7 @@ def search_file(name, path):
     
 def save_new_lh5(appArr, appArrN, ts, wfdCorr, file_save_path, detector_name, source_location, target_peak):
     numWave = appArr.shape[1]
-    newFile = h5py.File(f"{file_save_path}/{detector_name}_PSDs_{source_location}_{target_peak}.lh5", "w")
+    newFile = h5py.File(f"{file_save_path}/{detector_name}_PSDs_{target_peak}_{source_location}.lh5", "w")
     
     for n in range(len(appArr)):
         try:
