@@ -164,7 +164,7 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
     print(f"Size before Distribution Matching Signal: {sigSave.shape}, Background: {bkgSave.shape}")
     for i in range(len(match_features)):
         print(f"Distribution Matching {match_features[i]}")
-        sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, match_features[i], match_step[i], plots, show = False)
+        sigSave, bkgSave = match_data(sigSave, bkgSave, selectDict, match_features[i], match_step[i], plots, plotPath = plot_save_path, show = False)
     print(f"Size after Distribution Matching Signal: {sigSave.shape}, Background: {bkgSave.shape}")
 
     sigs = sigSave

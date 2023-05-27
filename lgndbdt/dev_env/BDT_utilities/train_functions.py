@@ -1,8 +1,7 @@
 import numpy as np
-from extraction_utils.config import *
-
+import matplotlib.pyplot as plt
 from imblearn.over_sampling import SMOTENC
-
+from utilities.global_config import cmapNormal
 
 
 ############################################################################################################################
@@ -23,7 +22,7 @@ def split_data(data, testSplit = 0.3):
 
 
 # Distribution Matching Function
-def match_data(signalData, bkgData, selectDict, varname, increment, plots=False, show = True):
+def match_data(signalData, bkgData, selectDict, varname, increment, plots=False, plotPath = "", show = True):
     """
     This function executes a distribution matching algorithm
     Distribution matching is used to match the number and distribution of entries in the signal and background datasets for each variable
@@ -132,16 +131,16 @@ def match_data(signalData, bkgData, selectDict, varname, increment, plots=False,
 
 ############################################################################################################################
 
-# Data Augmentation Function
-def augment_ICPC(xInput):
-    yTest = xInput[:, fname.index("dettype")] # Array of detector types
-    xTest = np.delete(xInput, fname.index("dettype"), axis = -1) # Removes detector type from input array
+# # Data Augmentation Function
+# def augment_ICPC(xInput, fname):
+#     yTest = xInput[:, fname.index("dettype")] # Array of detector types
+#     xTest = np.delete(xInput, fname.index("dettype"), axis = -1) # Removes detector type from input array
     
-    smICPC = SMOTENC(categorical_features = [fname.index("channel")-1, fname.index("ds")], k_neighbors = 10)
-    xRes, yRes = smICPC.fit_resample(xTest, yTest)
-    xOut = np.insert(xRes, fname.index("dettype"), yRes, axis=-1)
+#     smICPC = SMOTENC(categorical_features = [fname.index("channel")-1, fname.index("ds")], k_neighbors = 10)
+#     xRes, yRes = smICPC.fit_resample(xTest, yTest)
+#     xOut = np.insert(xRes, fname.index("dettype"), yRes, axis=-1)
     
-    return xOut    
+#     return xOut    
 
 ############################################################################################################################
 
