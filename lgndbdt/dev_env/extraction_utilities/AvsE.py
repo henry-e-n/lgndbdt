@@ -1,5 +1,5 @@
 import numpy as np
-import tqdm
+from tqdm import tqdm
 from utilities.global_config import terminalCMAP
 
 def AvsE(values, dtimes, plots = [], numWF = 2500, currentEstimator = 100):

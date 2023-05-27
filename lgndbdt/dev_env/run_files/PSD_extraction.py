@@ -1,5 +1,5 @@
 import numpy as np
-import tqdm
+from tqdm import tqdm
 
 from extraction_utilities.waveform import cTimes
 from utilities.get_files import get_save_paths
