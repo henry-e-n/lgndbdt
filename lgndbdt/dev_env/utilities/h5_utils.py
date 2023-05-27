@@ -56,3 +56,47 @@ def extract_h5(filepath, targetKeys):
         paramArr.append(wfd[keys[cut[0][0]]])
     
     return wfd, targetKeys, paramArr
+
+def paramExtract(filename, relativePathToFolder = "", og = "raw"):
+    """
+    Function: Extracts parameter arrays from an lh5 file
+
+    Parameters:
+        - filename: Name of file to be extracted, without the root
+        - relativePathToFolder: Root of path to folder
+        - *og = True: Indicates if it is a raw LEGEND file
+
+    Returns:
+        - wfd: open file
+        - headKeys/raw
+        - paramArr
+    """
+    filepath = checkPath(filename, relativePathToFolder)
+    # print(filepath)
+    wfd = h5.File(f"{filepath}", "r+")
+    
+    headKeys = list(wfd.keys()) # extracts group names within 'head' - only 'raw' exists
+        
+    if og == "raw":
+        raw = wfd[f"{headKeys[0]}"]
+        paramArr = [raw["A/E"], raw["dt"],
+                    raw["index"], raw["tp_0"],
+                    raw["waveform/dt"], 
+                    raw["waveform/t0"],
+                    raw["waveform/values"]]
+        return wfd, raw, paramArr
+    elif og == "clean":
+        raw = wfd[f"{headKeys[0]}"]
+        paramArr = [raw["A/E"], raw["dt"],
+                    raw["index"], raw["tp_0"],
+                    raw["waveform/dt"], 
+                    raw["waveform/t0"],
+                    raw["waveform/values"],
+                    raw["dc_labels"]]
+        return wfd, raw, paramArr
+    else:
+        paramArr = []
+        for n in range(len(headKeys)):
+            paramArr.append(wfd[f"{headKeys[n]}"])
+        return wfd, headKeys, paramArr
+    

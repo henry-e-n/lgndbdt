@@ -13,7 +13,7 @@ from tqdm import tqdm
 from imblearn.over_sampling import SMOTE
 
 from utilities.get_files import get_save_paths
-from utilities.h5_utils  import extract_h5
+from utilities.h5_utils  import paramExtract
 from BDT_utilities.Visualization import *
 from BDT_utilities.train_functions import split_data, match_data
 print("Finished Import")
@@ -45,7 +45,7 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
     print(fpath)
 
     def getRaw(filename, fpath):
-        file, names, paramArr = extract_h5(filename, fpath, False)
+        file, names, paramArr = paramExtract(filename, fpath, False)
         dataDict = []
         dataArr = np.zeros((len(train_features), paramArr[0].shape[0]))
         select = []
