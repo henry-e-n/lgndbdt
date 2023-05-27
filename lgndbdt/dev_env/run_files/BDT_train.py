@@ -25,7 +25,7 @@ max_bin              = 542 #args.max_bin
 randSeed = 27
 np.random.seed(randSeed)
 
-def BDT_train(detector_name, target_peak, source_location, train_features, match_features, match_step, bdt_thresh = 0.55, avse_thresh = 969, validate="split", augment = True, plots=True):
+def BDT_train(detector_name, target_peak, source_location, train_features, match_features, match_step, bdt_thresh = 0.55, avse_thresh = 969, split_ratio = 0.3, validate="split", augment = True, plots=True):
     top_file_save_path, top_plot_save_path = get_save_paths(detector_name, "top")
     side_file_save_path, side_plot_save_path = get_save_paths(detector_name, "side")
     plot_save_path = top_plot_save_path
@@ -150,15 +150,15 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
     print("--------------- Running Distribution Matching ---------------")
     print("-------------------------------------------------------------")
     
-    sigSave, sigPDM = split_data(sigRAW, 0.3)
-    bkgSave, bkgPDM = split_data(bkgRAW, 0.3)
+    sigSave, sigPDM = split_data(sigRAW, split_ratio)
+    bkgSave, bkgPDM = split_data(bkgRAW, split_ratio)
 
     print(f"Incoming dataset size \n \
             SS shape {len(sigRAW)} - Split to {len(sigSave), len(sigPDM)} \n \
             MS shape {len(bkgRAW)} - Split to {len(bkgSave), len(bkgPDM)}")
 
-    sigSave, sigAUGPDM = split_data(sigAUG, 0.3)
-    bkgSave, bkgAUGPDM = split_data(bkgAUG, 0.3)
+    sigSave, sigAUGPDM = split_data(sigAUG, split_ratio)
+    bkgSave, bkgAUGPDM = split_data(bkgAUG, split_ratio)
     
     print(f"Size before Distribution Matching Signal: {sigSave.shape}, Background: {bkgSave.shape}")
     for i in range(len(match_features)):
@@ -175,11 +175,11 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
     print("----------------------- Training Prep -----------------------")
     print("-------------------------------------------------------------")
 
-    signalTrain, signalTest = split_data(sigs, 0.3)
+    signalTrain, signalTest = split_data(sigs, split_ratio)
     sigLabelTrain           = np.ones(signalTrain.shape[0]) # Labels all training signals as signals (1)
     sigLabelTest            = np.ones(signalTest.shape[0]) # Labels all testing signals as signals (1)
 
-    bkgTrain, bkgTest = split_data(bkgs, 0.3)  # assigns arrays corresponding to randomly split signal data 
+    bkgTrain, bkgTest = split_data(bkgs, split_ratio)  # assigns arrays corresponding to randomly split signal data 
     bkgLabelTrain     = np.zeros(bkgTrain.shape[0])
     bkgLabelTest      = np.zeros(bkgTest.shape[0])
 
@@ -380,8 +380,8 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
                     lossRatio_BKG = len(bkgData)/len(bkgRAW)
 
                 else:
-                    sig_sideband_Save, sig_sideband_Ratio = split_data(sig_sideband_RAW, 0.3)
-                    bkg_sideband_Save, bkg_sideband_Ratio = split_data(bkg_sideband_RAW, 0.3)
+                    sig_sideband_Save, sig_sideband_Ratio = split_data(sig_sideband_RAW, split_ratio)
+                    bkg_sideband_Save, bkg_sideband_Ratio = split_data(bkg_sideband_RAW, split_ratio)
                     print(f"Ratio loss of signal data {len(signalData)/len(sigPDM)}")
                     print(f"Ratio loss of bkg data {len(bkgData)/len(bkgPDM)}")
                     lossRatio_SIG = len(signalData)/len(sigPDM)

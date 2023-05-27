@@ -6,13 +6,13 @@ from pygama import lh5
 
 def get_peak_index(target_peak):
     if "DEP" in target_peak:
-        print(f"Calibrating on 228Th DEP")
+        # print(f"Calibrating on 228Th DEP")
         peakIndex = 2
     elif "SEP" in target_peak:
-        print(f"Calibrating on 228Th SEP")
+        # print(f"Calibrating on 228Th SEP")
         peakIndex = 3
     elif "FEP" in target_peak:
-        print(f"Calibrating on 228Th FEP")
+        # print(f"Calibrating on 228Th FEP")
         peakIndex = 4
     return peakIndex
 
@@ -64,7 +64,7 @@ def extract_waveforms(detector_name, source_location, calibration_parameters, fi
                 sigmaKEV = peakFits[peakIndex][2]
                 sigmaADC = sigmaKEV*calibration_parameters[0]
                 sigma = sigmaADC
-                print(f"Selection Window : {(peakEnergy-sigma)} - {(peakEnergy+sigma)}, mean ADC: {peakEnergy}, sigma {sigma}")
+                # print(f"Selection Window : {(peakEnergy-sigma)} - {(peakEnergy+sigma)}, mean ADC: {peakEnergy}, sigma {sigma}")
 
                 if "_sideband" in target_peak:
                     sideband_width_ratio = 2 # Make sure if you change this to also change it in Visualization ROC, and in rtc plot
@@ -72,13 +72,13 @@ def extract_waveforms(detector_name, source_location, calibration_parameters, fi
                     peakEnergy_right = peakEnergy+(2.5 + sideband_width_ratio)*sigma
 
                     sigma = sideband_width_ratio*sigma
-                    print("SIDEBAND TIME!!")
+                    # print("SIDEBAND TIME!!")
                     selection_crit = ((energies>(peakEnergy_left-sigma))*(energies<(peakEnergy_left+sigma)))|((energies>(peakEnergy_right-sigma))*(energies<(peakEnergy_right+sigma)))
-                    print(f"Selection Window : {(peakEnergy_left-sigma)} - {(peakEnergy_left+sigma)}, {(peakEnergy_left-sigma)} - {(peakEnergy_left+sigma)}, mean ADC: {peakEnergy}, sigma {sigma}")
+                    # print(f"Selection Window : {(peakEnergy_left-sigma)} - {(peakEnergy_left+sigma)}, {(peakEnergy_left-sigma)} - {(peakEnergy_left+sigma)}, mean ADC: {peakEnergy}, sigma {sigma}")
 
                 else:
                     selection_crit =  (energies>(peakEnergy-sigma))*(energies<(peakEnergy+sigma))
-                    print(f"Selection Window : {(peakEnergy-sigma)} - {(peakEnergy+sigma)}, mean ADC: {peakEnergy}, sigma {sigma}")
+                    # print(f"Selection Window : {(peakEnergy-sigma)} - {(peakEnergy+sigma)}, mean ADC: {peakEnergy}, sigma {sigma}")
                 # sideband_crit = (energies>(peakEnergy+1.5*sigma))*(energies<(peakEnergy+3.5*sigma))
                 if file == 0:
                     for i in range(len(DSPparamArr)):
