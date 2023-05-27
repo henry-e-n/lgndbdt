@@ -10,7 +10,7 @@ def openGroup(group, kList):
                 kList = openGroup(group[key], kList)
     return kList
 
-def searchFile(name, path):
+def search_file(name, path):
     try: 
         for root, dirs, files in os.walk(path):
                 if name in files:

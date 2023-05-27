@@ -5,7 +5,7 @@ from raw_to_calibration      import calibrate_spectrum
 from calibration_to_peakdata import extract_waveforms
 from PSD_extraction          import psd_extraction
 from utilities.get_files     import get_save_paths
-from utilities.h5_utils      import searchFile
+from utilities.h5_utils      import search_file
 detector_list = ["V01415A"]
 source_loc    = ["top"]
 
@@ -27,7 +27,7 @@ for detector in detector_list: # Loops over all specified detectors
         if fit_exists:
             print(f"Using Pre-calibrated Fit found in {file_save_path}/fitResults.npy")
         else:
-            searchFile(os.getcwd(), "fitResults.npy")
+            search_file(os.getcwd(), "fitResults.npy")
             cal_pars, [fitData, fit_pars]  = calibrate_spectrum(detector_name = detector, source_location = source)
             fitResults = np.array([fitData, fit_pars], dtype=object)
             np.save(f"{file_save_path}/fit_results_{source}.npy", fitResults)
