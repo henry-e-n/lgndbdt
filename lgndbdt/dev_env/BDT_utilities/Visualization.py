@@ -7,7 +7,7 @@ from sklearn.decomposition import PCA
 import itertools
 
 from utilities.global_config import cmapNormal, cmapDiv, cmapNormal_r, terminalCMAP
-from plot_legacy import summary_legacy
+from BDT_utilities.plot_legacy import summary_legacy
 from matplotlib.colors import ListedColormap
 
 forceCMAP = ListedColormap(["#13294B", "#EF426F"])
