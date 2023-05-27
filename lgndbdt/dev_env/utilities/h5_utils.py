@@ -1,5 +1,6 @@
 import h5py
 import os
+import numpy as np
 
 def openGroup(group, kList):
     for key in group.keys():
@@ -40,3 +41,18 @@ def save_new_lh5(appArr, appArrN, ts, wfdCorr, file_save_path, detector_name, ta
 
     print(f"Saved as {file_save_path}/{detector_name}_PSDs.lh5")
     return
+
+###################################################################
+
+def extract_h5(filepath, targetKeys):
+    wfd = h5py.File(f"{filepath}", "r")
+    keys = []
+    keys = openGroup(wfd, keys)
+
+    paramArr = [] # np.empty(len(targetKeys), dtype = object)
+    for target in targetKeys:
+        cut = np.where(np.char.find(np.array(keys, dtype=str), target)>0)
+        # print(wfd[keys[cut[0][0]]][:])
+        paramArr.append(wfd[keys[cut[0][0]]])
+    
+    return wfd, targetKeys, paramArr
