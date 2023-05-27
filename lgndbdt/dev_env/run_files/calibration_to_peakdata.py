@@ -1,6 +1,7 @@
 import numpy as np
+import json
 
-from utilities.get_files import get_dsp_files
+from utilities.get_files import get_files
 
 from pygama import lh5
 
@@ -30,7 +31,10 @@ def extract_waveforms(detector_name, source_location, calibration_parameters, fi
     paramArr = np.empty(len(dsptargetKeys)+len(rawtargetKeys), dtype = object)
     paramArrKeys = dsptargetKeys + rawtargetKeys# + ["sidebandNum"]
     
-    dsp_files, raw_files, file_save_path = get_dsp_files(detector_name, source_location)
+    f = open(f"{os.getcwd()}/paths.json")
+    data = json.load(f)
+    data = data[detector_name][source_location]
+    dsp_files, raw_files, file_save_path = get_files(data)
 
     if verbose:
         print(f"Number of files: {len(dsp_files)}")

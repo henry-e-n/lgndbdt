@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import h5py
 
-from utilities.get_files import get_dsp_files, get_save_paths
+from utilities.get_files import get_files, get_save_paths
 from utilities.h5_utils import openGroup
 
 from pygama import lh5
@@ -32,7 +32,11 @@ def clean_dsp(dsp_files):
 
 ##############################
 def calibrate_spectrum(detector_name, source_location, files_for_calibration=6, verbose=False, plots_bool=False):
-    dsp_files, raw_files, file_save_path = get_dsp_files(detector_name, source_location)
+    f = open(f"{os.getcwd()}/paths.json")
+    data = json.load(f)
+    data = data[detector_name][source_location]
+
+    dsp_files, raw_files, file_save_path = get_files(data)
     file_save_path, plot_save_path = get_save_paths(detector_name, source_location)
     dsp_files_clean, dsp_files_icpcs = clean_dsp(dsp_files)
 
