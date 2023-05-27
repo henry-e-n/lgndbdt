@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import h5py
+import json, os
 
 from utilities.get_files import get_files, get_save_paths
 from utilities.h5_utils import openGroup
