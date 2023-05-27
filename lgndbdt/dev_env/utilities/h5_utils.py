@@ -57,6 +57,22 @@ def extract_h5(filepath, targetKeys):
     
     return wfd, targetKeys, paramArr
 
+    
+
+def checkPath(name, rOTF):
+    try:
+        fp = search_file(name, rOTF)
+        return fp
+    except FileNotFoundError:
+        try:
+            path = os.path.split(rOTF)[0]
+            fp = search_file(name, rOTF)
+            return fp
+        except FileNotFoundError:
+            print("Sorry, file not found.")
+            exit()
+    return
+
 def paramExtract(filename, relativePathToFolder = "", og = "raw"):
     """
     Function: Extracts parameter arrays from an lh5 file
@@ -73,7 +89,7 @@ def paramExtract(filename, relativePathToFolder = "", og = "raw"):
     """
     filepath = checkPath(filename, relativePathToFolder)
     # print(filepath)
-    wfd = h5.File(f"{filepath}", "r+")
+    wfd = h5py.File(f"{filepath}", "r+")
     
     headKeys = list(wfd.keys()) # extracts group names within 'head' - only 'raw' exists
         
