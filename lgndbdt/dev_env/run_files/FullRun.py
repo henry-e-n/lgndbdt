@@ -3,9 +3,9 @@ import os
 
 from raw_to_calibration      import calibrate_spectrum
 from calibration_to_peakdata import extract_waveforms
-
-from utilities.get_files import get_save_paths
-from utilities.h5_utils import searchFile
+from PSD_extraction          import psd_extraction
+from utilities.get_files     import get_save_paths
+from utilities.h5_utils      import searchFile
 detector_list = ["V01415A"]
 source_loc    = ["top"]
 
@@ -37,11 +37,16 @@ for detector in detector_list: # Loops over all specified detectors
         fit_params  = np.load(f"{file_save_path}/fit_results_{source}.npy", allow_pickle=True)
         cal_params  = np.load(f"{file_save_path}/cal_param_{source}.npy", allow_pickle=True)
         
-        for targ_peak in ["DEP", "SEP", "FEP"]:
-            wfd, param_keys  = extract_waveforms(detector_name = detector, source_location = source, calibration_parameters = cal_params, fit_parameters = fit_params, target_peak = targ_peak)
-            np.save(f"{file_save_path}/paramArr_{targ_peak}.npy", wfd)
-            np.save(f"{file_save_path}/paramKeys_{wfd}.npy", param_keys)
+        peak_list = ["DEP", "SEP", "FEP"]
+        for target_peak in peak_list:
+            wfd, param_keys  = extract_waveforms(detector_name = detector, source_location = source, calibration_parameters = cal_params, fit_parameters = fit_params, target_peak = target_peak)
+            np.save(f"{file_save_path}/paramArr_{target_peak}.npy", wfd)
+            np.save(f"{file_save_path}/paramKeys_{target_peak}.npy", param_keys)
 
+        for target_peak in peak_list:
+            param_arr  = np.load(f"{file_save_path}/paramArr_{target_peak}.npy")
+            param_keys = np.load(f"{file_save_path}/paramKeys_{target_peak}.npy")
+            psd_extraction(param_arr, param_keys, detector, source, target_peak)
         # END for targ_peak
     # END for source in source_loc
 # END for detector in detector_list
