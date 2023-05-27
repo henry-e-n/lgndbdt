@@ -26,7 +26,9 @@ randSeed = 27
 np.random.seed(randSeed)
 
 def BDT_train(detector_name, target_peak, source_location, train_features, match_features, match_step, bdt_thresh = 0.55, avse_thresh = 969, validate="split", augment = True, plots=True):
-    file_save_path, plot_save_path = get_save_paths(detector_name, source_location)
+    top_file_save_path, top_plot_save_path = get_save_paths(detector_name, "top")
+    side_file_save_path, side_plot_save_path = get_save_paths(detector_name, "side")
+    plot_save_path = top_plot_save_path
 
     # Validate = "Full" for validation on all data
     isExist = os.path.exists(f"{plot_save_path}/{source_location}/")
@@ -38,14 +40,11 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
     # Data Type Preparation
     ###################################################################
 
-    filename        = f"{detector_name}_PSDs_{target_peak}"
-    fpath           = f"{file_save_path}"
-
-    print(filename)
-    print(fpath)
+    filename        = f"{detector_name}_PSDs_"
 
     def getRaw(filename, fpath):
         file, names, paramArr = paramExtract(filename, fpath, False)
+        print(file)
         dataDict = []
         dataArr = np.zeros((len(train_features), paramArr[0].shape[0]))
         select = []
@@ -80,10 +79,10 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
 
     
     
-    sigRAWTop, selectDict = getRaw(f"{filename}DEP_top.lh5", f"{fpath}")
-    bkgRAWTop, selectDict = getRaw(f"{filename}{target_peak}_top.lh5", f"{fpath}")
-    sigRAWSide, selectDict = getRaw(f"{filename}DEP_side.lh5", f"{fpath}")
-    bkgRAWSide, selectDict = getRaw(f"{filename}{target_peak}_side.lh5", f"{fpath}")
+    sigRAWTop, selectDict = getRaw(f"{filename}DEP_top.lh5", f"{top_file_save_path}")
+    bkgRAWTop, selectDict = getRaw(f"{filename}{target_peak}_top.lh5", f"{top_file_save_path}")
+    sigRAWSide, selectDict = getRaw(f"{filename}DEP_side.lh5", f"{side_file_save_path}")
+    bkgRAWSide, selectDict = getRaw(f"{filename}{target_peak}_side.lh5", f"{side_file_save_path}")
     
     def scaleData(signalRAW, backgroundRAW):
         scaler = RobustScaler()
@@ -249,6 +248,7 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
 
 
     if plots:
+        print(plot_save_path)
         for i in tqdm(range(6), 
                 desc   ="Running Visualization................", 
                 colour = terminalCMAP[1]):
@@ -356,16 +356,16 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
             elif i == 4:
                 
                 if source_location == "mix":
-                    sig_sideband_RawTop, selectDict = getRaw(f"{filename}topDEP_sideband.lh5", f"{fpath}")
-                    bkg_sideband_RawTop, selectDict = getRaw(f"{filename}top{target_peak}_sideband.lh5", f"{fpath}")
-                    sig_sideband_RawSide, selectDict = getRaw(f"{filename}sideDEP_sideband.lh5", f"{fpath}")
-                    bkg_sideband_RawSide, selectDict = getRaw(f"{filename}side{target_peak}_sideband.lh5", f"{fpath}")
+                    sig_sideband_RawTop, selectDict = getRaw(f"{filename}DEP_sideband_top.lh5", f"{top_file_save_path}")
+                    bkg_sideband_RawTop, selectDict = getRaw(f"{filename}{target_peak}_sideband_top.lh5", f"{top_file_save_path}")
+                    sig_sideband_RawSide, selectDict = getRaw(f"{filename}DEP_sideband_side.lh5", f"{side_file_save_path}")
+                    bkg_sideband_RawSide, selectDict = getRaw(f"{filename}{target_peak}_sideband_side.lh5", f"{side_file_save_path}")
                     print(f"SIDEBAND DATA: Runs include a mix of data from source location on the top, and on the side\nTop Data Size (sig, bkg) {sig_sideband_RawTop.shape}, {bkg_sideband_RawTop.shape}\nSide Data Size (sig, bkg) {sig_sideband_RawSide.shape}, {bkg_sideband_RawSide.shape}")
                     sig_sideband_RAW = np.concatenate((sig_sideband_RawTop, sig_sideband_RawSide))
                     bkg_sideband_RAW = np.concatenate((bkg_sideband_RawTop, bkg_sideband_RawSide))
                 else:
-                    sig_sideband_RAW, selectDict = getRaw(f"{filename}{source_location}DEP_sideband.lh5", f"{fpath}")
-                    bkg_sideband_RAW, selectDict = getRaw(f"{filename}{source_location}{target_peak}_sideband.lh5", f"{fpath}")
+                    sig_sideband_RAW, selectDict = getRaw(f"{filename}{source_location}DEP_sideband.lh5", f"{top_file_save_path}") ####################### Could be a source of problem
+                    bkg_sideband_RAW, selectDict = getRaw(f"{filename}{source_location}{target_peak}_sideband.lh5", f"{top_file_save_path}") ######################
                 
                 print(f"Sideband Comparison (RAW)\n \
                         SS Peak Size {len(sigRAW)} - SS Sideband size {len(sig_sideband_RAW)} - \u03C4 = 4, {1/4*len(sig_sideband_RAW)}\n \
