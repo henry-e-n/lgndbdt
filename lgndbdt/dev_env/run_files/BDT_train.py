@@ -245,6 +245,8 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
     gbm = lgb.Booster(model_file='BDT_unblind.txt')  # init model
     if plots:
         TrainingMetric(evals_result) #####################
+        plt.savefig(f"{plot_save_path}/TrainingMetric.pdf", dpi=100, transparent=True)
+
 
     if plots:
         for i in tqdm(range(6), 
@@ -301,7 +303,7 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
                 sample = np.concatenate([Pos_sample[:10000], Neg_sample[:10000]],axis=0)
                 shap_values = explainer.shap_values(sample)
                 # Returns a list of matrices (# outputs, # samples x, # features)
-                BDTSummary(shap_values, sample)
+                BDTSummary(shap_values, sample, train_features)
                 plt.title(f"BDT SHAP Feature Importance ({source_location})")
                 plt.savefig(f"{plot_save_path}/{source_location}/bdt_summary.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
 
@@ -323,14 +325,14 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
                 np.random.shuffle(evnew)
                 evnew = evnew[:10000]
                 shap_valuesDist = explainer.shap_values(evnew)
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT10", "/A_DAQE")
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT", "/A_DAQE")
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT50", "/A_DAQE")
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/LQ80", "/A_DAQE"),
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/DCR", "/A_DAQE"),
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT10", "/A_DAQE", plot_save_path)
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT", "/A_DAQE", plot_save_path)
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT50", "/A_DAQE", plot_save_path)
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/LQ80", "/A_DAQE", plot_save_path)
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/DCR", "/A_DAQE", plot_save_path)
                 # make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/NOISE", "/A_DAQE"),
                 # make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/NOISETAIL", "/A_DAQE"),
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT", "/A_DAQE", point=True)
+                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT", "/A_DAQE", plot_save_path, point=True)
             elif i == 3:
                 # index = 0
                 # ROIdata = evnew
@@ -343,7 +345,7 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
                 #     plot_SHAP_force(explainer, shap_values[1][-n])
                 #     plt.savefig(f"{plot_save_path}/{source_location}/ForcePlots/ForcePlot{-n}.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
                 
-                plot_SHAP_force(explainer, shap_values[1][1])
+                plot_SHAP_force(explainer, shap_values[1][1], train_features)
                 plt.savefig(f"{plot_save_path}/{source_location}/ForcePlot.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
                 
                 # plot_SHAP_force(explainer, shap_values[1][2])

@@ -6,7 +6,7 @@ from sklearn.metrics import roc_curve, roc_auc_score, auc
 from sklearn.decomposition import PCA
 import itertools
 
-from utilities.global_config import plotPath, cmapNormal, fname, cmapDiv, cmapNormal_r, terminalCMAP
+from utilities.global_config import cmapNormal, cmapDiv, cmapNormal_r, terminalCMAP
 from plot_legacy import summary_legacy
 from matplotlib.colors import ListedColormap
 
@@ -21,14 +21,14 @@ def TrainingMetric(evals_result):
     clearAll()
     shap.initjs()
     ax = lgb.plot_metric(evals_result, metric='binary_logloss') # plot of log loss, should be smooth indicating the BDT was appropriately learning over iterations
-    plt.savefig(f"{plotPath}/TrainingMetric.pdf", dpi=100, transparent=True)
+    # plt.savefig(f"{plotPath}/TrainingMetric.pdf", dpi=100, transparent=True)
     return
 
-def TreeVis(gbm):
-    clearAll()
-    lgb.plot_tree(gbm, dpi=1000, show_info="data_percentage", figsize=(24,16))
-    plt.savefig(f"{plotPath}/PlotTree.pdf", dpi=1000, transparent=True)
-    return
+# def TreeVis(gbm):
+#     clearAll()
+#     lgb.plot_tree(gbm, dpi=1000, show_info="data_percentage", figsize=(24,16))
+#     plt.savefig(f"{plotPath}/PlotTree.pdf", dpi=1000, transparent=True)
+#     return
 
 def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
     clearAll()
@@ -53,24 +53,24 @@ def BDTDistrib(y_pred, Y_test, side_pred = [], side_test=[]):
     plt.ylabel("# of events / 0.01 BDT Output(a.u.)")
     return
 
-def BDTSummary(shap_values, sample):
+def BDTSummary(shap_values, sample, fname):
     clearAll()
     plt.rcParams["figure.figsize"] = (15,8)
     summary_legacy(shap_values[1], sample, plot_type="dot", plot_size=(15,8), feature_names=fname,show=False, cmap=cmapNormal)
     plt.colorbar(fraction = 0.05)
     return
 
-def plot_covariance(covMat, saveName, covName = fname):
-    clearAll()
-    plt.imshow(covMat, cmap=cmapDiv, vmin=-1, vmax=1)
-    plt.xticks(np.arange(len(covName)), covName, rotation=60)
-    plt.yticks(np.arange(len(covName)), covName)
-    plt.title(f"{saveName}")
-    plt.colorbar()
-    plt.savefig(f"{plotPath}/{saveName.replace(' ', '')}.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
-    return
+# def plot_covariance(covMat, saveName, covName = fname):
+#     clearAll()
+#     plt.imshow(covMat, cmap=cmapDiv, vmin=-1, vmax=1)
+#     plt.xticks(np.arange(len(covName)), covName, rotation=60)
+#     plt.yticks(np.arange(len(covName)), covName)
+#     plt.title(f"{saveName}")
+#     plt.colorbar()
+#     plt.savefig(f"{plotPath}/{saveName.replace(' ', '')}.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+#     return
 
-def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
+def make_dist_plot(data, shap, selectDict, var1, var2, plotPath, point=False):
     clearAll()    
     index1 = selectDict[var1]
     index2 = selectDict[var2]
@@ -116,57 +116,57 @@ def make_dist_plot(data, shap, selectDict, var1, var2, point=False):
     plt.savefig(f"{plotPath}/{var2[1:]}{var1[1:]}.pdf",dpi=200, transparent=True)
     return
 
-def plot_SHAP_force(explainer, shap_values):
+def plot_SHAP_force(explainer, shap_values, feature_names):
     clearAll()
-    shapFP = shap.force_plot(explainer.expected_value[1], shap_values, fname, matplotlib = True, show=False, plot_cmap = "PkYg", text_rotation=45)
-    plt.savefig(f"{plotPath}/ForcePlot.pdf",dpi=200, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+    shapFP = shap.force_plot(explainer.expected_value[1], shap_values, feature_names, matplotlib = True, show=False, plot_cmap = "PkYg", text_rotation=45)
+    # plt.savefig(f"{plotPath}/ForcePlot.pdf",dpi=200, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
     return
 
 
-def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_ext = True):
-    clearAll()
-    cleanSig = np.delete(sigavse, np.argwhere(np.isnan(sigavse)))
-    cleanBkg = np.delete(bkgavse, np.argwhere(np.isnan(bkgavse)))
+# def plot_ROC(sigavse, bkgavse, Y_test, y_pred, sigRaw, bkgRaw, selectDict, inc_ext = True):
+#     clearAll()
+#     cleanSig = np.delete(sigavse, np.argwhere(np.isnan(sigavse)))
+#     cleanBkg = np.delete(bkgavse, np.argwhere(np.isnan(bkgavse)))
 
-    avseOriginal = np.concatenate((cleanSig,cleanBkg))
-    avseOgLabels = np.concatenate((np.ones(len(cleanSig)), np.zeros(len(cleanBkg))))
+#     avseOriginal = np.concatenate((cleanSig,cleanBkg))
+#     avseOgLabels = np.concatenate((np.ones(len(cleanSig)), np.zeros(len(cleanBkg))))
 
-    BDTfpr, BDTtpr, BDTthresholds = roc_curve(Y_test, y_pred)
-    ogfpr, ogtpr, ogthresholds    = roc_curve(avseOgLabels, avseOriginal)
-    BDTauc = roc_auc_score(Y_test, y_pred)
-    ogauc  = roc_auc_score(avseOgLabels, avseOriginal)
+#     BDTfpr, BDTtpr, BDTthresholds = roc_curve(Y_test, y_pred)
+#     ogfpr, ogtpr, ogthresholds    = roc_curve(avseOgLabels, avseOriginal)
+#     BDTauc = roc_auc_score(Y_test, y_pred)
+#     ogauc  = roc_auc_score(avseOgLabels, avseOriginal)
 
-    hlineBDT = np.argmin(np.abs(BDTtpr-0.76))
-    hlineOG  = np.argmin(np.abs(ogtpr-0.76))
+#     hlineBDT = np.argmin(np.abs(BDTtpr-0.76))
+#     hlineOG  = np.argmin(np.abs(ogtpr-0.76))
 
-    if inc_ext:
-        cleanSigExt = np.delete(sigRaw[:,selectDict["/AvsE_c"]], np.argwhere(np.isnan(sigavse)))
-        cleanBkgExt = np.delete(bkgRaw[:,selectDict["/AvsE_c"]], np.argwhere(np.isnan(bkgavse)))
-        avseExt = np.concatenate((cleanSigExt,cleanBkgExt))
-        avseExtLabels = np.concatenate((np.ones(len(cleanSigExt)), np.zeros(len(cleanBkgExt))))
+#     if inc_ext:
+#         cleanSigExt = np.delete(sigRaw[:,selectDict["/AvsE_c"]], np.argwhere(np.isnan(sigavse)))
+#         cleanBkgExt = np.delete(bkgRaw[:,selectDict["/AvsE_c"]], np.argwhere(np.isnan(bkgavse)))
+#         avseExt = np.concatenate((cleanSigExt,cleanBkgExt))
+#         avseExtLabels = np.concatenate((np.ones(len(cleanSigExt)), np.zeros(len(cleanBkgExt))))
 
-        Extfpr, Exttpr, Extthresholds    = roc_curve(avseExtLabels, avseExt)
-        Extauc  = roc_auc_score(avseExtLabels, avseExt)
-        hlineExt  = np.argmin(np.abs(Exttpr-0.76))
+#         Extfpr, Exttpr, Extthresholds    = roc_curve(avseExtLabels, avseExt)
+#         Extauc  = roc_auc_score(avseExtLabels, avseExt)
+#         hlineExt  = np.argmin(np.abs(Exttpr-0.76))
 
-    plt.figure(figsize=(15,16))
-    plt.plot([0],[0],color="white",label = " Classifier             DEP           FEP        AUC    ")
-    plt.plot(BDTfpr, BDTtpr, color = "#EF426F" , linestyle = "-", linewidth = 4, label = f"     BDT               75.0%        {np.round(100*BDTfpr[hlineBDT],1)}%    {np.round(BDTauc, 3)}")
-    plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"Extracted A/E      75.0%        {np.round(100*ogfpr[hlineOG],1)}%    {np.round(ogauc, 3)}")
-    if inc_ext:
-        plt.plot(Extfpr , Exttpr , color = "#B87333", linestyle = "-.", linewidth = 4, label = f"Extracted A/E    75.0%        {np.round(100*Extfpr[hlineExt],1)}%    {np.round(Extauc, 3)}")
-        plt.vlines(x = Extfpr[hlineExt]  , ymin = 0, ymax = Exttpr[hlineExt]  , linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
-    plt.hlines(y = BDTtpr[hlineBDT], xmin = 0, xmax = BDTfpr[hlineBDT]  , linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
-    plt.vlines(x = BDTfpr[hlineBDT], ymin = 0, ymax = BDTtpr[hlineBDT], linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
-    plt.vlines(x = ogfpr[hlineOG]  , ymin = 0, ymax = ogtpr[hlineOG]  , linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
-    plt.xlim((0,1))
-    plt.ylim((0,1))
-    plt.legend(loc="lower right")
-    plt.xlabel("False Positivity Rate", fontsize = 40)
-    plt.ylabel("True Positivity Rate", fontsize = 40)
-    plt.title("BDT vs traditional A/E ROC performance", fontsize = 40) #, fontsize = 24, pad = 15, fontstyle='italic')
-    plt.savefig(f"{plotPath}/ROC3.pdf",dpi=300, transparent=True)
-    return
+#     plt.figure(figsize=(15,16))
+#     plt.plot([0],[0],color="white",label = " Classifier             DEP           FEP        AUC    ")
+#     plt.plot(BDTfpr, BDTtpr, color = "#EF426F" , linestyle = "-", linewidth = 4, label = f"     BDT               75.0%        {np.round(100*BDTfpr[hlineBDT],1)}%    {np.round(BDTauc, 3)}")
+#     plt.plot(ogfpr , ogtpr , color = "#13294B", linestyle = "--", linewidth = 4, label = f"Extracted A/E      75.0%        {np.round(100*ogfpr[hlineOG],1)}%    {np.round(ogauc, 3)}")
+#     if inc_ext:
+#         plt.plot(Extfpr , Exttpr , color = "#B87333", linestyle = "-.", linewidth = 4, label = f"Extracted A/E    75.0%        {np.round(100*Extfpr[hlineExt],1)}%    {np.round(Extauc, 3)}")
+#         plt.vlines(x = Extfpr[hlineExt]  , ymin = 0, ymax = Exttpr[hlineExt]  , linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
+#     plt.hlines(y = BDTtpr[hlineBDT], xmin = 0, xmax = BDTfpr[hlineBDT]  , linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
+#     plt.vlines(x = BDTfpr[hlineBDT], ymin = 0, ymax = BDTtpr[hlineBDT], linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
+#     plt.vlines(x = ogfpr[hlineOG]  , ymin = 0, ymax = ogtpr[hlineOG]  , linewidth = 3, color = cmapNormal(0.5), linestyles = 'dashed', alpha = 0.7)
+#     plt.xlim((0,1))
+#     plt.ylim((0,1))
+#     plt.legend(loc="lower right")
+#     plt.xlabel("False Positivity Rate", fontsize = 40)
+#     plt.ylabel("True Positivity Rate", fontsize = 40)
+#     plt.title("BDT vs traditional A/E ROC performance", fontsize = 40) #, fontsize = 24, pad = 15, fontstyle='italic')
+#     plt.savefig(f"{plotPath}/ROC3.pdf",dpi=300, transparent=True)
+#     return
 
 def getROC_sideband(peaks_known, peaks_pred, side_sig, side_bkg, sigavse, bkgavse):
     clearAll()
@@ -338,139 +338,139 @@ def MC_integration(BDT_ROC):
 
         return fDTAR, yArray, fDPRO,fRPRO,bounds_dst,cval
 
-    #===============================================================
-    # function xr = reject(fDTAR,fDPRO,fRPRO,R)
-    # Returns an array of random variables sampled according to a
-    # target distribution fDTAR. A proposal distribution fDPRO can
-    # be provided.
-    #
-    # input: fDTAR     : function pointer to the target distribution density function.
-    #                    The function must take arguments fTAR(x,bounds),
-    #                    and must return the value of fTAR at x.
-    #        fDPRO     : function pointer to the proposal distribution density function.
-    #        fRPRO     : function pointer to the proposal distribution function. 
-    #                    Note that this will return a set of random numbers sampled
-    #                    according to fDPRO. Check dnorm and rnorm, for example.
-    #        R         : number of samples to be generated
-    #        bounds_dst: array of shape (2,N), where N is the number of
-    #                    dimensions (elements) in a single x, and the two
-    #                    fields per dimension give the lower and upper bound
-    #                    in that dimension.
-    # output: x_r      : random variables sampled according to P(x)
-    #--------------------------------------------------------------
-    def reject(fDTAR, yArray, fDPRO,fRPRO,R,bounds_dst,scale):
+#     #===============================================================
+#     # function xr = reject(fDTAR,fDPRO,fRPRO,R)
+#     # Returns an array of random variables sampled according to a
+#     # target distribution fDTAR. A proposal distribution fDPRO can
+#     # be provided.
+#     #
+#     # input: fDTAR     : function pointer to the target distribution density function.
+#     #                    The function must take arguments fTAR(x,bounds),
+#     #                    and must return the value of fTAR at x.
+#     #        fDPRO     : function pointer to the proposal distribution density function.
+#     #        fRPRO     : function pointer to the proposal distribution function. 
+#     #                    Note that this will return a set of random numbers sampled
+#     #                    according to fDPRO. Check dnorm and rnorm, for example.
+#     #        R         : number of samples to be generated
+#     #        bounds_dst: array of shape (2,N), where N is the number of
+#     #                    dimensions (elements) in a single x, and the two
+#     #                    fields per dimension give the lower and upper bound
+#     #                    in that dimension.
+#     # output: x_r      : random variables sampled according to P(x)
+#     #--------------------------------------------------------------
+#     def reject(fDTAR, yArray, fDPRO,fRPRO,R,bounds_dst,scale):
 
-        mode  = 0
-        s     = bounds_dst.shape
-        if (len(s) > 1):
-            N     = (bounds_dst.shape)[1]
-            xr    = np.zeros((R,N))
-        else:
-            N     = 1
-            xr    = np.zeros(R)
-        Rsuc = 0
-        Rtot = 0
-        if (mode == 0): # slow version for demonstration
-            while (Rsuc < R):
-                # x                  = np.arange(len(fDTAR))#
-                x                  = fRPRO(1,bounds_dst)
-                u                  = np.random.rand(1)
-                Qx                 = scale*fDPRO(x)
-                Px                 = fDTAR(yArray, x)#[x]
-                if (u <= Px/Qx):
-                    xr[Rsuc]       = x
-                    Rsuc           = Rsuc+1
-                Rtot               = Rtot+1 
-            # print("[reject]: Rtot = %6i Rsuc = %6i Rsuc/Rtot = %13.5e" % (Rtot,Rsuc,float(Rsuc)/float(Rtot)))
-        return xr, float(Rsuc)/float(Rtot)
+#         mode  = 0
+#         s     = bounds_dst.shape
+#         if (len(s) > 1):
+#             N     = (bounds_dst.shape)[1]
+#             xr    = np.zeros((R,N))
+#         else:
+#             N     = 1
+#             xr    = np.zeros(R)
+#         Rsuc = 0
+#         Rtot = 0
+#         if (mode == 0): # slow version for demonstration
+#             while (Rsuc < R):
+#                 # x                  = np.arange(len(fDTAR))#
+#                 x                  = fRPRO(1,bounds_dst)
+#                 u                  = np.random.rand(1)
+#                 Qx                 = scale*fDPRO(x)
+#                 Px                 = fDTAR(yArray, x)#[x]
+#                 if (u <= Px/Qx):
+#                     xr[Rsuc]       = x
+#                     Rsuc           = Rsuc+1
+#                 Rtot               = Rtot+1 
+#             # print("[reject]: Rtot = %6i Rsuc = %6i Rsuc/Rtot = %13.5e" % (Rtot,Rsuc,float(Rsuc)/float(Rtot)))
+#         return xr, float(Rsuc)/float(Rtot)
 
-    #===============================================================
+#     #===============================================================
     
-    s_target   = BDT_ROC
-    s_proposal = "uniform"
-    R          = 10000
+#     s_target   = BDT_ROC
+#     s_proposal = "uniform"
+#     R          = 10000
 
-    fDTAR,yArray,fDPRO,fRPRO,bdst,scal = init(s_target,s_proposal) 
-    xr, AUC                            = reject(fDTAR, yArray, fDPRO,fRPRO,R,bdst,scal)
-    # print(f"AUC {AUC}")
-    # check(xr,fDTAR, yArray, fDPRO,bdst,scal)
-    return AUC
-    #===============================================================
+#     fDTAR,yArray,fDPRO,fRPRO,bdst,scal = init(s_target,s_proposal) 
+#     xr, AUC                            = reject(fDTAR, yArray, fDPRO,fRPRO,R,bdst,scal)
+#     # print(f"AUC {AUC}")
+#     # check(xr,fDTAR, yArray, fDPRO,bdst,scal)
+#     return AUC
+#     #===============================================================
 
-def printMVC(pcaMat):
-    plt.imshow(pcaMat, cmap=cmapDiv)
-    plt.suptitle("Multi Variate PCA", fontsize = 30, fontweight = 15)
-    plt.title("Read as [x y]", fontsize = 24, pad = 15, fontstyle='italic')
-    plt.xticks(np.arange(len(fname)), fname, rotation=60)
-    plt.yticks(np.arange(len(fname)), fname)
-    plt.colorbar()
-    plt.savefig(f"{plotPath}/mvc.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
-    plt.cla()
-    plt.clf()
-    plt.close()
+# def printMVC(pcaMat):
+#     plt.imshow(pcaMat, cmap=cmapDiv)
+#     plt.suptitle("Multi Variate PCA", fontsize = 30, fontweight = 15)
+#     plt.title("Read as [x y]", fontsize = 24, pad = 15, fontstyle='italic')
+#     plt.xticks(np.arange(len(fname)), fname, rotation=60)
+#     plt.yticks(np.arange(len(fname)), fname)
+#     plt.colorbar()
+#     plt.savefig(f"{plotPath}/mvc.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+#     plt.cla()
+#     plt.clf()
+#     plt.close()
 
-def printBVC(pcaVect, pcaNames):
-    plt.figure(figsize=(12,14))
-    barColors = cmapNormal_r(pcaVect+0.3)
-    plt.barh(np.arange(len(pcaVect)), pcaVect, color=barColors)
-    plt.suptitle("PCA - Log Scale", fontsize = 30, fontweight = 15)
-    # plt.title("Log Scale", fontsize = 24, pad = 15, fontstyle='italic')
-    plt.yticks(np.arange(len(pcaNames)), pcaNames) #, rotation=90
-    plt.semilogx()
-    plt.savefig(f"{plotPath}/bvc.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
-    plt.cla()
-    plt.clf()
-    plt.close()
+# def printBVC(pcaVect, pcaNames):
+#     plt.figure(figsize=(12,14))
+#     barColors = cmapNormal_r(pcaVect+0.3)
+#     plt.barh(np.arange(len(pcaVect)), pcaVect, color=barColors)
+#     plt.suptitle("PCA - Log Scale", fontsize = 30, fontweight = 15)
+#     # plt.title("Log Scale", fontsize = 24, pad = 15, fontstyle='italic')
+#     plt.yticks(np.arange(len(pcaNames)), pcaNames) #, rotation=90
+#     plt.semilogx()
+#     plt.savefig(f"{plotPath}/bvc.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+#     plt.cla()
+#     plt.clf()
+#     plt.close()
 
-    small = (pcaVect<0.03)
-    others = np.sum(pcaVect*small)
+#     small = (pcaVect<0.03)
+#     others = np.sum(pcaVect*small)
 
-    pcaVectPie = np.append(np.delete(pcaVect, small), others)
-    pcaNamesPie = np.append(np.delete(pcaNames, small), "Others (< 3%)")
-    Piecolors = cmapNormal_r(pcaVectPie+0.3)
+#     pcaVectPie = np.append(np.delete(pcaVect, small), others)
+#     pcaNamesPie = np.append(np.delete(pcaNames, small), "Others (< 3%)")
+#     Piecolors = cmapNormal_r(pcaVectPie+0.3)
 
-    plt.pie(pcaVectPie, labels=pcaNamesPie, autopct='%1.1f%%', colors=Piecolors)
-    plt.suptitle("PCA", fontsize = 30, fontweight = 15)
-    # plt.title("Raw Scale", fontsize = 24, pad = 15, fontstyle='italic')
-    plt.savefig(f"{plotPath}/bvcPIE.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
-    plt.cla()
-    plt.clf()
-    plt.close()
-
-
-def printPCAResults(pcaResults, pcaNames):    
-    [pcaComp, pcaEVR] = pcaResults
-    [pcaNames, pltNames] = pcaNames
-
-    print(f"PCA components - {pcaComp}")
-    print(f"PCA explained variance ratio - {pcaEVR}")
-    print(f"Names - {pcaNames}")
-
-    plt.barh(np.arange(len(pcaEVR)), np.abs(pcaEVR))
-    plt.suptitle("PCA - Log Scale", fontsize = 30, fontweight = 15)
-    plt.yticks(np.arange(len(pltNames)), pltNames) #, rotation=90
-    plt.semilogx()
-    plt.xlim(0.001, 1)
-    plt.savefig(f"bvcComp.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=False)
+#     plt.pie(pcaVectPie, labels=pcaNamesPie, autopct='%1.1f%%', colors=Piecolors)
+#     plt.suptitle("PCA", fontsize = 30, fontweight = 15)
+#     # plt.title("Raw Scale", fontsize = 24, pad = 15, fontstyle='italic')
+#     plt.savefig(f"{plotPath}/bvcPIE.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
+#     plt.cla()
+#     plt.clf()
+#     plt.close()
 
 
+# def printPCAResults(pcaResults, pcaNames):    
+#     [pcaComp, pcaEVR] = pcaResults
+#     [pcaNames, pltNames] = pcaNames
 
-    pcaCompPlot = np.zeros(pcaComp.shape)
-    for s in range(pcaComp.shape[0]):
-        pcaCompPlot[s, :] = np.abs(pcaComp[s,:])/np.sum(np.abs(pcaComp[s,:]))*pcaEVR[s]
-    plt.figure()
-    inc = np.zeros(len(pcaEVR))
-    plt.barh(np.arange(len(pcaEVR)), np.abs(pcaCompPlot[:, 0]), label=f"{pcaNames[0]}")
-    for i in range(1, len(pcaCompPlot[0, :])):
-        inc = np.abs(inc+pcaCompPlot[:, i-1])
-        plt.barh(np.arange(len(pcaEVR)), np.abs(pcaCompPlot[:, i]), left=inc, label=f"{pcaNames[i]}")
+#     print(f"PCA components - {pcaComp}")
+#     print(f"PCA explained variance ratio - {pcaEVR}")
+#     print(f"Names - {pcaNames}")
 
-    plt.suptitle("PCA - Log Scale", fontsize = 30, fontweight = 15)
-    plt.yticks(np.arange(len(pltNames)), pltNames) #, rotation=90
-    plt.semilogx()
-    plt.xlim(0.001, 1)
-    plt.legend(ncol=2, bbox_to_anchor = (1.05, 0.99))
-    plt.savefig(f"bvc.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=False)
+#     plt.barh(np.arange(len(pcaEVR)), np.abs(pcaEVR))
+#     plt.suptitle("PCA - Log Scale", fontsize = 30, fontweight = 15)
+#     plt.yticks(np.arange(len(pltNames)), pltNames) #, rotation=90
+#     plt.semilogx()
+#     plt.xlim(0.001, 1)
+#     plt.savefig(f"bvcComp.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=False)
+
+
+
+#     pcaCompPlot = np.zeros(pcaComp.shape)
+#     for s in range(pcaComp.shape[0]):
+#         pcaCompPlot[s, :] = np.abs(pcaComp[s,:])/np.sum(np.abs(pcaComp[s,:]))*pcaEVR[s]
+#     plt.figure()
+#     inc = np.zeros(len(pcaEVR))
+#     plt.barh(np.arange(len(pcaEVR)), np.abs(pcaCompPlot[:, 0]), label=f"{pcaNames[0]}")
+#     for i in range(1, len(pcaCompPlot[0, :])):
+#         inc = np.abs(inc+pcaCompPlot[:, i-1])
+#         plt.barh(np.arange(len(pcaEVR)), np.abs(pcaCompPlot[:, i]), left=inc, label=f"{pcaNames[i]}")
+
+#     plt.suptitle("PCA - Log Scale", fontsize = 30, fontweight = 15)
+#     plt.yticks(np.arange(len(pltNames)), pltNames) #, rotation=90
+#     plt.semilogx()
+#     plt.xlim(0.001, 1)
+#     plt.legend(ncol=2, bbox_to_anchor = (1.05, 0.99))
+#     plt.savefig(f"bvc.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=False)
 
 
 def sourceLoc_distCheck(sigRAWTop, bkgRAWTop, sigRAWSide, bkgRAWSide, selectDict, parameter_name):
