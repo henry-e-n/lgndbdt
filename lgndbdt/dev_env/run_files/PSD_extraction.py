@@ -98,6 +98,6 @@ def psd_extraction(paramArr, paramKeys, detector_name, source_location, target_p
     wfCorr = np.delete(wfCorr, trash, axis=0)
     print(f"Trash {len(trash)}, Shape {wfCorr.shape}")
     standardAnalysisNames = np.array(["dt", "t0", "tp_0", "MAXA", "DCR", "LQ80", "NOISE", "NOISETAIL", "TDRIFT", "TDRIFT50", "TDRIFT10", "DAQ_E", "A_NORM", "A_DAQE"])
-    save_new_lh5(standardAnalysisArray, standardAnalysisNames, ts, wfCorr, file_save_path, detector_name, target_peak)
+    save_new_lh5(standardAnalysisArray, standardAnalysisNames, ts, wfCorr, file_save_path, detector_name, source_location, target_peak)
     print(f"Final Shape of PSD array, after removing late rise waveforms: {standardAnalysisArray.shape}")
     return

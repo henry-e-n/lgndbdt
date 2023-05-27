@@ -19,9 +19,9 @@ def search_file(name, path):
     except FileNotFoundError:
         return
     
-def save_new_lh5(appArr, appArrN, ts, wfdCorr, file_save_path, detector_name, target_peak):
+def save_new_lh5(appArr, appArrN, ts, wfdCorr, file_save_path, detector_name, source_location, target_peak):
     numWave = appArr.shape[1]
-    newFile = h5py.File(f"{file_save_path}/{detector_name}_PSDs_{target_peak}.lh5", "w")
+    newFile = h5py.File(f"{file_save_path}/{detector_name}_PSDs_{source_location}_{target_peak}.lh5", "w")
     
     for n in range(len(appArr)):
         try:
@@ -39,7 +39,7 @@ def save_new_lh5(appArr, appArrN, ts, wfdCorr, file_save_path, detector_name, ta
     wfddset = newFile.create_dataset("wfdCorr", wfdCorr.shape, dtype = wfdCorr.dtype, maxshape = (None, wfdCorr.shape[1]), chunks = True)
     wfddset[:] = wfdCorr[:numWave, :]
 
-    print(f"Saved as {file_save_path}/{detector_name}_PSDs.lh5")
+    # print(f"Saved as {file_save_path}/{detector_name}_PSDs.lh5")
     return
 
 ###################################################################

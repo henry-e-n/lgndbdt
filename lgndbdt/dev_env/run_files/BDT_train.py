@@ -38,7 +38,7 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
     # Data Type Preparation
     ###################################################################
 
-    filename        = f"{detector_name}_PSDs_{target_peak[:-3]}"
+    filename        = f"{detector_name}_PSDs_{target_peak}"
     fpath           = f"{file_save_path}"
 
     print(filename)
