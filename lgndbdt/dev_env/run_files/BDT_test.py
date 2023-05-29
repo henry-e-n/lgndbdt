@@ -35,9 +35,9 @@ def BDT_test(detector_name, source_location, train_features, data_to_test, BDTmo
     y_pred = MSBDT.predict(data_to_test[:,:len(train_features)], num_iteration=MSBDT.best_iteration)
     np.save("Y_pred.npy", y_pred)
 
-    plt.hist(y_pred)
+    plt.hist(y_pred, histtype="step", linewidth = 3, color = "#13294B")
     plt.title("BDT Result Distribution", fontsize = 40)
-    plt.savefig(f"/BDT_DistributionResults.pdf",dpi=300, transparent=True)
+    plt.savefig(f"BDT_DistributionResults.pdf",dpi=300, transparent=True)
     plt.cla()
     plt.clf()
     plt.close()
