@@ -45,9 +45,7 @@ def psd_extraction(paramArr, paramKeys, detector_name, source_location, target_p
     #####################################################################
     ### LQ80
     #####################################################################
-    print(len(trashPZ))
     lqVal, trash                = get_LQ80(ts, wfCorr, trashPZ)
-    print(len(trashPZ))
 
     #####################################################################
     ### Energy - Redundent from Eest Line 131
