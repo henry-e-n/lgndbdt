@@ -29,7 +29,7 @@ def BDT_test(detector_name, source_location, train_features, data_to_test, BDTmo
     top_file_save_path, top_plot_save_path = get_save_paths(detector_name, "top")
     plot_save_path = top_plot_save_path
 
-    
+
     MSBDT     = lgb.Booster(model_file=BDTmodel)
     
     y_pred = MSBDT.predict(data_to_test[:,:len(train_features)], num_iteration=MSBDT.best_iteration)
@@ -37,7 +37,7 @@ def BDT_test(detector_name, source_location, train_features, data_to_test, BDTmo
 
     plt.hist(y_pred)
     plt.title("BDT Result Distribution", fontsize = 40)
-    plt.savefig(f"{plot_save_path}/{source_location}/BDT_distribution.pdf",dpi=300, transparent=True)
+    plt.savefig(f"/BDT_DistributionResults.pdf",dpi=300, transparent=True)
     plt.cla()
     plt.clf()
     plt.close()
