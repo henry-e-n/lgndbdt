@@ -13,7 +13,6 @@ from tqdm import tqdm
 from imblearn.over_sampling import SMOTE
 
 from utilities.get_files import get_save_paths
-from utilities.h5_utils  import paramExtract
 from BDT_utilities.Visualization import *
 from BDT_utilities.train_functions import split_data, match_data, getRaw
 print("Finished Import")
@@ -56,10 +55,10 @@ def BDT_train_validate(detector_name, target_peak, source_location, train_featur
 
     
     
-    sigRAWTop, selectDict = getRaw(f"{filename}DEP_top.lh5", f"{top_file_save_path}")
-    bkgRAWTop, selectDict = getRaw(f"{filename}{target_peak}_top.lh5", f"{top_file_save_path}")
-    sigRAWSide, selectDict = getRaw(f"{filename}DEP_side.lh5", f"{side_file_save_path}")
-    bkgRAWSide, selectDict = getRaw(f"{filename}{target_peak}_side.lh5", f"{side_file_save_path}")
+    sigRAWTop, selectDict = getRaw(f"{filename}DEP_top.lh5", f"{top_file_save_path}", train_features)
+    bkgRAWTop, selectDict = getRaw(f"{filename}{target_peak}_top.lh5", f"{top_file_save_path}", train_features)
+    sigRAWSide, selectDict = getRaw(f"{filename}DEP_side.lh5", f"{side_file_save_path}", train_features)
+    bkgRAWSide, selectDict = getRaw(f"{filename}{target_peak}_side.lh5", f"{side_file_save_path}", train_features)
     
     def scaleData(signalRAW, backgroundRAW):
         scaler = RobustScaler()
@@ -333,16 +332,16 @@ def BDT_train_validate(detector_name, target_peak, source_location, train_featur
             elif i == 4:
                 
                 if source_location == "mix":
-                    sig_sideband_RawTop, selectDict = getRaw(f"{filename}DEP_sideband_top.lh5", f"{top_file_save_path}")
-                    bkg_sideband_RawTop, selectDict = getRaw(f"{filename}{target_peak}_sideband_top.lh5", f"{top_file_save_path}")
-                    sig_sideband_RawSide, selectDict = getRaw(f"{filename}DEP_sideband_side.lh5", f"{side_file_save_path}")
-                    bkg_sideband_RawSide, selectDict = getRaw(f"{filename}{target_peak}_sideband_side.lh5", f"{side_file_save_path}")
+                    sig_sideband_RawTop, selectDict = getRaw(f"{filename}DEP_sideband_top.lh5", f"{top_file_save_path}", train_features)
+                    bkg_sideband_RawTop, selectDict = getRaw(f"{filename}{target_peak}_sideband_top.lh5", f"{top_file_save_path}", train_features)
+                    sig_sideband_RawSide, selectDict = getRaw(f"{filename}DEP_sideband_side.lh5", f"{side_file_save_path}", train_features)
+                    bkg_sideband_RawSide, selectDict = getRaw(f"{filename}{target_peak}_sideband_side.lh5", f"{side_file_save_path}", train_features)
                     print(f"SIDEBAND DATA: Runs include a mix of data from source location on the top, and on the side\nTop Data Size (sig, bkg) {sig_sideband_RawTop.shape}, {bkg_sideband_RawTop.shape}\nSide Data Size (sig, bkg) {sig_sideband_RawSide.shape}, {bkg_sideband_RawSide.shape}")
                     sig_sideband_RAW = np.concatenate((sig_sideband_RawTop, sig_sideband_RawSide))
                     bkg_sideband_RAW = np.concatenate((bkg_sideband_RawTop, bkg_sideband_RawSide))
                 else:
-                    sig_sideband_RAW, selectDict = getRaw(f"{filename}{source_location}DEP_sideband.lh5", f"{top_file_save_path}") ####################### Could be a source of problem
-                    bkg_sideband_RAW, selectDict = getRaw(f"{filename}{source_location}{target_peak}_sideband.lh5", f"{top_file_save_path}") ######################
+                    sig_sideband_RAW, selectDict = getRaw(f"{filename}{source_location}DEP_sideband.lh5", f"{top_file_save_path}", train_features) ####################### Could be a source of problem
+                    bkg_sideband_RAW, selectDict = getRaw(f"{filename}{source_location}{target_peak}_sideband.lh5", f"{top_file_save_path}", train_features) ######################
                 
                 print(f"Sideband Comparison (RAW)\n \
                         SS Peak Size {len(sigRAW)} - SS Sideband size {len(sig_sideband_RAW)} - \u03C4 = 4, {1/4*len(sig_sideband_RAW)}\n \

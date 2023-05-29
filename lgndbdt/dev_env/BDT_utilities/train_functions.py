@@ -156,8 +156,10 @@ def remove_infinite(inputArr):
 
 
 ############################################################################################################################
+from utilities.h5_utils  import paramExtract
 
-def getRaw(filename, fpath):
+
+def getRaw(filename, fpath, train_features):
         file, names, paramArr = paramExtract(filename, fpath, False)
         print(file)
         dataDict = []
