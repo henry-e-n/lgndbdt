@@ -96,8 +96,8 @@ def extract_waveforms(detector_name, source_location, calibration_parameters, fi
                     for i in range(len(RAWparamArr)):
                         paramArr[i+len(DSPparamArr)] = np.append(paramArr[i+len(DSPparamArr)], RAWparamArr[i][selection_crit], axis = 0)
                     # paramArr[len(RAWparamArr)+len(DSPparamArr)] += int(np.sum(sideband_crit))
-        except ValueError:
-            print(f"Value Error {dspFile}")
+        except ValueError or OSError:
+            print(f"Error Processing {dspFile} - Either ValueError or OSError - File skipped")
     if verbose:
         print(f"Number of features: {len(paramArrKeys)}")
         print(f"Number of Extracted Waveforms (pre-clean): {paramArr[1].shape[0]}")
