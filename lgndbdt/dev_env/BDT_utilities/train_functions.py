@@ -156,3 +156,28 @@ def remove_infinite(inputArr):
 
 
 ############################################################################################################################
+
+def getRaw(filename, fpath):
+        file, names, paramArr = paramExtract(filename, fpath, False)
+        print(file)
+        dataDict = []
+        dataArr = np.zeros((len(train_features), paramArr[0].shape[0]))
+        select = []
+        counter = 0
+        wfd = np.zeros(2, dtype = object)
+        for i in range(len(paramArr)):
+            if np.any(np.isin(train_features, paramArr[i].name)):
+                dataDict.append([paramArr[i].name, paramArr[i][:]])
+                dataArr[counter, :] = paramArr[i]
+                select.append([paramArr[i].name, counter])
+                counter += 1
+            if np.any(np.isin("/times", paramArr[i].name)):
+                wfd[0] = paramArr[i]
+            if np.any(np.isin("/wfdCorr", paramArr[i].name)):
+                wfd[1] = paramArr[i]
+        dataDictionary = dict(dataDict)
+        selectDictionary = dict(select)
+        dataArr = np.stack(dataArr, 1)
+        print(f"Returned {fpath}{filename}")
+        file.close()
+        return dataArr, selectDictionary

@@ -25,9 +25,8 @@ max_bin              = 542 #args.max_bin
 randSeed = 27
 np.random.seed(randSeed)
 
-def BDT_test(detector_name, target_peak, source_location, train_features, data_to_test, BDTmodel = "BDT_unblind.txt"):
+def BDT_test(detector_name, source_location, train_features, data_to_test, BDTmodel = "BDT_unblind.txt"):
     top_file_save_path, top_plot_save_path = get_save_paths(detector_name, "top")
-    side_file_save_path, side_plot_save_path = get_save_paths(detector_name, "side")
     plot_save_path = top_plot_save_path
 
     MSBDT     = lgb.Booster(model_file=BDTmodel)
