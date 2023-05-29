@@ -150,15 +150,15 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
     print("--------------- Running Distribution Matching ---------------")
     print("-------------------------------------------------------------")
     
-    sigSave, sigPDM = split_data(sigRAW, split_ratio)
-    bkgSave, bkgPDM = split_data(bkgRAW, split_ratio)
+    # sigSave, sigPDM = split_data(sigRAW, split_ratio)
+    # bkgSave, bkgPDM = split_data(bkgRAW, split_ratio)
 
-    print(f"Incoming dataset size \n \
-            SS shape {len(sigRAW)} - Split to {len(sigSave), len(sigPDM)} \n \
-            MS shape {len(bkgRAW)} - Split to {len(bkgSave), len(bkgPDM)}")
+    # print(f"Incoming dataset size \n \
+    #         SS shape {len(sigRAW)} - Split to {len(sigSave), len(sigPDM)} \n \
+    #         MS shape {len(bkgRAW)} - Split to {len(bkgSave), len(bkgPDM)}")
 
-    sigSave, sigAUGPDM = split_data(sigAUG, split_ratio)
-    bkgSave, bkgAUGPDM = split_data(bkgAUG, split_ratio)
+    sigSave = sigAUG
+    bkgSave = bkgAUG
     
     print(f"Size before Distribution Matching Signal: {sigSave.shape}, Background: {bkgSave.shape}")
     for i in range(len(match_features)):
@@ -245,191 +245,5 @@ def BDT_train(detector_name, target_peak, source_location, train_features, match
     if plots:
         TrainingMetric(evals_result) #####################
         plt.savefig(f"{plot_save_path}/TrainingMetric.pdf", dpi=100, transparent=True)
-
-
-    if plots:
-        print(plot_save_path)
-        for i in tqdm(range(6), 
-                desc   ="Running Visualization................", 
-                colour = terminalCMAP[1]):
-            if i == 0:
-                if validate=="Full":
-                    minSize = np.min([sigRAW.shape[0], bkgRAW.shape[0]])
-                    np.random.shuffle(sigRAW)
-                    np.random.shuffle(bkgRAW)           
-                    signalData   = sigRAW[:minSize, :]
-                    bkgData      = bkgRAW[:minSize, :]
-                    print(f"Validating on full dataset {signalData.shape}")
-                else:
-                    # Using split raw data
-                    minSize = np.min([sigPDM.shape[0], bkgPDM.shape[0]])
-                    np.random.shuffle(sigPDM)
-                    np.random.shuffle(bkgPDM)
-                    signalData   = sigPDM[:minSize, :]
-                    bkgData      = bkgPDM[:minSize, :]
-                    print(f"Validating on Split dataset {signalData.shape}")
-
-
-                X_test = np.concatenate([signalData,bkgData], axis=0)
-                Y_test = np.array([1]*len(signalData) + [0] * len(bkgData))
-                params = {"num_iterations": 1, "learning_rate": 0.15967607193274216, "num_leaves": 688, "bagging_freq": 34, "bagging_fraction": 0.9411410478379901, "min_data_in_leaf": 54, "drop_rate": 0.030050388917525712, "min_gain_to_split": 0.24143821598351703, "max_bin": 454, "boosting": "dart", "objective": "binary", "metric": "binary_logloss", "verbose": -1}
-
-                lgb_train = lgb.Dataset(X_test[:,:len(train_features)], Y_test,free_raw_data=False, feature_name = list(train_features))
-                MSBDT     = lgb.Booster(model_file='BDT_unblind.txt')
-                # params["num_iterations"] = 1
-
-                gbm = lgb.train(params, 
-                                lgb_train) 
-
-                MSBDTstr  = MSBDT.model_to_string()
-                explainer = shap.TreeExplainer(gbm.model_from_string(MSBDTstr))
-                
-                y_pred = gbm.predict(X_test[:,:len(train_features)], num_iteration=gbm.best_iteration)
-                np.save("Y_test.npy", Y_test)
-                np.save("Y_pred.npy", y_pred)
-
-                BDTDistrib(y_pred, Y_test)
-                plt.title("BDT Result Distribution", fontsize = 40)
-                plt.savefig(f"{plot_save_path}/{source_location}/BDT_distribution.pdf",dpi=300, transparent=True)
-                plt.cla()
-                plt.clf()
-                plt.close()
-            elif i == 1:
-                Pos_sample = X_test[Y_test == 1,:len(train_features)]
-                Neg_sample = X_test[Y_test == 0,:len(train_features)]
-                np.random.shuffle(Pos_sample)
-                np.random.shuffle(Neg_sample)
-
-                sample = np.concatenate([Pos_sample[:10000], Neg_sample[:10000]],axis=0)
-                shap_values = explainer.shap_values(sample)
-                # Returns a list of matrices (# outputs, # samples x, # features)
-                BDTSummary(shap_values, sample, train_features)
-                plt.title(f"BDT SHAP Feature Importance ({source_location})")
-                plt.savefig(f"{plot_save_path}/{source_location}/bdt_summary.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
-
-            elif i == 2:
-                # selectDictKeys = selectDict.keys()
-                # print(selectDictKeys)
-                # print(np.any(np.isin("/A_", selectDictKeys)))
-                # if np.any(np.isin("/A_", selectDictKeys)):
-                #     print("ITS HERE !!!")
-                #     print(np.isin("/A_", selectDictKeys))
-                #     print(selectDictKeys[np.isin("/A_", selectDictKeys)])
-
-                explainer  = shap.TreeExplainer(gbm)
-                sample_sig = (y_pred>bdt_thresh) & (Y_test == 1) & (X_test[:,selectDict["/A_DAQE"]]<avse_thresh)# & cselector
-                sample_bkg  = (y_pred<bdt_thresh) & (Y_test == 0) & (X_test[:,selectDict["/A_DAQE"]]>avse_thresh)# & cselector
-
-                sample_selector = sample_sig|sample_bkg
-                evnew = X_test[sample_selector,:len(train_features)]
-                np.random.shuffle(evnew)
-                evnew = evnew[:10000]
-                shap_valuesDist = explainer.shap_values(evnew)
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT10", "/A_DAQE", plot_save_path)
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT", "/A_DAQE", plot_save_path)
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT50", "/A_DAQE", plot_save_path)
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/LQ80", "/A_DAQE", plot_save_path)
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/DCR", "/A_DAQE", plot_save_path)
-                # make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/NOISE", "/A_DAQE"),
-                # make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/NOISETAIL", "/A_DAQE"),
-                make_dist_plot(evnew,shap_valuesDist[1],selectDict, "/TDRIFT", "/A_DAQE", plot_save_path, point=True)
-            elif i == 3:
-                # index = 0
-                # ROIdata = evnew
-                # ROIdata     = ROIdata[ROIdata[:,selectDict["/tdrift"]] < 600]
-                # sample      = ROIdata[index,:len(train_features)].reshape(1,-1)
-                # shap_values = explainer.shap_values(sample)
-                # print(np.shape(explainer.expected_value), np.shape(shap_values), shap_values[1][1])
-                # shapFP = shap.force_plot(explainer.expected_value[1], shap_values[1][1], train_features, matplotlib = True, show=False, plot_cmap = "PkYg", text_rotation=45)
-                # for n in range(25):
-                #     plot_SHAP_force(explainer, shap_values[1][-n])
-                #     plt.savefig(f"{plot_save_path}/{source_location}/ForcePlots/ForcePlot{-n}.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
-                
-                plot_SHAP_force(explainer, shap_values[1][1], train_features)
-                plt.savefig(f"{plot_save_path}/{source_location}/ForcePlot.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
-                
-                # plot_SHAP_force(explainer, shap_values[1][2])
-                # plt.savefig(f"{plot_save_path}/ForcePlot2.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
-                # plot_SHAP_force(explainer, shap_values[1][3])
-                # plt.savefig(f"{plot_save_path}/ForcePlot3.pdf",dpi=300, bbox_inches = 'tight', pad_inches = 0.3, transparent=True)
-            
-            elif i == 4:
-                
-                if source_location == "mix":
-                    sig_sideband_RawTop, selectDict = getRaw(f"{filename}DEP_sideband_top.lh5", f"{top_file_save_path}")
-                    bkg_sideband_RawTop, selectDict = getRaw(f"{filename}{target_peak}_sideband_top.lh5", f"{top_file_save_path}")
-                    sig_sideband_RawSide, selectDict = getRaw(f"{filename}DEP_sideband_side.lh5", f"{side_file_save_path}")
-                    bkg_sideband_RawSide, selectDict = getRaw(f"{filename}{target_peak}_sideband_side.lh5", f"{side_file_save_path}")
-                    print(f"SIDEBAND DATA: Runs include a mix of data from source location on the top, and on the side\nTop Data Size (sig, bkg) {sig_sideband_RawTop.shape}, {bkg_sideband_RawTop.shape}\nSide Data Size (sig, bkg) {sig_sideband_RawSide.shape}, {bkg_sideband_RawSide.shape}")
-                    sig_sideband_RAW = np.concatenate((sig_sideband_RawTop, sig_sideband_RawSide))
-                    bkg_sideband_RAW = np.concatenate((bkg_sideband_RawTop, bkg_sideband_RawSide))
-                else:
-                    sig_sideband_RAW, selectDict = getRaw(f"{filename}{source_location}DEP_sideband.lh5", f"{top_file_save_path}") ####################### Could be a source of problem
-                    bkg_sideband_RAW, selectDict = getRaw(f"{filename}{source_location}{target_peak}_sideband.lh5", f"{top_file_save_path}") ######################
-                
-                print(f"Sideband Comparison (RAW)\n \
-                        SS Peak Size {len(sigRAW)} - SS Sideband size {len(sig_sideband_RAW)} - \u03C4 = 4, {1/4*len(sig_sideband_RAW)}\n \
-                        MS Peak Size {len(bkgRAW)} - MS Sideband size {len(bkg_sideband_RAW)} - \u03C4 = 4, {1/4*len(bkg_sideband_RAW)}")
-
-                if validate=="Full":
-                    sig_sideband_Ratio = sig_sideband_RAW
-                    bkg_sideband_Ratio = bkg_sideband_RAW
-                    print(f"Ratio loss of signal data {len(signalData)/len(sigRAW)}")
-                    print(f"Ratio loss of bkg data {len(bkgData)/len(bkgRAW)}")
-                    lossRatio_SIG = len(signalData)/len(sigRAW)
-                    lossRatio_BKG = len(bkgData)/len(bkgRAW)
-
-                else:
-                    sig_sideband_Save, sig_sideband_Ratio = split_data(sig_sideband_RAW, split_ratio)
-                    bkg_sideband_Save, bkg_sideband_Ratio = split_data(bkg_sideband_RAW, split_ratio)
-                    print(f"Ratio loss of signal data {len(signalData)/len(sigPDM)}")
-                    print(f"Ratio loss of bkg data {len(bkgData)/len(bkgPDM)}")
-                    lossRatio_SIG = len(signalData)/len(sigPDM)
-                    lossRatio_BKG = len(bkgData)/len(bkgPDM)
-
-
-                np.random.shuffle(sig_sideband_Ratio)
-                np.random.shuffle(bkg_sideband_Ratio)
-                sig_sideband_Ratio = sig_sideband_Ratio[:int(lossRatio_SIG*len(sig_sideband_Ratio))]
-                bkg_sideband_Ratio = bkg_sideband_Ratio[:int(lossRatio_BKG*len(bkg_sideband_Ratio))]
-
-                MSBDT     = lgb.Booster(model_file='BDT_unblind.txt')
-                gbm = lgb.train(params, 
-                                lgb_train) 
-                MSBDTstr  = MSBDT.model_to_string()
-                explainer = shap.TreeExplainer(gbm.model_from_string(MSBDTstr))
-                
-                sig_sideband_pred = gbm.predict(sig_sideband_Ratio, num_iteration=gbm.best_iteration)
-                bkg_sideband_pred = gbm.predict(bkg_sideband_Ratio, num_iteration=gbm.best_iteration)
-
-                result = list(filter(lambda x: "A_" in x, selectDict))
-                
-                if validate=="Full":
-                    sigavse = sigRAW[:,selectDict[result[0]]]
-                    bkgavse = bkgRAW[:,selectDict[result[0]]]
-                else:
-                    # small set validation
-                    sigavse = sigPDM[:,selectDict[result[0]]]
-                    bkgavse = bkgPDM[:,selectDict[result[0]]]
-                    
-                # sigavse = sigPDM[:,selectDict[result[0]]]
-                # bkgavse = bkgPDM[:,selectDict[result[0]]]
-                
-                side_pred = np.concatenate((sig_sideband_pred, bkg_sideband_pred))
-                side_test = np.array([1]*len(sig_sideband_pred) + [0]*len(bkg_sideband_pred))
-                BDTDistrib(y_pred, Y_test, side_pred, side_test)
-                plt.title(f"BDT Distribution - {source_location} data", fontsize = 40)
-                plt.savefig(f"{plot_save_path}/{source_location}/BDT_{source_location}_+Sideband_distribution.pdf",dpi=300, transparent=True)
-                
-                tpr, fpr = getROC_sideband(Y_test, y_pred, sig_sideband_pred, bkg_sideband_pred, sigavse, bkgavse)#, sideSigAvsE, sideBkgAvsE)
-                plt.title(f"ROC performance - {source_location} data", fontsize = 40) #, fontsize = 24, pad = 15, fontstyle='italic')
-                plt.savefig(f"{plot_save_path}/{source_location}/ROC_{source_location}_sideband.pdf",dpi=300, transparent=False)
-                plt.cla()
-                plt.clf()
-                plt.close()
-            elif i==5:
-                os.environ["PATH"] += os.pathsep + '/global/homes/h/hnachman/.conda/pkgs/graphviz-2.50.0-h3cd0ef9_0/bin/'
-                digraph = lgb.create_tree_digraph(MSBDT, 0, name="PlotTree", directory=f"{plot_save_path}/{source_location}/", format="pdf") # , renderer="cairo", formatter="cairo"
-                digraph.render(directory=f"{plot_save_path}/{source_location}/", view=True)
 
     return
