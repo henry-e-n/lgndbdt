@@ -45,8 +45,8 @@ def BDT_test(detector_name, source_location, train_features, data_to_test, BDTmo
     plt.clf()
     plt.close()
 
-    Pos_sample = data_to_test[:,:len(train_features)]
-    np.random.shuffle(Pos_sample)
+    # Pos_sample = data_to_test[:,:len(train_features)]
+    # np.random.shuffle(Pos_sample)
 
     # sample = np.concatenate([Pos_sample],axis=0)
     # shap_values = explainer.shap_values(sample)
