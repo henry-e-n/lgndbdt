@@ -403,9 +403,9 @@ def BDT_train_validate(detector_name, target_peak, source_location, train_featur
                 plt.cla()
                 plt.clf()
                 plt.close()
-            elif i==5:
-                os.environ["PATH"] += os.pathsep + '/global/homes/h/hnachman/.conda/pkgs/graphviz-2.50.0-h3cd0ef9_0/bin/'
-                digraph = lgb.create_tree_digraph(MSBDT, 0, name="PlotTree", directory=f"{plot_save_path}/{source_location}/", format="pdf") # , renderer="cairo", formatter="cairo"
-                digraph.render(directory=f"{plot_save_path}/{source_location}/", view=True)
+            # elif i==5:
+            #     os.environ["PATH"] += os.pathsep + '/global/homes/h/hnachman/.conda/pkgs/graphviz-2.50.0-h3cd0ef9_0/bin/'
+            #     digraph = lgb.create_tree_digraph(MSBDT, 0, name="PlotTree", directory=f"{plot_save_path}/{source_location}/", format="pdf") # , renderer="cairo", formatter="cairo"
+            #     digraph.render(directory=f"{plot_save_path}/{source_location}/", view=True)
 
     return
