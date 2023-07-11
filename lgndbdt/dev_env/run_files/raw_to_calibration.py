@@ -142,7 +142,7 @@ def calibrate_spectrum(detector_name, source_location, files_for_calibration=6, 
         plt.savefig(f"{plot_save_path}/EnergyHist.pdf", dpi=300)
         plt.clf()
         plt.cla()
-
+        plt.close()
 
 
     #####################################
@@ -239,6 +239,7 @@ def calibrate_spectrum(detector_name, source_location, files_for_calibration=6, 
     plt.savefig(f"{plot_save_path}/fitPeaks.pdf", dpi=300)
     plt.cla()
     plt.clf()
+    plt.close()
 
     mus = np.asarray([fit_pars[i][1] for i in range(len(fit_pars))])
     mu_errs = np.asarray([fit_errs[i][1] for i in range(len(fit_pars))]) 
@@ -277,6 +278,7 @@ def calibrate_spectrum(detector_name, source_location, files_for_calibration=6, 
                 plt.savefig(f"{plot_save_path}/EnergyHist_SEP.pdf", dpi=300)
             plt.clf()
             plt.cla()
+            plt.close()
 
 
         # plt.hist(cal_energies_first[(cal_energies_first>peaks[3]-200)*(cal_energies_first<peaks[3]+200)], bins=200, color='k', ec='k')
