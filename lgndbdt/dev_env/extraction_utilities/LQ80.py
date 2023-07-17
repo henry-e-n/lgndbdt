@@ -33,6 +33,14 @@ def get_mid_index(ts, ind80, buffer = 100):
 
 
 def get_LQ80(ts, vals, trashPZ):
+    """
+    Function: Calculate the area about the turning edge of the waveform, aka LQ80
+
+    Parameters:
+        - ts: Waveform times array
+        - values: Waveform ADC values
+        - trashPZ: Array of waveform indeces to trash
+    """
     LQ80 = np.zeros(vals.shape[0])
     trash_ind = []
     for i in tqdm(range(vals.shape[0]), 

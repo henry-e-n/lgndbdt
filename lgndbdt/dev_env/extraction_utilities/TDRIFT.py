@@ -2,6 +2,21 @@ import numpy as np
 from scipy.interpolate import interp1d
 
 def get_TDRIFT_interpolate(times, values, startTime, dtimes):
+    """
+    Function: Determine the drift time values of a waveform.
+
+    Parameters:
+        - times: Times array.
+        - values: Waveform values:
+        - startTime: Start of the rise times:
+        - dtimes: dt of time samples.
+    
+    Returns: 
+        - tdrift
+        - tdrift50
+        - tdrift10
+    """
+    
     tdrift = np.zeros(values.shape[0])
     tdrift50 = np.zeros(values.shape[0])
     tdrift10 = np.zeros(values.shape[0])

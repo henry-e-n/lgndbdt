@@ -82,7 +82,7 @@ def find_slope_corr(values, valuesCorrected, dtimes):
 
     Parameters:
         - values: Waveform ADC values
-        - values: P0 corrected waveform ADC values
+        - valuesCorrected: P0 corrected waveform ADC values
         - dtimes: time cell deltas
 
     Returns:

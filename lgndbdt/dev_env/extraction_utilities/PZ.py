@@ -64,6 +64,18 @@ def dp0fx(popt, wfArray):
 ###################################################################
 
 def dp0Vis(popt, wfArray):
+    """
+    Function: Creates new waveforms with PZ correction.
+
+    Parameters:
+        - popt: The parameters of the PZ fit.
+        - wfArray: Array of raw waveforms to be corrected.
+
+    Returns:
+        - wfInAdj: RAW waveforms
+        - wfCorr: Corrected Waveforms
+        - trash: Array of waveforms to trash
+    """
     [tau1, tau2, f] = popt
     wfInAdj = np.zeros(wfArray.shape)
     wfCorr = np.zeros(wfArray.shape)

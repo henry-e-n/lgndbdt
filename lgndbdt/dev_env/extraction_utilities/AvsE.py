@@ -4,6 +4,7 @@ from utilities.global_config import terminalCMAP
 
 def AvsE(values, dtimes, plots = [], numWF = 2500, currentEstimator = 100):
     """
+    Function: Finds the maximum amplitude of the waveform by calculating the derivative of the wave via tensor arithmetic.
     Arguments:
         - ntimes array - [#Waveforms, #TimeCells]
         - values - [#Waveforms, #TimeCells] - choose one waveform
